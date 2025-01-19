@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>web12-20 | 我是大帅比</title><meta name="author" content="向每个梦想加速"><meta name="copyright" content="向每个梦想加速"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Web12 提示:有时候网站上的公开信息，就是管理员常用密码 主要考察收集信息和大胆猜测的能力 Robots.txt &#x2F;admin&#x2F; User:admin Passwd:372619038(在页面的最下面) ctfshow{5fae3c78-7d0c-4749-ba24-fa0a6bbe9cdd} Web13 提示;技术文档里面不要出现敏感信息，部署到生产环境后及时修改默认密码 页面下面的docu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="web12-20">
+<meta property="og:url" content="http://example.com/2025/01/19/web12-20/index.html">
+<meta property="og:site_name" content="我是大帅比">
+<meta property="og:description" content="Web12 提示:有时候网站上的公开信息，就是管理员常用密码 主要考察收集信息和大胆猜测的能力 Robots.txt &#x2F;admin&#x2F; User:admin Passwd:372619038(在页面的最下面) ctfshow{5fae3c78-7d0c-4749-ba24-fa0a6bbe9cdd} Web13 提示;技术文档里面不要出现敏感信息，部署到生产环境后及时修改默认密码 页面下面的docu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/touxiang.png">
+<meta property="article:published_time" content="2025-01-19T12:18:28.000Z">
+<meta property="article:modified_time" content="2025-01-19T12:22:22.364Z">
+<meta property="article:author" content="向每个梦想加速">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/touxiang.png"><link rel="shortcut icon" href="/img/urltouxiang.png"><link rel="canonical" href="http://example.com/2025/01/19/web12-20/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'web12-20',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/touxiang.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/beijing.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">我是大帅比</span></a><a class="nav-page-title" href="/"><span class="site-name">web12-20</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">web12-20</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-19T12:18:28.000Z" title="发表于 2025-01-19 20:18:28">2025-01-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-19T12:22:22.364Z" title="更新于 2025-01-19 20:22:22">2025-01-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1>Web12</h1>
+<p>提示:有时候网站上的公开信息，就是管理员常用密码</p>
+<p>主要考察收集信息和大胆猜测的能力</p>
+<p>Robots.txt</p>
+<p>/admin/</p>
+<p>User:admin</p>
+<p>Passwd:372619038(在页面的最下面)</p>
+<p>ctfshow{5fae3c78-7d0c-4749-ba24-fa0a6bbe9cdd}</p>
+<h1>Web13</h1>
+<p>提示;技术文档里面不要出现敏感信息，部署到生产环境后及时修改默认密码</p>
+<p>页面下面的document点进去出现账号密码和url</p>
+<p>ctfshow{eb6944f6-439f-40a9-bdb2-1b15750377d8}</p>
+<h1>Web14</h1>
+<p>提示:有时候源码里面就能不经意间泄露重要(editor)的信息,默认配置害死人</p>
+<p>我们看源码，搜索editor发现是一个图片，再通过wp进入了editor</p>
+<p>联想到：页面的设计编辑当中出现的图片是通过一个画图工具显示的，那么这个画图工具一定可以查看当前所有目录。</p>
+<p>那么，我们就把flag所在的目录搞到url就可以</p>
+<p>Wp说的原理</p>
+<p><img src="wps8.jpg" alt="img"></p>
+<h1>Web15</h1>
+<p>提示：公开的信息比如邮箱，可能造成信息泄露，产生严重后果</p>
+<p>这道题我们可以通过utl/admin进入后台，然后账号应该是admin，密码不知道，但是重置密码里面可以重置，但是要重置密码需要作者所居住的城市，我们可以通过页面下面作者的qq邮箱搜索他的qq（25.1.16截至今天已经搜不到了），不过不妨碍做题，是西安，密码重置了之后登录进去</p>
+<p>ctfshow{d95e4ba6-fa90-40ee-9835-f68407fb8f9b}</p>
+<h1>Web16</h1>
+<p>提示：对于测试用的探针，使用完毕后要及时删除，可能会造成信息泄露</p>
+<p>PHP探针：php探针是用来探测空间、服务器运行状况和PHP信息用的，探针可以实时查看服务器硬盘资源、内存占用、网卡 流量、系统负载、服务器时间等信息。输入URL/tz.php 即可打开雅黑PHP探针</p>
+<p><img src="wps9.jpg" alt="img"></p>
+<p>点进phpinfo，查看php信息，然后搜索ctf</p>
+<p>ctfshow{1b1ba394-e6ac-40fa-a0a2-aec94f57f917}</p>
+<h1>Web17</h1>
+<p>提示：备份的sql文件会泄露敏感信息</p>
+<p>Url/backup.sql</p>
+<p>ctfshow{dfca4269-062e-4c5f-9140-3de1758c32a5}</p>
+<h1>Web18</h1>
+<p>游戏题，太好了，我是傻逼，就喜欢这种题</p>
+<p>查看js文件，找目标</p>
+<p>if(score&gt;100)</p>
+<p>{</p>
+<p>var result=window.confirm(“\u4f60\u8d62\u4e86\uff0c\u53bb\u5e7a\u5e7a\u96f6\u70b9\u76ae\u7231\u5403\u76ae\u770b\u770b”);</p>
+<p>}</p>
+<p>复制里边的东西，然后运行</p>
+<p><img src="wps10.jpg" alt="img"></p>
+<p>去看看url/110.php</p>
+<p>ctfshow{0869ea96-75f4-4b14-87cd-48e8f6d4cce1}</p>
+<h1>Web19</h1>
+<p>提示：密钥什么的，就不要放在前端了</p>
+<p><img src="wps11.jpg" alt="img"></p>
+<p>用hackebar</p>
+<p>方法一：Username=admin&amp;pazzword=a599ac85a73384ee3219fa684296eaa62667238d608efa81837030bd1ce1bf04</p>
+<p>在原来的登录界面不行，因为没有解密啥的（后来知道他是在登录界面又加密了一下，所以要解密一下源码里面的），但是为啥在hackbar的post就可以</p>
+<p>方法二：</p>
+<p>解码然后在登录界面提交</p>
+<p>这是什么解码？复制给ai问ai</p>
+<p>解出来是</p>
+<p>i_want_a_36d_girl</p>
+<p>出题人脑子也纯有冰</p>
+<p>ctfshow{c155ec3f-a3e9-44dc-84d6-03cd726e5751}</p>
+<h1>Web20</h1>
+<p>提示：mdb文件是早期asp+access构架的数据库文件，文件泄露相当于数据库被脱裤了。</p>
+<p>url/db/db.mdb下载文件</p>
+<p>flag{ctfshow_old_database}</p>
+<h1>12-20总结</h1>
+<p>1.后台登录界面url/robots.txt</p>
+<p>2.尾页documen里面会有账号密码之类的<br>
+3.网页图片editor浏览所有文件<br>
+4.Php探针，url/tz.php然后就是进去phpinfo<br>
+5.sql文件泄露url/backup.sql<br>
+6.游戏找js文件<br>
+7.密钥类的用hackbar或者自行ai解码</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">向每个梦想加速</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/01/19/web12-20/">http://example.com/2025/01/19/web12-20/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">我是大帅比</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/touxiang.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/01/19/web21-30/" title="web21-30"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">web21-30</div></div><div class="info-2"><div class="info-item-1">Web21 有一点真麻烦  Bp抓包 发送给intruder 添加账号密码哪里  用自定义迭代器(Custom Iterator) payload配置当中 位置1添加admin  位置2添加英文冒号  位置3添加下载的附件  Payload处理当中选择  对我们添加的东西进行base64加密 关闭对勾  开始破解 点击状态码  第一个就是账号和密码 解码出来是  admin:shark63 ctfshow{fb4fe60a-bc16-4982-92df-439262c04233} Web22 没有靶机，自行wp Web23  根据源码可知，需要token为特定的值才可以得到flag Token里面应该是abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 当中任意的几个的结合体 Wp里面假设了三个，php脚本为： >和cp(复制，和>>差不多)用法cp flag.php 1.txt  ?c=echo `cat [f]*`;注意看源代码，你看你的软件，肯定没回显的  ?c=echo `cat [f]* >>...</div></div></div></a><a class="pagination-related" href="/2025/01/19/web1-10/" title="web1-10"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">web1-10</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/touxiang.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">向每个梦想加速</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">qq2325525993</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">Web12</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">Web13</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">Web14</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">Web15</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">Web16</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">Web17</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">7.</span> <span class="toc-text">Web18</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">8.</span> <span class="toc-text">Web19</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">9.</span> <span class="toc-text">Web20</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">10.</span> <span class="toc-text">12-20总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/19/pwn13-19/" title="pwn13-19">pwn13-19</a><time datetime="2025-01-19T12:44:37.000Z" title="发表于 2025-01-19 20:44:37">2025-01-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/19/web21-30/" title="web21-30">web21-30</a><time datetime="2025-01-19T12:22:47.000Z" title="发表于 2025-01-19 20:22:47">2025-01-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/19/web12-20/" title="web12-20">web12-20</a><time datetime="2025-01-19T12:18:28.000Z" title="发表于 2025-01-19 20:18:28">2025-01-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/19/web1-10/" title="web1-10">web1-10</a><time datetime="2025-01-19T12:12:42.000Z" title="发表于 2025-01-19 20:12:42">2025-01-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/19/pwn6-12/" title="pwn6-12">pwn6-12</a><time datetime="2025-01-19T11:57:27.000Z" title="发表于 2025-01-19 19:57:27">2025-01-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/beijing.png);"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By 向每个梦想加速</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
