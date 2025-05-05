@@ -1,0 +1,385 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>pickle反序列化 | 向每个梦想加速</title><meta name="author" content="向每个梦想加速"><meta name="copyright" content="向每个梦想加速"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="原文链接1 原文链接2 这里只是为了让我的思绪跟着原文的思路,并加上个人理解,所以不建议看我的文章 基本知识 pickle简介 pickle是Python的一个库,可以对一个对象进行序列化和反序列化操作.其中__reduce__魔法函数会在一个对象被反序列化时自动执行,我们可以通过在__reduce__魔法函数内植入恶意代码的方式进行任意命令执行.通常会利用到Python的反弹shell.  与P">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pickle反序列化">
+<meta property="og:url" content="http://example.com/2025/04/29/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/index.html">
+<meta property="og:site_name" content="向每个梦想加速">
+<meta property="og:description" content="原文链接1 原文链接2 这里只是为了让我的思绪跟着原文的思路,并加上个人理解,所以不建议看我的文章 基本知识 pickle简介 pickle是Python的一个库,可以对一个对象进行序列化和反序列化操作.其中__reduce__魔法函数会在一个对象被反序列化时自动执行,我们可以通过在__reduce__魔法函数内植入恶意代码的方式进行任意命令执行.通常会利用到Python的反弹shell.  与P">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/touxiang.png">
+<meta property="article:published_time" content="2025-04-29T12:47:41.000Z">
+<meta property="article:modified_time" content="2025-04-29T13:41:57.901Z">
+<meta property="article:author" content="向每个梦想加速">
+<meta property="article:tag" content="pickle反序列化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/touxiang.png"><link rel="shortcut icon" href="/img/urltouxiang.png"><link rel="canonical" href="http://example.com/2025/04/29/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'pickle反序列化',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/touxiang.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">38</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">25</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/beijing.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">向每个梦想加速</span></a><a class="nav-page-title" href="/"><span class="site-name">pickle反序列化</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 目录</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">pickle反序列化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-04-29T12:47:41.000Z" title="发表于 2025-04-29 20:47:41">2025-04-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-04-29T13:41:57.901Z" title="更新于 2025-04-29 21:41:57">2025-04-29</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/7032">原文链接1</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/13498">原文链接2</a></p>
+<p>这里只是为了让我的思绪跟着原文的思路,并加上个人理解,所以不建议看我的文章</p>
+<h2 id="基本知识">基本知识</h2>
+<h3 id="pickle简介">pickle简介</h3>
+<p>pickle是Python的一个库,可以对一个对象进行序列化和反序列化操作.其中<code>__reduce__</code>魔法函数会在一个对象被反序列化时自动执行,我们可以通过在<code>__reduce__</code>魔法函数内植入恶意代码的方式进行任意命令执行.通常会利用到Python的反弹shell.</p>
+<ul>
+<li>与PHP类似，python也有序列化功能以长期储存内存中的数据。pickle是python下的序列化与反序列化包。</li>
+<li>python有另一个更原始的序列化包marshal，现在开发时一般使用pickle。</li>
+<li>与json相比，pickle以二进制储存，不易人工阅读；json可以跨语言，而pickle是Python专用的；pickle能表示python几乎所有的类型（包括自定义类型），json只能表示一部分内置类型且不能表示自定义类型。</li>
+<li>pickle实际上可以看作一种<strong>独立的语言</strong>，通过对opcode的更改编写可以执行python代码、覆盖变量等操作。直接编写的opcode灵活性比使用pickle序列化生成的代码更高，有的代码不能通过pickle序列化得到（pickle解析能力大于pickle生成能力）。</li>
+</ul>
+<h4 id="序列化和反序列化">序列化和反序列化</h4>
+<p>序列化就是将一个对象转换为以字符串方式存储的过程,反序列化就是将字符串重新变为一个对象的实例.和php的反序列化差不多.</p>
+<blockquote>
+<p>注意,在linux下和windows下进行序列化的操作的结果可能会有所不同,在做题时需要根据靶机的系统选择用windows还是linux进行序列化操作.</p>
+</blockquote>
+<h4 id="关于序列化和反序列化的函数">关于序列化和反序列化的函数</h4>
+<ol>
+<li><code>pickle.dump()</code></li>
+<li><code>pickle.load()</code></li>
+<li><code>pickle.dumps()</code></li>
+<li><code>pickle.loads()</code></li>
+</ol>
+<p>其中两个dump函数是把python对象转换为二进制对象的,两个load函数是把二进制对象转换为python对象的.</p>
+<p>而s函数是指对字符串进行反序列化和序列化操作,另外两个函数是对文件进行操作.</p>
+<h4 id="python魔术方法">python魔术方法</h4>
+<p>略.另开文章</p>
+<h4 id="常用opcode">常用opcode</h4>
+<p>在Python的pickle.py中，我们能够找到所有的opcode及其解释，常用的opcode如下，这里我们以V0版本为例</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>描述</th>
+<th>具体写法</th>
+<th>栈上的变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>c</td>
+<td>获取一个全局对象或import一个模块</td>
+<td>c[module]\n[instance]\n</td>
+<td>获得的对象入栈</td>
+</tr>
+<tr>
+<td>o</td>
+<td>寻找栈中的上一个MARK，以之间的第一个数据（必须为函数）为callable，第二个到第n个数据为参数，执行该函数（或实例化一个对象）</td>
+<td>o</td>
+<td>这个过程中涉及到的数据都出栈，函数的返回值（或生成的对象）入栈</td>
+</tr>
+<tr>
+<td>i</td>
+<td>相当于c和o的组合，先获取一个全局函数，然后寻找栈中的上一个MARK，并组合之间的数据为元组，以该元组为参数执行全局函数（或实例化一个对象）</td>
+<td>i[module]\n[callable]\n</td>
+<td>这个过程中涉及到的数据都出栈，函数返回值（或生成的对象）入栈</td>
+</tr>
+<tr>
+<td>N</td>
+<td>实例化一个None</td>
+<td>N</td>
+<td>获得的对象入栈</td>
+</tr>
+<tr>
+<td>S</td>
+<td>实例化一个字符串对象</td>
+<td>S’xxx’\n（也可以使用双引号、'等python字符串形式）</td>
+<td>获得的对象入栈</td>
+</tr>
+<tr>
+<td>V</td>
+<td>实例化一个UNICODE字符串对象</td>
+<td>Vxxx\n</td>
+<td>获得的对象入栈</td>
+</tr>
+<tr>
+<td>I</td>
+<td>实例化一个int对象</td>
+<td>Ixxx\n</td>
+<td>获得的对象入栈</td>
+</tr>
+<tr>
+<td>F</td>
+<td>实例化一个float对象</td>
+<td>Fx.x\n</td>
+<td>获得的对象入栈</td>
+</tr>
+<tr>
+<td>R</td>
+<td>选择栈上的第一个对象作为函数、第二个对象作为参数（第二个对象必须为元组），然后调用该函数</td>
+<td>R</td>
+<td>函数和参数出栈，函数的返回值入栈</td>
+</tr>
+<tr>
+<td>.</td>
+<td>程序结束，栈顶的一个元素作为pickle.loads()的返回值</td>
+<td>.</td>
+<td>无</td>
+</tr>
+<tr>
+<td>(</td>
+<td>向栈中压入一个MARK标记</td>
+<td>(</td>
+<td>MARK标记入栈</td>
+</tr>
+<tr>
+<td>t</td>
+<td>寻找栈中的上一个MARK，并组合之间的数据为元组</td>
+<td>t</td>
+<td>MARK标记以及被组合的数据出栈，获得的对象入栈</td>
+</tr>
+<tr>
+<td>)</td>
+<td>向栈中直接压入一个空元组</td>
+<td>)</td>
+<td>空元组入栈</td>
+</tr>
+<tr>
+<td>l</td>
+<td>寻找栈中的上一个MARK，并组合之间的数据为列表</td>
+<td>l</td>
+<td>MARK标记以及被组合的数据出栈，获得的对象入栈</td>
+</tr>
+<tr>
+<td>]</td>
+<td>向栈中直接压入一个空列表</td>
+<td>]</td>
+<td>空列表入栈</td>
+</tr>
+<tr>
+<td>d</td>
+<td>寻找栈中的上一个MARK，并组合之间的数据为字典（数据必须有偶数个，即呈key-value对）</td>
+<td>d</td>
+<td>MARK标记以及被组合的数据出栈，获得的对象入栈</td>
+</tr>
+<tr>
+<td>}</td>
+<td>向栈中直接压入一个空字典</td>
+<td>}</td>
+<td>空字典入栈</td>
+</tr>
+<tr>
+<td>p</td>
+<td>将栈顶对象储存至memo_n</td>
+<td>pn\n</td>
+<td>无</td>
+</tr>
+<tr>
+<td>g</td>
+<td>将memo_n的对象压栈</td>
+<td>gn\n</td>
+<td>对象被压栈</td>
+</tr>
+<tr>
+<td>0</td>
+<td>丢弃栈顶对象</td>
+<td>0</td>
+<td>栈顶对象被丢弃</td>
+</tr>
+<tr>
+<td>b</td>
+<td>使用栈中的第一个元素（储存多个属性名: 属性值的字典）对第二个元素（对象实例）进行属性设置</td>
+<td>b</td>
+<td>栈上第一个元素出栈</td>
+</tr>
+<tr>
+<td>s</td>
+<td>将栈的第一个和第二个对象作为key-value对，添加或更新到栈的第三个对象（必须为列表或字典，列表以数字作为key）中</td>
+<td>s</td>
+<td>第一、二个元素出栈，第三个元素（列表或字典）添加新值或被更新</td>
+</tr>
+<tr>
+<td>u</td>
+<td>寻找栈中的上一个MARK，组合之间的数据（数据必须有偶数个，即呈key-value对）并全部添加或更新到该MARK之前的一个元素（必须为字典）中</td>
+<td>u</td>
+<td>MARK标记以及被组合的数据出栈，字典被更新</td>
+</tr>
+<tr>
+<td>a</td>
+<td>将栈的第一个元素append到第二个元素(列表)中</td>
+<td>a</td>
+<td>栈顶元素出栈，第二个元素（列表）被更新</td>
+</tr>
+<tr>
+<td>e</td>
+<td>寻找栈中的上一个MARK，组合之间的数据并extends到该MARK之前的一个元素（必须为列表）中</td>
+<td>e</td>
+<td>MARK标记以及被组合的数据出栈，列表被更新</td>
+</tr>
+</tbody>
+</table>
+<p>比较全的指令集</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"># Pickle opcodes.  See pickletools.py for extensive docs.  The listing</span><br><span class="line"># here is in kind-of alphabetical order of 1-character pickle code.</span><br><span class="line"># pickletools groups them by purpose.</span><br><span class="line"># 说明:</span><br><span class="line"># 1.如果对栈顶元素只说了取出,而没有说弹出的话那就说明只是将栈顶元素复制一份放到一个变量或者就是后面的操作对栈顶元素进行更新修改,但是这个栈顶元素是不会弹出的</span><br><span class="line"># 2.部分说明中对数据进行操作先弹出然后进行操作再进行压栈,但是对照源码可能是对栈数组直接进行直接截取而并没有pop弹出或者append的压栈操作,我这里描述为弹出和压栈的过程是为了便于理解</span><br><span class="line"># 3.用于指定后面需要读取的数据大小的字节读出来之后,有可能是按照字符字面大小读取,也可能是按照其16进制大小进行数据读取,例如字符&#x27;1&#x27;=&#x27;\x31&#x27;,0x31=49可能是读取1字节大小也肯能是读取49字节大小,注意我的注释描述</span><br><span class="line"># 4._struct.unpack解压&lt;i格式数据的时候需要传入4字节大小的数据,然后会把4个字节左右顺序调换,得到一个8位的16进制数,最后将其转为一个10进制整数,例如_struct.unpack(&#x27;&lt;i&#x27;, b&#x27;\x00\x01\x00\x00&#x27;)[0]=&gt;0x00001000=&gt;256</span><br><span class="line"># 5.struct.unpack解压&lt;Q格式数据则是需要传入8字节大小数据,转换操作同上,例如unpack(&#x27;&lt;Q&#x27;, b&#x27;\x00\x01\x00\x00\x00\x00\x00\x00&#x27;)[0] =&gt; 0x0000000000000100 =&gt; 256</span><br><span class="line">MARK           = b&#x27;(&#x27;   #向栈中压入一个Mark标记</span><br><span class="line">STOP           = b&#x27;.&#x27;   #相当于停止当前的反序列化过程</span><br><span class="line">POP            = b&#x27;0&#x27;   #从栈中pop出一个元素,就是删除栈顶元素</span><br><span class="line">POP_MARK       = b&#x27;1&#x27;   #从栈中不断pop元素直到遇到Mark标记</span><br><span class="line">DUP            = b&#x27;2&#x27;   #向栈中再压入一个当前的栈顶元素,就是复制一份当前栈顶元素然后进行压栈</span><br><span class="line">FLOAT          = b&#x27;F&#x27;   #读取当前行到行末尾,然后转为float类型,向栈中压入一个float浮点数</span><br><span class="line">INT            = b&#x27;I&#x27;   #向栈中压入一个int整数,整数就是当前行的最后一个字节,不过如果整数为01的时候压入的是True,为00的时候压入的是False</span><br><span class="line">BININT         = b&#x27;J&#x27;   #从后面的输入中读取4个字节并且使用unpack通过&#x27;&lt;i&#x27;的格式将4字节的buffer数据解包转为int类型,后面不能换行,直接家下一步的操作b&quot;(S&#x27;a&#x27;\nK\x01\x01\x01\x01.&quot;</span><br><span class="line">BININT1        = b&#x27;K&#x27;   #和上面BININT一样,不过K操作只读取一个字节的数据b&quot;(S&#x27;a&#x27;\nK\x01.&quot;</span><br><span class="line">LONG           = b&#x27;L&#x27;   #读取当前行到行末尾,然后转为int类型,但如果后面是字符L的话会先去掉最后一个字符L再转int</span><br><span class="line">BININT2        = b&#x27;M&#x27;   #从后面的输入中读取2个字节并且使用unpack通过&#x27;&lt;H&#x27;的格式将2字节的buffer作为一个2进制数解包为int,后面不能换行,直接加下一步的操作b&quot;(S&#x27;a&#x27;\nM\x01\x01.&quot;</span><br><span class="line">NONE           = b&#x27;N&#x27;   #向栈中压入一个None元素,后面不能换行,直接加下一步的操作b&quot;(S&#x27;a&#x27;\nN.&quot;</span><br><span class="line">PERSID         = b&#x27;P&#x27;   #读取当前行到行末尾,将读取到的数据作为id,通过persistent_load函数获得obj对象返回后将obj对象压栈,默认情况没用,要重写persistent_load函数才能生效</span><br><span class="line">BINPERSID      = b&#x27;Q&#x27;   #和上面作用一样,从当前栈中弹出一个元素作为id,通过persistent_load...</span><br><span class="line">REDUCE         = b&#x27;R&#x27;   #从当前栈中弹出两次元素,第一次是函数参数args,第二次是函数func,执行func(args)</span><br><span class="line">STRING         = b&#x27;S&#x27;   #向栈中压入一个string字符串,内容就是后面的数据,后面的字符串第一个和最后一个必须是单引号b&quot;(S&#x27;a&#x27;\nS&#x27;&#x27;a&#x27;&#x27;\n.&quot;</span><br><span class="line">BINSTRING      = b&#x27;T&#x27;   #从后面数据读取4字节数据,通过unpack使用&lt;i格式将数据解压后变为int类型, 然后将其作为一个长度, 后面读取这个指定长度的数据作为字符串进行压栈b&quot;(S&#x27;a&#x27;\nT\x10\x00\x00\x000123456789abcdef.&quot;</span><br><span class="line"># _struct.unpack(&#x27;&lt;i&#x27;, b&quot;\x10\x00\x00\x00&quot;) =&gt; (16,)</span><br><span class="line">SHORT_BINSTRING= b&#x27;U&#x27;   #先读取一个字节数据作为长度,然后按照这个长度读取字符串,读出的字符串压栈</span><br><span class="line">UNICODE        = b&#x27;V&#x27;   #读出当前行后面的全部数据,然后进行Unicode解码,将解码内容压栈b&#x27;V\\u0061\n.&#x27;</span><br><span class="line">BINUNICODE     = b&#x27;X&#x27;   #读出4字节数据通过unpack使用&lt;I格式解压,将解压得到的数据作为长度,然后进行数据读取b&#x27;X\x10\x00\x00\x00abcdef0123456789.&#x27;</span><br><span class="line">APPEND         = b&#x27;a&#x27;   #先pop出栈一个变量var1,然后获取当前栈顶元素var2,执行栈顶元素的append函数,就是将一开始的栈顶元素弹出,然后又加到下一个栈顶数组中b&quot;]S&#x27;S1nKk&#x27;\na.&quot; =&gt; 得到[&#x27;S1nKk&#x27;]</span><br><span class="line">BUILD          = b&#x27;b&#x27;   #这个操作就是设置元素属性的操作</span><br><span class="line"># 先pop出栈一个变量var1,然后获取当前栈顶元素var2,获取var2的__setstate__子成员作为var3,如果var3非空,那就执行var3(var1),这个操作正常就是通过__setstate__设置变量的属性</span><br><span class="line"># 但是上面的var3为空也有别的处理:</span><br><span class="line"># 1.检查var1是否为tuple类型且长度为2,如果是的话那就将其分别赋值为state,slotstate</span><br><span class="line"># 2.检查state是否为空,如果不为空尝试取出state.items()然后使用k,v键值对的方式便利,最后通过修改var2.__dict__的方式修改var2的属性,也就是使得var2[k]=v,var2.k=v</span><br><span class="line"># 3.检查slotstate是否为空,如果不为空和第2步一样,取出slotstate.items()通过k,v键值对方式遍历,然后使用setattr方法设置var2属性,最后效果也是var2[k]=v,var2.k=v</span><br><span class="line">GLOBAL         = b&#x27;c&#x27;   #导入一个模块,首先读取当前行后面的全部内容适应utf-8解码得到的字符串作为module,然后再读出下一行的内容同样解析出字符串作为那么,最后导入module.name这个包</span><br><span class="line">DICT           = b&#x27;d&#x27;   #将栈中的数据弹出到上一个Mark为止,然后按照key:value的方式逐个解析然后放入到一个字典中,将最后得到的字典压栈b&quot;(S&#x27;key1&#x27;\nS&#x27;val1&#x27;\nS&#x27;key2&#x27;\nS&#x27;val2&#x27;\nd.&quot; =&gt; &#123;&#x27;key1&#x27;: &#x27;val1&#x27;, &#x27;key2&#x27;: &#x27;val2&#x27;&#125;</span><br><span class="line">EMPTY_DICT     = b&#x27;&#125;&#x27;   #没什么好说的,就是往栈中压入一个空字典</span><br><span class="line">APPENDS        = b&#x27;e&#x27;   #先将栈中元素不断弹出知道Mark标记,然后将弹出的全部元素放入items中,再取出栈顶作为list_obj,之后执行下面两步操作:</span><br><span class="line"># 1.先取出extend=list_obj.extend,然后执行extend(items)</span><br><span class="line"># 2.取出append = list_obj.append,然后使用for循环遍历items得到item,然后每次循环都执行一次append(item)</span><br><span class="line"># 看到这里应该想到函数触发的方法,我们只需要使用b操作将list_obj的extend改为一个危险的函数方法,然后再让参数进入items,就可以通过extend(items)的方式调用任意构造的危险函数了</span><br><span class="line">GET            = b&#x27;g&#x27;   #读取后面的全部本行数据,然后转为int类型放入变量i中,使用i作为索引,从缓存区取出数据mem[i],然后将这个从缓存中取出的变量压栈</span><br><span class="line">BINGET         = b&#x27;h&#x27;   #后面读取一个字节的数据,然后使用字符16进制大小作为下标索引,从缓存mem中读数据,将读出的内容压栈,下面就是一个获取缓存中下标为1的数据的实例b&quot;S&#x27;h0cksr&#x27;\np1\nS&#x27;t&#x27;\n0h\x01.&quot;</span><br><span class="line">INST           = b&#x27;i&#x27;   #两次pop出栈读出数据并且均进行解码操作使其变为字符串格式,</span><br><span class="line"># 1. 第一第二次弹出的数据分别放入module和name中,先导入moudle模块,然后name通过.逐个获取出里面的子成员,最后返回目标子成员(可能是函数也可能是类或变量)var1</span><br><span class="line"># 2. 继续进行出栈,直到遇到Mark标志,将出栈的数据作为参数,var1位方法,执行var1(Mark弹出数据)</span><br><span class="line"># 3. 将生成的实例化对象压栈</span><br><span class="line">LONG_BINGET    = b&#x27;j&#x27;   #先读出4字节大小数据流,然后通过unpack使用&lt;I格式解压得到int类型数据i,将i作为下标,从缓存中获取变量mem[i],将获取到的数据压栈</span><br><span class="line">LIST           = b&#x27;l&#x27;   #将上一次Mark之后的数据全部弹出,并且将其存放到一个数组中,然后在将这个数组压栈b&quot;(S&#x27;S1nKk&#x27;\np1\nS&#x27;t&#x27;\nl.&quot;</span><br><span class="line">EMPTY_LIST     = b&#x27;]&#x27;   #没什么好说,往栈中压入一个空数组</span><br><span class="line">OBJ            = b&#x27;o&#x27;   #先是将上一次Mark之后的数据全部弹出,得到一个数组var1,然后又在var1中pop取出最后一个数据作为var2,之后执行以下过程:</span><br><span class="line"># 1.检查弹出数据后的var1数组是否为空,如果var1非空,或者弹出的var2属于type类型,或者弹出的var2有__getinitargs__属性成员,那么就会执行var2(var1)</span><br><span class="line"># 2.如果以上条件均不满足,那就执行var2.__new__(var2)</span><br><span class="line"># 3.将执行结果压入栈中</span><br><span class="line">PUT            = b&#x27;p&#x27;   #读取后面全部当前行的数据,然后转为int类型的变量i,然后赋值当前栈顶元素存到memo[i]中</span><br><span class="line">BINPUT         = b&#x27;q&#x27;   #和上一个一样,不同的是下标i是通过读取1个字节的数据,然后直接当做下标</span><br><span class="line">LONG_BINPUT    = b&#x27;r&#x27;   #和上一个一样,不同的是下标i是通过读取4个字节的数据,然后通过unpack使用&lt;I模式解压得到的整数当做下标</span><br><span class="line">SETITEM        = b&#x27;s&#x27;   #先在栈中pop弹出第一个数据作为value,然后在pop弹出第二个元素作为key,再获取当前栈顶元素记为dict,给栈顶元素赋值dict[key]=value</span><br><span class="line">TUPLE          = b&#x27;t&#x27;   #弹出上一次Mark之后的全部数据大农一个list数组中,然后使用tuple函数将其转为元组格式再把这个元组压入栈中</span><br><span class="line">EMPTY_TUPLE    = b&#x27;)&#x27;   #没什么好说,往栈中压入一个空元组</span><br><span class="line">SETITEMS       = b&#x27;u&#x27;   #先弹出上一次Mark之后的全部元素放入一个数组items中,然后获取栈顶元素记为dict,通过i=0,2,3...获取items中的数据,执行dict[items[i]] = items[i + 1]给栈顶的字典元素添加键值对</span><br><span class="line">BINFLOAT       = b&#x27;G&#x27;   #先读取8字节数据,然后使用unpack通过&lt;d格式的解压,将得到的float数据压栈</span><br><span class="line"></span><br><span class="line">TRUE           = b&#x27;I01\n&#x27;  # not an opcode; see INT docs in pickletools.py</span><br><span class="line">FALSE          = b&#x27;I00\n&#x27;  # not an opcode; see INT docs in pickletools.py</span><br><span class="line"></span><br><span class="line"># Protocol 2</span><br><span class="line"></span><br><span class="line">PROTO          = b&#x27;\x80&#x27;  #用于声明pickle协议版本</span><br><span class="line">NEWOBJ         = b&#x27;\x81&#x27;#(这个很有用)  #从栈中弹出两次变量,第一次弹出的变量记为var1,第二次弹出的变量记为var2,然后就会通过cls.__new__(var2, *var1)生成实例化对象,然后将生成的对象压栈</span><br><span class="line">EXT1           = b&#x27;\x82&#x27;  #&#x27;&#x27;&#x27;\x82,\x83,\x84这三个操作都是和extension registry扩展注册表有关的,但是拓展注册表主要维护4个从copyreg导入的映射字典</span><br><span class="line">EXT2           = b&#x27;\x83&#x27;  #     dispatch_tablecopyreg, _extension_registry, _inverted_registry, _extension_cache</span><br><span class="line">EXT4           = b&#x27;\x84&#x27;  #     但是从头到尾貌似这几个核心表单都没有发生过变化(也可能是我没注意到而已)&#x27;&#x27;&#x27;</span><br><span class="line">TUPLE1         = b&#x27;\x85&#x27;  #将栈顶元素弹出放到一个元组中再将这个元组压栈,就是将栈顶放到一个元组里面的作用b&quot;S&#x27;S1nk&#x27;\n\x85.&quot; =&gt; (&#x27;S1nk&#x27;,)</span><br><span class="line">TUPLE2         = b&#x27;\x86&#x27;  #将栈顶的两个元素弹出,栈顶弹出为var1,继续弹出一个为var2,然后组成一个元组然后将这个元组压栈,得到(var2,var1),b&quot;S&#x27;S1nk&#x27;\nS&#x27;S1nKk&#x27;\n\x86.&quot; =&gt; (&#x27;S1nk&#x27;, &#x27;S1nKk&#x27;)</span><br><span class="line">TUPLE3         = b&#x27;\x87&#x27;  #和上面一样,不够该操作是弹出三个元素形成元组b&quot;S&#x27;S1nK&#x27;\nS&#x27;S11nK&#x27;\nS&#x27;S111nK&#x27;\n\x87.&quot; =&gt; (&#x27;S1nK&#x27;, &#x27;S11nK&#x27;, &#x27;S111nk&#x27;)</span><br><span class="line">NEWTRUE        = b&#x27;\x88&#x27;  #向栈中压入一个True</span><br><span class="line">NEWFALSE       = b&#x27;\x89&#x27;  #向栈中压入一个False</span><br><span class="line">LONG1          = b&#x27;\x8a&#x27;  #先读取一个字节,以该字节16进制数为大小size,从后面的数据读取size个字节,然后将读取到的数据转为long类型</span><br><span class="line">LONG4          = b&#x27;\x8b&#x27;  #读取4字节数据,通过unpack的&lt;i格式将数据解压得到一个整数,以这个整数为字节大小读取后面的数据</span><br><span class="line"></span><br><span class="line">_tuplesize2code = [EMPTY_TUPLE, TUPLE1, TUPLE2, TUPLE3]#就是元组操作合集,分别是向栈中压入空数组,将最后1个元素放入元组后将元组压栈,将最后2个元素放入元组后将元组压栈,将最后3个元素放入元组后将元组压栈</span><br><span class="line"></span><br><span class="line"># Protocol 3 (Python 3.x)#这里要注意一下,后面的操作是有python3方才支持</span><br><span class="line"></span><br><span class="line">BINBYTES       = b&#x27;B&#x27;   #先读取4字节数据通过unpack使用&lt;i格式将数据解压,将得到的结果作为大小向后读取相应字节数,然后将读取到的全部字节压栈,注意一下,压栈的是原始的比特流数据b&#x27;B\x06\x00\x00\x00h0cksr.&#x27; =&gt; b&#x27;S1nKk&#x27;</span><br><span class="line">SHORT_BINBYTES = b&#x27;C&#x27;   #读取一个字节,以它的16进制数作为大小向后读取对应字节的数据b&#x27;C\x06h0cksr.&#x27; =&gt; b&#x27;S1nKk&#x27;</span><br><span class="line"></span><br><span class="line"># Protocol 4</span><br><span class="line">SHORT_BINUNICODE = b&#x27;\x8c&#x27;  #先读取一个字节,以这个字节的16进制为大小向后读取对应字节的数据,然后使用utf-8的格式解码数据为字符串格式,然后将这个字符串压栈b&#x27;\x8c\x06S1nKk.&#x27; =&gt; S1nKk</span><br><span class="line">BINUNICODE8      = b&#x27;\x8d&#x27;  #先读取8字节数据然后通过unpack使用&lt;Q格式解压数据,将得到的结果作为大小向后读取相应字节数,然后将读取到的数据使用utf-8格式解压为字符串,将字符串压栈b&#x27;\x8d\x06\x00\x00\x00\x00\x00\x00\x00h0cksr.&#x27; =&gt; h0cksr</span><br><span class="line">BINBYTES8        = b&#x27;\x8e&#x27;  #同上读取8字节数据&lt;Q格式解压,然后读取数据,但是直接将比特流数据压栈而不会解码b&#x27;\x8e\x06\x00\x00\x00\x00\x00\x00\x00S1nKk.&#x27; =&gt; b&#x27;S1nKk&#x27;</span><br><span class="line">EMPTY_SET        = b&#x27;\x8f&#x27;  #向栈中压入一个set类型的空集合(set()没有指定iterable的时候返回的是一个空集合)</span><br><span class="line">ADDITEMS         = b&#x27;\x90&#x27;  #先pop弹出一个元素作为items,记栈顶元素为top,然后检查top是否为set类型,如果是的话就执行top.update(items),如果top不是set类型那就使用for遍历items,逐个执行top.add(item)</span><br><span class="line">FROZENSET        = b&#x27;\x91&#x27;  #弹出栈顶元素作为items,然后执行frozenset(items)生成一个frozenset类型的变量,并将这个变量压栈</span><br><span class="line">NEWOBJ_EX        = b&#x27;\x92&#x27;#(这个很有用)  #和NEWOBJ差不多,先从栈中弹出三个元素,第一个,第二个,第三个弹出的元素分别记为var1,var2,var3,然后执行cls.__new__(var3, *var2, **var1)之后将执行生成的对象压栈</span><br><span class="line">STACK_GLOBAL     = b&#x27;\x93&#x27;#(这个很有用)  #和GLOBAL操作一样但是导入的模块从栈上获取,先弹出一个元素为name,然后再弹出一个元素moudle,要求两个元素都必须是字符串类型,然后到处moudle.name,在将导出的内容压栈b&quot;S&#x27;os&#x27;\nS&#x27;system&#x27;\n\x93.&quot; =&gt; os.system</span><br><span class="line">MEMOIZE          = b&#x27;\x94&#x27;  #将当前栈顶元素添加到缓存列表的末尾(注意栈顶不会弹出)</span><br><span class="line">FRAME            = b&#x27;\x95&#x27;  #后面先是读取8字节数据通过unpack使用&lt;Q格式将数据解压得到的结果作为大小,向后读取对应字节的数据,然后将读取到的数据进行正常pickle反序列化(感觉用不用这个操作没啥差别,但是细节差别的话看源码)</span><br></pre></td></tr></table></figure>
+<p>来自h0cksr师傅</p>
+<h4 id="pickletools的使用">pickletools的使用</h4>
+<p>pickletools是python的一个内建模块,常用的方法有<code>pickletools.dis()</code>,用于把一段opcode转换为易读的形式,如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import pickletools</span><br><span class="line"></span><br><span class="line">opcode = b&#x27;&#x27;&#x27;c__main__</span><br><span class="line">secret</span><br><span class="line">(S&#x27;secret&#x27;</span><br><span class="line">S&#x27;Hack!!!&#x27;</span><br><span class="line">db.&#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">pickletools.dis(opcode)</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">0: c    GLOBAL     &#x27;__main__ secret&#x27;</span><br><span class="line">   17: (    MARK</span><br><span class="line">   18: S        STRING     &#x27;secret&#x27;</span><br><span class="line">   28: S        STRING     &#x27;Hack!!!&#x27;</span><br><span class="line">   39: d        DICT       (MARK at 17)</span><br><span class="line">   40: b    BUILD</span><br><span class="line">   41: .    STOP</span><br><span class="line">highest protocol among opcodes = 0</span><br></pre></td></tr></table></figure>
+<h4 id="pker的使用">pker的使用</h4>
+<p>pker是一个可以把python语言翻译成opcode的工具.</p>
+<p>pker支持这三种操作</p>
+<ul>
+<li>变量赋值：
+<ul>
+<li>左值可以是变量名，dict或list的item，对象成员</li>
+<li>右值可以是基础类型字面量，函数调用</li>
+</ul>
+</li>
+<li>函数调用</li>
+<li>return：可返回0~1个参数</li>
+</ul>
+<p>pker内置了三个函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GLOBAL(&#x27;os&#x27;, &#x27;system&#x27;)             =&gt;  cos\nsystem\n</span><br><span class="line">INST(&#x27;os&#x27;, &#x27;system&#x27;, &#x27;ls&#x27;)         =&gt;  (S&#x27;ls&#x27;\nios\nsystem\n</span><br><span class="line">OBJ(GLOBAL(&#x27;os&#x27;, &#x27;system&#x27;), &#x27;ls&#x27;)  =&gt;  (cos\nsystem\nS&#x27;ls&#x27;\no</span><br></pre></td></tr></table></figure>
+<p>可以用return返回一个对象</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">return           =&gt;  .</span><br><span class="line">return var       =&gt;  g_\n.</span><br><span class="line">return 1         =&gt;  I1\n.</span><br><span class="line">#pker_test.py</span><br><span class="line"></span><br><span class="line">i = 0</span><br><span class="line">s = &#x27;id&#x27;</span><br><span class="line">lst = [i]</span><br><span class="line">tpl = (0,)</span><br><span class="line">dct = &#123;tpl: 0&#125;</span><br><span class="line">system = GLOBAL(&#x27;os&#x27;, &#x27;system&#x27;)</span><br><span class="line">system(s)</span><br><span class="line">return</span><br><span class="line">#命令行下</span><br><span class="line"></span><br><span class="line">$ python3 pker.py &lt; pker_tests.py</span><br><span class="line"></span><br><span class="line">b&quot;I0\np0\n0S&#x27;id&#x27;\np1\n0(g0\nlp2\n0(I0\ntp3\n0(g3\nI0\ndp4\n0cos\nsystem\np5\n0g5\n(g1\ntR.&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="利用">利用</h2>
+<h3 id="变量覆盖">变量覆盖</h3>
+<p>假设存在类<code>Secret</code>,类有一个<code>name</code>属性,那我们可以通过pickle反序列化修改这个属性的值.</p>
+<p>下面这个例子当中将原本的s.name属性ssz修改为了zmr</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import pickle</span><br><span class="line">import pickletools</span><br><span class="line">class Secret:</span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">s=Secret(&quot;ssz&quot;)</span><br><span class="line">print(s.name)</span><br><span class="line">opcode=b&quot;&quot;&quot;c__main__</span><br><span class="line">s</span><br><span class="line">(S&#x27;name&#x27;</span><br><span class="line">S&#x27;zmr&#x27;</span><br><span class="line">db.&quot;&quot;&quot;</span><br><span class="line">pickle.loads(opcode)</span><br><span class="line">print(s.name)</span><br><span class="line"># pickletools.dis(opcode)</span><br></pre></td></tr></table></figure>
+<p><img src="/2025/04/29/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20250429213501354.png" alt="image-20250429213501354"></p>
+<p><code>opcode</code> 的含义 (逐个字节码指令分析)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">opcode = <span class="string">b&quot;&quot;&quot;c__main__    # GLOBAL &#x27;__main__&#x27; </span></span><br><span class="line"><span class="string">s            # Push &#x27;s&#x27; (这个是上面的 Secret 对象 s)</span></span><br><span class="line"><span class="string">(            # MARK — 开始一个元组</span></span><br><span class="line"><span class="string">S&#x27;name&#x27;      # Push 字符串 &#x27;name&#x27;</span></span><br><span class="line"><span class="string">S&#x27;zmr&#x27; 		 # Push 字符串 &#x27;Funny_M0nk3y&#x27;</span></span><br><span class="line"><span class="string">d            # DICT — 构造一个 dict：&#123;&#x27;name&#x27;: &#x27;Funny_M0nk3y&#x27;&#125;</span></span><br><span class="line"><span class="string">b.           # BUILD + STOP — 把这个 dict 应用到 s（调用 __setstate__ 或更新 __dict__）</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>具体解释**<code>b</code>（BUILD）**：从栈上取出两个对象，一个是目标对象（比如类的实例），另一个是一个 <code>dict</code>，然后把这个 <code>dict</code> 里面的内容应用到目标对象上。</p>
+<ul>
+<li>如果这个对象有 <code>__setstate__</code> 方法，就调用它。</li>
+<li>如果没有，就默认执行：<code>obj.__dict__.update(state_dict)</code></li>
+</ul>
+<p>在这个例子中，就是这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s.__dict__.update(&#123;&#x27;name&#x27;: &#x27;Funny_M0nk3y&#x27;&#125;)</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">向每个梦想加速</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/04/29/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">http://example.com/2025/04/29/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">向每个梦想加速</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">pickle反序列化</a></div><div class="post-share"><div class="social-share" data-image="/img/touxiang.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2025/04/30/Python%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="Python魔术方法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Python魔术方法</div></div></div></a><a class="pagination-related" href="/2025/04/28/%E5%85%B6%E4%BB%96/" title="其他"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">其他</div></div><div class="info-2"><div class="info-item-1">1234567891011121314151617&lt;?php$url = &#x27;http://username:password@hostname/path?arg=value#anchor&#x27;;print_r(parse_url($url));echo parse_url($url, PHP_URL_PATH);?&gt;结果Array(    [scheme] =&gt; http    [host] =&gt; hostname    [user] =&gt; username    [pass] =&gt; password    [path] =&gt; /path    [query] =&gt; arg=value    [fragment] =&gt; anchor)/path web396~401 123456789&lt;?phperror_reporting(0);if(isset($_GET[&#x27;url&#x27;]))&#123;    $url = parse_url($_GET[&#x27;url&#x27;]);   ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/touxiang.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">向每个梦想加速</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">38</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">25</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://user.qzone.qq.com/2325525993"><i class="fas fa-envelope"></i><span>qq空间</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">qq2325525993</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">基本知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pickle%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">pickle简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.1.1.</span> <span class="toc-text">序列化和反序列化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9A%84%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.2.</span> <span class="toc-text">关于序列化和反序列化的函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#python%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.3.</span> <span class="toc-text">python魔术方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8opcode"><span class="toc-number">1.1.4.</span> <span class="toc-text">常用opcode</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pickletools%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">1.1.5.</span> <span class="toc-text">pickletools的使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pker%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">1.1.6.</span> <span class="toc-text">pker的使用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96"><span class="toc-number">2.1.</span> <span class="toc-text">变量覆盖</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/05/%E6%A0%88%E6%BA%A2%E5%87%BA/" title="栈溢出">栈溢出</a><time datetime="2025-05-04T19:22:12.000Z" title="发表于 2025-05-05 03:22:12">2025-05-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/03/%E6%A0%88%E6%BA%A2%E5%87%BA%E5%8D%B1%E9%99%A9%E5%87%BD%E6%95%B0/" title="栈溢出危险函数">栈溢出危险函数</a><time datetime="2025-05-03T11:51:51.000Z" title="发表于 2025-05-03 19:51:51">2025-05-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/02/%E5%88%B7%E5%88%B7-%F0%9F%90%82%E6%9C%A8%E7%9A%84-%E7%93%B6%E9%A2%88%E5%88%B0%E4%BA%86/" title="刷刷,🐂木的,瓶颈到了">刷刷,🐂木的,瓶颈到了</a><time datetime="2025-05-02T15:34:00.000Z" title="发表于 2025-05-02 23:34:00">2025-05-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/30/XYctf/" title="XYctf">XYctf</a><time datetime="2025-04-30T07:36:19.000Z" title="发表于 2025-04-30 15:36:19">2025-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/30/Python%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="Python魔术方法">Python魔术方法</a><time datetime="2025-04-30T06:23:21.000Z" title="发表于 2025-04-30 14:23:21">2025-04-30</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/beijing.png);"><div id="footer-wrap"><div class="copyright">&copy;2025 By 向每个梦想加速</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="MING,LOVE,ME" data-fontsize="10px" data-random="true" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
